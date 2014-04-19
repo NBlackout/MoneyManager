@@ -1,0 +1,21 @@
+#{extends 'main.html' /}
+#{set title:'Account' /}
+
+<table>
+	<thead>
+		<tr>
+			<td>Intitulé</td>
+			<td>Montant</td>
+			<td>Date</td>
+		</tr>
+	</thead>
+	<tbody>
+		#{list as:'transaction', items:transactions}
+			<tr>
+				<td>${transaction.label}</td>
+				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
+				<td>${new Date(transaction.date).format()}</td>
+			</tr>
+		#{/list}
+	</tbody>
+</table>

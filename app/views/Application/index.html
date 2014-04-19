@@ -14,7 +14,7 @@
 		#{list as:'account', items:accounts}
 			<tr>
 				<td>${account.bank?.label}</td>
-				<td>${account.label}</td>
+				<td>#{a @Application.showAccount(account.id)}${account.label}#{/a}</td>
 				<td>${account.balance.formatCurrency(messages.get('currency'))}</td>
 				<td>${new Date(account.lastSync).format()}</td>
 			</tr>
