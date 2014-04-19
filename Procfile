@@ -1,1 +1,1 @@
-web: target/start -Dhttp.port=${PORT} ${JAVA_OPTS} -Ddb=${DATABASE_URL}
+web: play run --http.port=\$PORT \$PLAY_OPTS -Ddb=\$DATABASE_URL
