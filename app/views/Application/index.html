@@ -1,4 +1,23 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
 
-#{welcome /}
+<table>
+	<thead>
+		<tr>
+			<td>Banque</td>
+			<td>Intitulé</td>
+			<td>Solde</td>
+			<td>Synchronisation</td>
+		</tr>
+	</thead>
+	<tbody>
+		#{list as:'account', items:accounts}
+			<tr>
+				<td>${account.bank?.label}</td>
+				<td>${account.label}</td>
+				<td>${account.balance.formatCurrency(messages.get('currency'))}</td>
+				<td>${new Date(account.lastSync).format()}</td>
+			</tr>
+		#{/list}
+	</tbody>
+</table>
