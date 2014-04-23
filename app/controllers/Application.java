@@ -4,62 +4,34 @@ import java.util.Calendar;
 import java.util.List;
 
 import models.Account;
-import models.Bank;
 import models.Transaction;
+import play.db.jpa.GenericModel.JPAQuery;
 import play.mvc.Controller;
 
 public class Application extends Controller {
 
+	public static final int PAGE_SIZE = 10;
+
 	public static void index() {
-		Transaction.deleteAll();
-		Account.deleteAll();
-		Bank.deleteAll();
-
-		for (int i = 0; i < 3; i++) {
-			Bank bank = new Bank();
-			bank.label = "Banque " + i;
-			bank.save();
-		}
-
-		for (int i = 0; i < 10; i++) {
-			int index = (int) (Math.random() * Bank.count());
-
-			Account account = new Account();
-			account.bank = Bank.<Bank>findAll().get(index);
-			account.label = "Compte " + i;
-			account.balance = Math.random() * 10000;
-			account.lastSync = Calendar.getInstance().getTimeInMillis();
-			account.save();
-		}
-
 		List<Account> accounts = Account.findAll();
 
 		render(accounts);
 	}
 
-	public static void showAccount(long accountId) {
-		Account account = Account.findById(accountId);
+	public static void showAccount(long accountId, int page) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1, 0, 0, 0);
+		long minDate = calendar.getTimeInMillis();
 
-		if (Transaction.count("account.id", accountId) == 0) {
-			for (int i = 0; i < 50; i++) {
-				Calendar now = Calendar.getInstance();
-				now.add(Calendar.DATE, -i);
+		calendar.add(Calendar.MONTH, 1);
+		long maxDate = calendar.getTimeInMillis();
 
-				int perDay = (int) (Math.random() * 6);
-				for (int j = 0; j < perDay; j++) {
-					double amount = Math.random() * 300 - 200;
+		JPAQuery query = Transaction.find("account.id = :accountId AND date >= :minDate AND date < :maxDate ORDER BY date DESC");
+		query.setParameter("accountId", accountId);
+		query.setParameter("minDate", minDate);
+		query.setParameter("maxDate", maxDate);
 
-					Transaction transaction = new Transaction();
-					transaction.account = account;
-					transaction.label = ((amount >= 0) ? "Débit" : "Crédit") + " " + (Transaction.count() + 1);
-					transaction.amount = amount;
-					transaction.date = now.getTimeInMillis();
-					transaction.save();
-				}
-			}
-		}
-
-		List<Transaction> transactions = Transaction.find("account.id = :accountId order by date desc").setParameter("accountId", accountId).fetch();
+		List<Transaction> transactions = query.fetch(page, PAGE_SIZE);
 
 		render(transactions);
 	}
