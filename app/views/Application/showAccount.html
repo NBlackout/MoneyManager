@@ -1,6 +1,18 @@
 #{extends 'main.html' /}
 #{set title:'Account' /}
 
+#{form @Application.showAccount(), method:'GET'}
+	<input name="accountId" type="hidden" value="${accountId}">
+	
+	#{select 'month', items:months, value:month}
+	#{/select}
+
+	#{select 'year', items:years, value:year}
+	#{/select}
+
+	<input type="submit" value="Valider">
+#{/form}
+
 <table>
 	<thead>
 		<tr>
@@ -9,6 +21,7 @@
 			<td>Date</td>
 		</tr>
 	</thead>
+
 	<tbody>
 		#{list as:'transaction', items:transactions}
 			<tr>
