@@ -1,11 +1,13 @@
 package controllers;
 
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
 import models.Account;
 import models.Transaction;
+
+import org.joda.time.DateTime;
+
 import play.mvc.Controller;
 
 public class Application extends Controller {
@@ -22,23 +24,33 @@ public class Application extends Controller {
 		}
 
 		if (year == null || month == null) {
-			Calendar calendar = Calendar.getInstance();
+			DateTime now = DateTime.now();
 
-			year = calendar.get(Calendar.YEAR);
-			month = calendar.get(Calendar.MONTH) + 1;
+			year = now.getYear();
+			month = now.getMonthOfYear();
 		}
 
-		List<Transaction> transactions = Transaction.findByAccountIdYearMonth(accountId, year, month - 1);
 		List<Integer> years = buildYearList();
 		List<Integer> months = buildMonthList();
 
-		render(transactions, accountId, years, year, months, month);
+		List<Transaction> transactions = Transaction.findByAccountIdYearMonth(accountId, year, month);
+		List<Transaction> regularTransactions = new LinkedList<>();
+		List<Transaction> monthlyTransactions = new LinkedList<>();
+		for (Transaction transaction : transactions) {
+			if (transaction.monthly == true) {
+				monthlyTransactions.add(transaction);
+			} else {
+				regularTransactions.add(transaction);
+			}
+		}
+
+		render(accountId, years, year, months, month, regularTransactions, monthlyTransactions);
 	}
 
 	private static List<Integer> buildYearList() {
 		List<Integer> years = new LinkedList<>();
 
-		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+		int currentYear = DateTime.now().getYear();
 		for (int year = currentYear - 3; year <= currentYear; year++) {
 			years.add(year);
 		}

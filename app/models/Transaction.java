@@ -1,10 +1,12 @@
 package models;
 
-import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
 
 import play.db.jpa.Model;
 
@@ -20,7 +22,10 @@ public class Transaction extends Model {
 
 	public double amount;
 
-	public long date;
+	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+	public DateTime dateTime;
+
+	public boolean monthly;
 
 	public static List<Transaction> findByAccountIdYearMonth(Long accountId, Integer year, Integer month) {
 		if (accountId == null) {
@@ -33,21 +38,13 @@ public class Transaction extends Model {
 			throw new IllegalArgumentException("month cannot be null");
 		}
 
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.YEAR, year);
-		calendar.set(Calendar.MONTH, month);
-		calendar.set(Calendar.DAY_OF_MONTH, 1);
-		calendar.set(Calendar.HOUR, 0);
-		calendar.set(Calendar.MINUTE, 0);
-		long minDate = calendar.getTimeInMillis();
+		DateTime minDateTime = new DateTime(year, month, 1, 0, 0);
+		DateTime maxDateTime = minDateTime.plusMonths(1);
 
-		calendar.add(Calendar.MONTH, 1);
-		long maxDate = calendar.getTimeInMillis();
-
-		JPAQuery query = Transaction.find("account.id = :accountId AND date >= :minDate AND date < :maxDate ORDER BY date DESC");
+		JPAQuery query = Transaction.find("account.id = :accountId AND dateTime >= :minDateTime AND dateTime < :maxDateTime ORDER BY dateTime DESC");
 		query.setParameter("accountId", accountId);
-		query.setParameter("minDate", minDate);
-		query.setParameter("maxDate", maxDate);
+		query.setParameter("minDateTime", minDateTime);
+		query.setParameter("maxDateTime", maxDateTime);
 
 		return query.fetch();
 	}

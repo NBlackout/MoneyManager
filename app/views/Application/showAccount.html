@@ -23,11 +23,18 @@
 	</thead>
 
 	<tbody>
-		#{list as:'transaction', items:transactions}
+		#{list as:'transaction', items:monthlyTransactions}
 			<tr>
 				<td>${transaction.label}</td>
 				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
-				<td>${new Date(transaction.date).format()}</td>
+				<td>${transaction.dateTime.toDate().format()}</td>
+			</tr>
+		#{/list}
+		#{list as:'transaction', items:regularTransactions}
+			<tr>
+				<td>${transaction.label}</td>
+				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
+				<td>${transaction.dateTime.toDate().format()}</td>
 			</tr>
 		#{/list}
 	</tbody>
