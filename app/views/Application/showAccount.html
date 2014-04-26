@@ -3,7 +3,7 @@
 
 #{form @Application.showAccount(), method:'GET'}
 	<input name="accountId" type="hidden" value="${accountId}">
-	
+
 	#{select 'month', items:months, value:month}
 	#{/select}
 
@@ -13,7 +13,19 @@
 	<input type="submit" value="Valider">
 #{/form}
 
-<table>
+<table id="transactions">
+	<tbody>
+		#{list as:'transaction', items:transactions}
+			<tr #{if transaction.monthly == true}class="monthly"#{/if}>
+				<td>${transaction.label}</td>
+				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
+				<td>${transaction.dateTime.toDate().format()}</td>
+			</tr>
+		#{/list}
+	</tbody>
+</table>
+
+<table id="monthly">
 	<thead>
 		<tr>
 			<td>Intitulé</td>
@@ -23,19 +35,35 @@
 	</thead>
 
 	<tbody>
-		#{list as:'transaction', items:monthlyTransactions}
-			<tr>
-				<td>${transaction.label}</td>
-				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
-				<td>${transaction.dateTime.toDate().format()}</td>
-			</tr>
-		#{/list}
-		#{list as:'transaction', items:regularTransactions}
-			<tr>
-				<td>${transaction.label}</td>
-				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
-				<td>${transaction.dateTime.toDate().format()}</td>
-			</tr>
-		#{/list}
 	</tbody>
 </table>
+
+<table id="regular">
+	<thead>
+		<tr>
+			<td>Intitulé</td>
+			<td>Montant</td>
+			<td>Date</td>
+		</tr>
+	</thead>
+
+	<tbody>
+	</tbody>
+</table>
+
+<script type="text/javascript">
+	$(function() {
+		var transactions = $('table#transactions > tbody');
+		var monthly = $('table#monthly > tbody');
+		var regular = $('table#regular > tbody');
+
+		$.each(transactions.children('tr'), function(index, value) {
+			var tr = $(value);
+			if (tr.hasClass('monthly')) {
+				monthly.append(tr);
+			} else {
+				regular.append(tr);
+			}
+		});
+	});
+</script>

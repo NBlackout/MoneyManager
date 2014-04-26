@@ -32,19 +32,9 @@ public class Application extends Controller {
 
 		List<Integer> years = buildYearList();
 		List<Integer> months = buildMonthList();
-
 		List<Transaction> transactions = Transaction.findByAccountIdYearMonth(accountId, year, month);
-		List<Transaction> regularTransactions = new LinkedList<>();
-		List<Transaction> monthlyTransactions = new LinkedList<>();
-		for (Transaction transaction : transactions) {
-			if (transaction.monthly == true) {
-				monthlyTransactions.add(transaction);
-			} else {
-				regularTransactions.add(transaction);
-			}
-		}
 
-		render(accountId, years, year, months, month, regularTransactions, monthlyTransactions);
+		render(accountId, years, year, months, month, transactions);
 	}
 
 	private static List<Integer> buildYearList() {
