@@ -4,11 +4,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import models.Account;
-import models.OneOffTransaction;
-import models.RegularTransaction;
+import models.transactions.OneOffTransaction;
+import models.transactions.Periodicity;
+import models.transactions.RegularTransaction;
+import models.transactions.RegularTransactionConfiguration;
 
 import org.joda.time.DateTime;
 
+import play.data.binding.As;
 import play.mvc.Controller;
 
 public class Application extends Controller {
@@ -37,6 +40,33 @@ public class Application extends Controller {
 		List<OneOffTransaction> oneOffTransactions = OneOffTransaction.findByAccountIdYearMonth(accountId, year, month);
 
 		render(accountId, years, year, months, month, regularTransactions, oneOffTransactions);
+	}
+
+	public static void createRegularTransaction(Long accountId, Integer year, Integer month, String label, Double amount, @As("yyyy-MM-dd") DateTime date) {
+		System.out.println(label);
+		System.out.println(amount);
+		System.out.println(date);
+		if (accountId == null || year == null || month == null) {
+			index();
+		}
+
+		RegularTransactionConfiguration configuration = new RegularTransactionConfiguration();
+		configuration.account = Account.findById(accountId);
+		configuration.label = label;
+		configuration.amount = amount;
+		configuration.periodicity = Periodicity.find("byLabel", "Mensuelle").first();
+		configuration.firstDueDate = date;
+		configuration.lastDueDate = date;
+		configuration.save();
+
+		RegularTransaction transaction = new RegularTransaction();
+		transaction.configuration = configuration;
+		transaction.date = date;
+		transaction.done = false;
+		transaction.save();
+
+		showAccount(accountId, year, month);
+
 	}
 
 	private static List<Integer> buildYearList() {

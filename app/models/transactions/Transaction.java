@@ -1,8 +1,9 @@
-package models;
+package models.transactions;
 
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
+import models.Account;
 import play.db.jpa.Model;
 
 @MappedSuperclass

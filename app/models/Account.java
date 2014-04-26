@@ -1,5 +1,6 @@
 package models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -23,6 +24,7 @@ public class Account extends Model {
 
 	public double balance;
 
+	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime lastSync;
 }

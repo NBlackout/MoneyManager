@@ -1,5 +1,6 @@
-package models;
+package models.transactions;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -14,9 +15,11 @@ public class RegularTransactionConfiguration extends Transaction {
 	@ManyToOne
 	public Periodicity periodicity;
 
+	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime firstDueDate;
 
+	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime lastDueDate;
 }

@@ -5,8 +5,8 @@ import java.util.List;
 
 import models.Account;
 import models.Bank;
-import models.OneOffTransaction;
-import models.Periodicity;
+import models.transactions.OneOffTransaction;
+import models.transactions.Periodicity;
 
 import org.joda.time.DateTime;
 
@@ -25,9 +25,13 @@ public class Bootstrap extends Job {
 
 	private final List<String> PERIODICITY_LABELS = Arrays.asList("Annuelle", "Semestrielle", "Trimestrielle", "Mensuelle");
 
-	private final int TRANSACTION_MIN_AMOUNT = -200;
+	private final int MAX_YEARS = 0;
 
-	private final int TRANSACTION_MAX_AMOUNT = 100;
+	private final int MAX_PER_DAY = 1;
+
+	private final int MIN_AMOUNT = -200;
+
+	private final int MAX_AMOUNT = 100;
 
 	@Override
 	public void doJob() {
@@ -81,20 +85,27 @@ public class Bootstrap extends Job {
 	}
 
 	private void initOneOffTransactions() {
+		// OneOffTransaction.em().getTransaction().commit();
+		// int mb = 1024 * 1024;
+
 		Logger.info("BEGIN initOneOffTransactions()");
 		if (OneOffTransaction.count() == 0) {
-			int currentYear = DateTime.now().getYear();
+			DateTime now = DateTime.now();
+			int currentYear = now.getYear();
+			int currentMonth = now.getMonthOfYear();
 
 			for (Account account : Account.<Account>findAll()) {
-				for (int y = currentYear - 3; y <= currentYear; y++) {
+				for (int y = currentYear - MAX_YEARS; y <= currentYear; y++) {
+					long beforeY = DateTime.now().getMillis();
 					for (int m = 1; m <= 12; m++) {
+						long beforeM = DateTime.now().getMillis();
 						int maxDays = new DateTime(y, m, 1, 0, 0).dayOfMonth().getMaximumValue();
 
 						for (int d = 1; d <= maxDays; d++) {
-							int maxDayTransactions = (int) (Math.random() * 6);
+							int maxDayTransactions = (int) ((Math.random() * MAX_PER_DAY) + MAX_PER_DAY);
 
 							for (int t = 0; t < maxDayTransactions; t++) {
-								double amount = (Math.random() * TRANSACTION_MAX_AMOUNT + Math.abs(TRANSACTION_MAX_AMOUNT)) - TRANSACTION_MIN_AMOUNT;
+								double amount = Math.random() * (MAX_AMOUNT - MIN_AMOUNT) + MIN_AMOUNT;
 
 								OneOffTransaction transaction = new OneOffTransaction();
 								transaction.account = account;
@@ -102,9 +113,19 @@ public class Bootstrap extends Job {
 								transaction.amount = amount;
 								transaction.date = new DateTime(y, m, d, 0, 0);
 								transaction.save();
+								// OneOffTransaction.em().persist(transaction);
 							}
 						}
+
+						// OneOffTransaction.em().getTransaction().commit();
+						long afterM = DateTime.now().getMillis();
+						Logger.info("END   %d in %d ms", y, afterM - beforeM);
+						if (y == currentYear && m == currentMonth) {
+							break;
+						}
 					}
+					long afterY = DateTime.now().getMillis();
+					Logger.info("END   %d in %d ms", y, afterY - beforeY);
 				}
 			}
 		}

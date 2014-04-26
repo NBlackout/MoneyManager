@@ -1,4 +1,4 @@
-package models;
+package models.transactions;
 
 import javax.persistence.Entity;
 
