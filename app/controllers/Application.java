@@ -4,7 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import models.Account;
-import models.Transaction;
+import models.OneOffTransaction;
+import models.RegularTransaction;
 
 import org.joda.time.DateTime;
 
@@ -32,9 +33,10 @@ public class Application extends Controller {
 
 		List<Integer> years = buildYearList();
 		List<Integer> months = buildMonthList();
-		List<Transaction> transactions = Transaction.findByAccountIdYearMonth(accountId, year, month);
+		List<RegularTransaction> regularTransactions = RegularTransaction.findByAccountIdYearMonth(accountId, year, month);
+		List<OneOffTransaction> oneOffTransactions = OneOffTransaction.findByAccountIdYearMonth(accountId, year, month);
 
-		render(accountId, years, year, months, month, transactions);
+		render(accountId, years, year, months, month, regularTransactions, oneOffTransactions);
 	}
 
 	private static List<Integer> buildYearList() {

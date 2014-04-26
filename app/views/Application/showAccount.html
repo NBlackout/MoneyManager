@@ -13,41 +13,45 @@
 	<input type="submit" value="Valider">
 #{/form}
 
-<table id="transactions">
-	<tbody>
-		#{list as:'transaction', items:transactions}
-			<tr #{if transaction.monthly == true}class="monthly"#{/if}>
-				<td>${transaction.label}</td>
-				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
-				<td>${transaction.dateTime.toDate().format()}</td>
-			</tr>
-		#{/list}
-	</tbody>
-</table>
-
-<table id="monthly">
-	<thead>
-		<tr>
-			<td>Intitulé</td>
-			<td>Montant</td>
-			<td>Date</td>
-		</tr>
-	</thead>
-
-	<tbody>
-	</tbody>
-</table>
-
 <table id="regular">
 	<thead>
 		<tr>
 			<td>Intitulé</td>
 			<td>Montant</td>
 			<td>Date</td>
+			<td>Actions</td>
 		</tr>
 	</thead>
 
 	<tbody>
+		#{list as:'transaction', items:regularTransactions}
+			<tr>
+				<td>${transaction.label}</td>
+				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
+				<td>${transaction.date.toDate().format()}</td>
+				<td><a href="#" data-id="${transaction.id}">Supprimer</a></td>
+			</tr>
+		#{/list}
+	</tbody>
+</table>
+
+<table id="oneOff">
+	<thead>
+		<tr>
+			<td>Intitulé</td>
+			<td>Montant</td>
+			<td>Date</td>
+		</tr>
+	</thead>
+
+	<tbody>
+		#{list as:'transaction', items:oneOffTransactions}
+			<tr>
+				<td>${transaction.label}</td>
+				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
+				<td>${transaction.date.toDate().format()}</td>
+			</tr>
+		#{/list}
 	</tbody>
 </table>
 
@@ -57,13 +61,16 @@
 		var monthly = $('table#monthly > tbody');
 		var regular = $('table#regular > tbody');
 
-		$.each(transactions.children('tr'), function(index, value) {
-			var tr = $(value);
-			if (tr.hasClass('monthly')) {
-				monthly.append(tr);
-			} else {
-				regular.append(tr);
+		var f = function() {
+			alert('ok');
+		};
+
+		$('a').click(function() {
+			if (confirm('ici')) {
+				f();
 			}
+
+			return false;
 		});
 	});
 </script>
