@@ -43,9 +43,6 @@ public class Application extends Controller {
 	}
 
 	public static void createRegularTransaction(Long accountId, Integer year, Integer month, String label, Double amount, @As("yyyy-MM-dd") DateTime date) {
-		System.out.println(label);
-		System.out.println(amount);
-		System.out.println(date);
 		if (accountId == null || year == null || month == null) {
 			index();
 		}
@@ -67,6 +64,17 @@ public class Application extends Controller {
 
 		showAccount(accountId, year, month);
 
+	}
+
+	public static void deleteRegularTransaction(Long accountId, Integer year, Integer month, Long configurationId) {
+		if (configurationId == null) {
+			index();
+		}
+
+		RegularTransactionConfiguration configuration = RegularTransactionConfiguration.findById(configurationId);
+		configuration.delete();
+
+		showAccount(accountId, year, month);
 	}
 
 	private static List<Integer> buildYearList() {

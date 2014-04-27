@@ -2,7 +2,6 @@ package models.transactions;
 
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -19,7 +18,6 @@ public class RegularTransaction extends Model {
 	@ManyToOne
 	public RegularTransactionConfiguration configuration;
 
-	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime date;
 

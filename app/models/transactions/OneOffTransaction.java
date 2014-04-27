@@ -2,7 +2,6 @@ package models.transactions;
 
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import org.hibernate.annotations.Type;
@@ -13,7 +12,6 @@ public class OneOffTransaction extends Transaction {
 
 	private static final long serialVersionUID = 855382573468954474L;
 
-	@Column(columnDefinition = "TIMESTAMP WITH TIME ZONE")
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime date;
 
