@@ -1,0 +1,21 @@
+* {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	line-height: 1;
+	font-family: inherit;
+	text-align: left;
+	vertical-align: baseline;
+}
+
+ol,ul {
+	list-style: none;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}

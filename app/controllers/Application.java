@@ -1,12 +1,13 @@
 package controllers;
 
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 
 import models.Account;
 import models.transactions.OneOffTransaction;
 import models.transactions.Periodicity;
 import models.transactions.RegularTransaction;
+import models.transactions.RegularTransactionCategory;
 import models.transactions.RegularTransactionConfiguration;
 
 import org.joda.time.DateTime;
@@ -34,12 +35,50 @@ public class Application extends Controller {
 			month = now.getMonthOfYear();
 		}
 
-		List<Integer> years = buildYearList();
-		List<Integer> months = buildMonthList();
+		List<Integer> years = Arrays.asList(year - 3, year - 2, year - 1, year);
+		List<Integer> months = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+		List<RegularTransactionCategory> categories = RegularTransactionCategory.findAll();
 		List<RegularTransaction> regularTransactions = RegularTransaction.findByAccountIdYearMonth(accountId, year, month);
 		List<OneOffTransaction> oneOffTransactions = OneOffTransaction.findByAccountIdYearMonth(accountId, year, month);
 
-		render(accountId, years, year, months, month, regularTransactions, oneOffTransactions);
+		render(accountId, years, year, months, month, categories, regularTransactions, oneOffTransactions);
+	}
+
+	public static void createRegularTransaction(Long transactionId, @As("yyyy-MM-dd") DateTime date) {
+		if (transactionId == null || date == null) {
+			index();
+		}
+
+		OneOffTransaction oneOffTransaction = OneOffTransaction.findById(transactionId);
+		{
+			DateTime dateTime = oneOffTransaction.date;
+			
+			Account account = oneOffTransaction.account;
+			int year = dateTime.getYear();
+			int month = dateTime.getMonthOfYear();
+
+			RegularTransactionConfiguration configuration = new RegularTransactionConfiguration();
+			{
+				configuration.account = account;
+				configuration.label = oneOffTransaction.label;
+				configuration.amount = oneOffTransaction.amount;
+				configuration.periodicity = Periodicity.find("byLabel", "Mensuelle").first();
+				configuration.firstDueDate = date;
+				configuration.save();
+			}
+
+			RegularTransaction regularTransaction = new RegularTransaction();
+			{
+				regularTransaction.configuration = configuration;
+				regularTransaction.date = dateTime;
+				regularTransaction.done = true;
+				regularTransaction.save();
+			}
+
+			oneOffTransaction.delete();
+
+			showAccount(account.id, year, month);
+		}
 	}
 
 	public static void createRegularTransaction(Long accountId, Integer year, Integer month, String label, Double amount, @As("yyyy-MM-dd") DateTime date) {
@@ -53,7 +92,6 @@ public class Application extends Controller {
 		configuration.amount = amount;
 		configuration.periodicity = Periodicity.find("byLabel", "Mensuelle").first();
 		configuration.firstDueDate = date;
-		configuration.lastDueDate = date;
 		configuration.save();
 
 		RegularTransaction transaction = new RegularTransaction();
@@ -63,7 +101,6 @@ public class Application extends Controller {
 		transaction.save();
 
 		showAccount(accountId, year, month);
-
 	}
 
 	public static void deleteRegularTransaction(Long accountId, Integer year, Integer month, Long configurationId) {
@@ -75,26 +112,5 @@ public class Application extends Controller {
 		configuration.delete();
 
 		showAccount(accountId, year, month);
-	}
-
-	private static List<Integer> buildYearList() {
-		List<Integer> years = new LinkedList<>();
-
-		int currentYear = DateTime.now().getYear();
-		for (int year = currentYear - 3; year <= currentYear; year++) {
-			years.add(year);
-		}
-
-		return years;
-	}
-
-	private static List<Integer> buildMonthList() {
-		List<Integer> months = new LinkedList<>();
-
-		for (int month = 1; month <= 12; month++) {
-			months.add(month);
-		}
-
-		return months;
 	}
 }

@@ -30,7 +30,7 @@
 	</tfoot>
 	<tbody>
 		#{list as:'transaction', items:regularTransactions}
-			<tr>
+			<tr class="${(transaction.done == true) ? 'transaction-done-ok' : transaction-done-ko}">
 				<td>${transaction.configuration.label}</td>
 				<td>${transaction.configuration.amount.formatCurrency(messages.get('currency'))}</td>
 				<td>${transaction.date.toDate().format()}</td>
@@ -40,7 +40,7 @@
 	</tbody>
 </table>
 
-#{form @Application.createRegularTransaction(), id:'createRegularTransactionForm', method:'POST', style:'display: none;'}
+#{form @Application.createRegularTransaction(), id:'createRegularTransactionTableForm', method:'POST', style:'display: none;'}
 	<input name="accountId" type="hidden" value="${accountId}">
 	<input name="year" type="hidden" value="${year}">
 	<input name="month" type="hidden" value="${month}">
@@ -58,38 +58,95 @@
 			<td>Intitulé</td>
 			<td>Montant</td>
 			<td>Date</td>
+			<td>Actions</td>
 		</tr>
 	</thead>
 
 	<tbody>
 		#{list as:'transaction', items:oneOffTransactions}
-			<tr>
-				<td>${transaction.label}</td>
-				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
-				<td>${transaction.date.toDate().format()}</td>
+			<tr data-transaction-id="${transaction.id}">
+				<td class="transaction-label">${transaction.label}</td>
+				<td class="transaction-amount">${transaction.amount.formatCurrency(messages.get('currency'))}</td>
+				<td class="transaction-date">${transaction.date.toDate().format()}</td>
+				<td><a href="#" data-action="create">Ajouter</a></td>
 			</tr>
 		#{/list}
 	</tbody>
 </table>
+
+<div id="dialog-form" title="Create new user">
+	#{form @Application.createRegularTransaction(), id:'createRegularTransactionDialogForm', method:'POST'}
+		<input name="accountId" type="hidden" value="${accountId}">
+		<input name="transactionId" type="hidden">
+
+		<div>
+			<label for="label">Intitulé</label>
+			<input id="label" name="label" type="text" disabled="disabled">
+		</div>
+
+		<div>
+			<label for="amount">Montant</label>
+			<input id="amount" name="amount" type="text" disabled="disabled">
+		</div>
+
+		<div>
+			<label for="date">Date</label>
+			<input id="date" name="date" type="date">
+		</div>
+	#{/form}
+</div>
 
 <script type="text/javascript">
 	$(function() {
 		var regularTransactions = $('table#regular > tbody');
 		var oneOffTransactions = $('table#oneOff > tbody');
 
-		/* Regular transaction creation */
+		$('#dialog-form').dialog({
+			autoOpen : false,
+			height : 300,
+			width : 350,
+			modal : true,
+			buttons : {
+				'Valider' : function() {
+					$('#createRegularTransactionDialogForm').submit();
+				},
+				'Annuler' : function() {
+					$(this).dialog('close');
+				}
+			}
+		});
+
+		/* Regular transaction creation from regular transactions table */
 		$('#createRegularTransactionLink').click(function() {
 			$('#createRegularTransactionTr').hide();
-			$('#createRegularTransactionForm').show();
+			$('#createRegularTransactionTableForm').show();
 
 			return false;
 		});
 
-		$('#createRegularTransactionForm').submit(function() {
+		$('#createRegularTransactionTableForm').submit(function() {
 			return confirm('Êtes-vous sûr de vouloir ajouter cette transaction permanente ?');
 		});
 
-		/* Regular transaction deletion */
+		/* Regular transaction creation from one-off transactions table */
+		oneOffTransactions.find('a[data-action="create"]').click(function() {
+			var tr = $(this).closest('tr[data-transaction-id]');
+
+			$('#dialog-form').find('input[name="transactionId"]').val(tr.data('transaction-id'));
+
+			$('#dialog-form').find('input[name="label"]').val(tr.find('.transaction-label').text());
+			$('#dialog-form').find('input[name="amount"]').val(tr.find('.transaction-amount').text());
+			$('#dialog-form').find('input[name="date"]').val(tr.find('.transaction-date').text());
+			$('#dialog-form').dialog('open');
+
+			return false;
+		});
+
+		$('#createRegularTransactionTableForm').submit(function() {
+			return confirm('Êtes-vous sûr de vouloir ajouter cette transaction permanente ?');
+		});
+
+		/* Regular transaction deletion from regular transactions table */
 		regularTransactions.find('a[data-action="delete"]').click(function() {
 			return confirm('Êtes-vous sûr de vouloir supprimer cette transaction permanente ?');
 		});

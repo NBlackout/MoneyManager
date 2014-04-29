@@ -1,0 +1,8 @@
+/* Regular transactions */
+.transaction-done-ok {
+	background-color: rgba(237, 237, 237, 1);
+}
+
+.transaction-done-ko {
+	background-color: rgba(255, 133, 102, 0.2);
+}
