@@ -30,7 +30,7 @@
 	</tfoot>
 	<tbody>
 		#{list as:'transaction', items:regularTransactions}
-			<tr class="${(transaction.done == true) ? 'transaction-done-ok' : transaction-done-ko}">
+			<tr class="${(transaction.done == true) ? 'transaction-done-ok' : 'transaction-done-ko'}">
 				<td>${transaction.configuration.label}</td>
 				<td>${transaction.configuration.amount.formatCurrency(messages.get('currency'))}</td>
 				<td>${transaction.date.toDate().format()}</td>
@@ -47,7 +47,7 @@
 
 	<input name="label" type="text" placeholder="Intitulé">
 	<input name="amount" type="text" placeholder="Montant">
-	<input name="date" type="date">
+	<input name="date" type="text">
 
 	<input type="submit" value="Valider">
 #{/form}
@@ -74,24 +74,24 @@
 	</tbody>
 </table>
 
-<div id="dialog-form" title="Create new user">
+<div id="dialog-form">
 	#{form @Application.createRegularTransaction(), id:'createRegularTransactionDialogForm', method:'POST'}
 		<input name="accountId" type="hidden" value="${accountId}">
 		<input name="transactionId" type="hidden">
 
 		<div>
-			<label for="label">Intitulé</label>
-			<input id="label" name="label" type="text" disabled="disabled">
+			<label>Intitulé</label>
+			<input name="label" type="text" disabled="disabled">
 		</div>
 
 		<div>
-			<label for="amount">Montant</label>
-			<input id="amount" name="amount" type="text" disabled="disabled">
+			<label>Montant</label>
+			<input name="amount" type="text" disabled="disabled">
 		</div>
 
 		<div>
-			<label for="date">Date</label>
-			<input id="date" name="date" type="date">
+			<label>Date</label>
+			<input name="date" type="text">
 		</div>
 	#{/form}
 </div>
@@ -101,6 +101,14 @@
 		var regularTransactions = $('table#regular > tbody');
 		var oneOffTransactions = $('table#oneOff > tbody');
 
+		$('#createRegularTransactionTableForm').find('input[name="date"]').datepicker({
+			showOn : 'button',
+			buttonImage : '',
+			buttonImageOnly : true
+		});
+		$('#createRegularTransactionTableForm').find('input[name="date"]').datepicker('option', 'dateFormat', 'dd/mm/yy');
+
+		/* Dialog configuration */
 		$('#dialog-form').dialog({
 			autoOpen : false,
 			height : 300,
@@ -115,6 +123,12 @@
 				}
 			}
 		});
+		$('#dialog-form').find('input[name="date"]').datepicker({
+			showOn : 'button',
+			buttonImage : '',
+			buttonImageOnly : true
+		});
+		$('#dialog-form').find('input[name="date"]').datepicker('option', 'dateFormat', 'dd/mm/yy');
 
 		/* Regular transaction creation from regular transactions table */
 		$('#createRegularTransactionLink').click(function() {
@@ -137,12 +151,13 @@
 			$('#dialog-form').find('input[name="label"]').val(tr.find('.transaction-label').text());
 			$('#dialog-form').find('input[name="amount"]').val(tr.find('.transaction-amount').text());
 			$('#dialog-form').find('input[name="date"]').val(tr.find('.transaction-date').text());
+
 			$('#dialog-form').dialog('open');
 
 			return false;
 		});
 
-		$('#createRegularTransactionTableForm').submit(function() {
+		$('#createRegularTransactionDialogForm').submit(function() {
 			return confirm('Êtes-vous sûr de vouloir ajouter cette transaction permanente ?');
 		});
 

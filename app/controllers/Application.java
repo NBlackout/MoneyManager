@@ -12,7 +12,6 @@ import models.transactions.RegularTransactionConfiguration;
 
 import org.joda.time.DateTime;
 
-import play.data.binding.As;
 import play.mvc.Controller;
 
 public class Application extends Controller {
@@ -44,7 +43,37 @@ public class Application extends Controller {
 		render(accountId, years, year, months, month, categories, regularTransactions, oneOffTransactions);
 	}
 
-	public static void createRegularTransaction(Long transactionId, @As("yyyy-MM-dd") DateTime date) {
+	public static void createRegularTransaction(Long accountId, Integer year, Integer month, String label, Double amount, DateTime date) {
+		System.out.println(accountId);
+		System.out.println(year);
+		System.out.println(month);
+		System.out.println(label);
+		System.out.println(amount);
+		System.out.println(date);
+		if (accountId == null || year == null || month == null) {
+			index();
+		}
+
+		RegularTransactionConfiguration configuration = new RegularTransactionConfiguration();
+		configuration.account = Account.findById(accountId);
+		configuration.label = label;
+		configuration.amount = amount;
+		configuration.periodicity = Periodicity.find("byLabel", "Mensuelle").first();
+		configuration.firstDueDate = date;
+		configuration.save();
+
+		RegularTransaction transaction = new RegularTransaction();
+		transaction.configuration = configuration;
+		transaction.date = date;
+		transaction.done = false;
+		transaction.save();
+
+		showAccount(accountId, year, month);
+	}
+
+	public static void createRegularTransaction(Long transactionId, DateTime date) {
+		System.out.println(transactionId);
+		System.out.println(date);
 		if (transactionId == null || date == null) {
 			index();
 		}
@@ -52,7 +81,7 @@ public class Application extends Controller {
 		OneOffTransaction oneOffTransaction = OneOffTransaction.findById(transactionId);
 		{
 			DateTime dateTime = oneOffTransaction.date;
-			
+
 			Account account = oneOffTransaction.account;
 			int year = dateTime.getYear();
 			int month = dateTime.getMonthOfYear();
@@ -79,28 +108,6 @@ public class Application extends Controller {
 
 			showAccount(account.id, year, month);
 		}
-	}
-
-	public static void createRegularTransaction(Long accountId, Integer year, Integer month, String label, Double amount, @As("yyyy-MM-dd") DateTime date) {
-		if (accountId == null || year == null || month == null) {
-			index();
-		}
-
-		RegularTransactionConfiguration configuration = new RegularTransactionConfiguration();
-		configuration.account = Account.findById(accountId);
-		configuration.label = label;
-		configuration.amount = amount;
-		configuration.periodicity = Periodicity.find("byLabel", "Mensuelle").first();
-		configuration.firstDueDate = date;
-		configuration.save();
-
-		RegularTransaction transaction = new RegularTransaction();
-		transaction.configuration = configuration;
-		transaction.date = date;
-		transaction.done = false;
-		transaction.save();
-
-		showAccount(accountId, year, month);
 	}
 
 	public static void deleteRegularTransaction(Long accountId, Integer year, Integer month, Long configurationId) {
