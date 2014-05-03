@@ -2,9 +2,9 @@ package jobs.bootstrap;
 
 import models.Account;
 import models.Bank;
-import models.transactions.OneOffTransaction;
-import models.transactions.Periodicity;
-import models.transactions.RegularTransactionCategory;
+import models.transactions.oneoff.OneOffTransaction;
+import models.transactions.regular.RegularTransactionCategory;
+import models.transactions.regular.RegularTransactionPeriodicity;
 
 import org.joda.time.DateTime;
 
@@ -17,17 +17,17 @@ public class Bootstrap extends Job {
 
 	@Override
 	public void doJob() {
-		Logger.info("BEGIN doJob()");
+		Logger.info("BEGIN Bootstrap.doJob()");
 		initBanks();
 		initAccounts();
 		initPeriodicities();
 		initCategories();
 		initOneOffTransactions();
-		Logger.info("  END doJob()");
+		Logger.info("  END Bootstrap.doJob()");
 	}
 
 	private void initBanks() {
-		Logger.info("BEGIN initBanks()");
+		Logger.info("BEGIN Bootstrap.initBanks()");
 		if (Bank.count() == 0) {
 			for (int b = 0; b < BoostrapConfiguration.BANK_COUNT; b++) {
 				Bank bank = new Bank();
@@ -35,11 +35,11 @@ public class Bootstrap extends Job {
 				bank.save();
 			}
 		}
-		Logger.info("  END initBanks()");
+		Logger.info("  END Bootstrap.initBanks()");
 	}
 
 	private void initAccounts() {
-		Logger.info("BEGIN initAccounts()");
+		Logger.info("BEGIN Bootstrap.initAccounts()");
 		if (Account.count() == 0) {
 			for (int a = 0; a < BoostrapConfiguration.ACCOUNT_COUNT; a++) {
 				int index = (int) (Math.random() * BoostrapConfiguration.BANK_COUNT);
@@ -52,35 +52,35 @@ public class Bootstrap extends Job {
 				account.save();
 			}
 		}
-		Logger.info("  END initAccounts()");
+		Logger.info("  END Bootstrap.initAccounts()");
 	}
 
 	private void initPeriodicities() {
-		Logger.info("BEGIN initPeriodicities()");
-		if (Periodicity.count() == 0) {
+		Logger.info("BEGIN Bootstrap.initPeriodicities()");
+		if (RegularTransactionPeriodicity.count() == 0) {
 			for (String label : BoostrapConfiguration.PERIODICITY_LABELS) {
-				Periodicity periodicity = new Periodicity();
-				periodicity.label = label;
-				periodicity.save();
+				RegularTransactionPeriodicity regularTransactionPeriodicity = new RegularTransactionPeriodicity();
+				regularTransactionPeriodicity.label = label;
+				regularTransactionPeriodicity.save();
 			}
 		}
-		Logger.info("  END initPeriodicities()");
+		Logger.info("  END Bootstrap.initPeriodicities()");
 	}
 
 	private void initCategories() {
-		Logger.info("BEGIN initCategories()");
-		if (Periodicity.count() == 0) {
+		Logger.info("BEGIN Bootstrap.initCategories()");
+		if (RegularTransactionCategory.count() == 0) {
 			for (String label : BoostrapConfiguration.CATEGORY_LABELS) {
-				RegularTransactionCategory category = new RegularTransactionCategory();
-				category.label = label;
-				category.save();
+				RegularTransactionCategory regularTransactionCategory = new RegularTransactionCategory();
+				regularTransactionCategory.label = label;
+				regularTransactionCategory.save();
 			}
 		}
-		Logger.info("  END initCategories()");
+		Logger.info("  END Bootstrap.initCategories()");
 	}
 
 	private void initOneOffTransactions() {
-		Logger.info("BEGIN initOneOffTransactions()");
+		Logger.info("BEGIN Bootstrap.initOneOffTransactions()");
 		if (OneOffTransaction.count() == 0) {
 			DateTime now = DateTime.now();
 			int currentYear = now.getYear();
@@ -92,7 +92,7 @@ public class Bootstrap extends Job {
 						int maxDays = new DateTime(y, m, 1, 0, 0).dayOfMonth().getMaximumValue();
 
 						for (int d = 1; d <= maxDays; d++) {
-							int maxDayTransactions = (int) ((Math.random() * BoostrapConfiguration.MAX_PER_DAY) + BoostrapConfiguration.MAX_PER_DAY);
+							int maxDayTransactions = (int) (Math.random() * BoostrapConfiguration.MAX_PER_DAY);
 
 							for (int t = 0; t < maxDayTransactions; t++) {
 								double amount = Math.random() * (BoostrapConfiguration.MAX_AMOUNT - BoostrapConfiguration.MIN_AMOUNT) + BoostrapConfiguration.MIN_AMOUNT;
@@ -113,6 +113,6 @@ public class Bootstrap extends Job {
 				}
 			}
 		}
-		Logger.info("  END initOneOffTransactions()");
+		Logger.info("  END Bootstrap.initOneOffTransactions()");
 	}
 }

@@ -13,7 +13,36 @@
 	<input type="submit" value="Valider">
 #{/form}
 
-<table id="regular">
+<div id="dialog-form">
+	#{form @Application.createRegularTransaction(), id:'createRegularTransactionForm', method:'POST'}
+		<input name="accountId" type="hidden" value="${accountId}">
+		<input id="transactionId" name="transactionId" type="hidden">
+
+		<div>
+			<label>Catégorie</label>
+			#{select 'categoryId', items:categories, valueProperty:'id', labelProperty:'label', id:'transactionCategory'}
+				#{option}#{/option}
+			#{/select}
+		</div>
+
+		<div>
+			<label>Intitulé</label>
+			<input id="transactionLabel" name="label" type="text" placeholder="Intitulé">
+		</div>
+
+		<div>
+			<label>Montant</label>
+			<input id="transactionAmount" name="amount" type="text" placeholder="Montant">
+		</div>
+
+		<div>
+			<label>Date</label>
+			<input id="transactionDate" name="date" type="text">
+		</div>
+	#{/form}
+</div>
+
+<table id="regularTransactions">
 	<thead>
 		<tr>
 			<td>Intitulé</td>
@@ -22,37 +51,34 @@
 			<td>Actions</td>
 		</tr>
 	</thead>
+
 	<tfoot>
 		<tr id="createRegularTransactionTr">
 			<td colspan="3"></td>
-			<td><a id="createRegularTransactionLink" href="#">Ajouter</a></td>
+			<td><a id="createRegularTransactionLink" href="#">+</a></td>
 		</tr>
 	</tfoot>
+
 	<tbody>
-		#{list as:'transaction', items:regularTransactions}
-			<tr class="${(transaction.done == true) ? 'transaction-done-ok' : 'transaction-done-ko'}">
-				<td>${transaction.configuration.label}</td>
-				<td>${transaction.configuration.amount.formatCurrency(messages.get('currency'))}</td>
-				<td>${transaction.date.toDate().format()}</td>
-				<td><a href="@{Application.deleteRegularTransaction(accountId, year, month, transaction.configuration.id)}" data-action="delete">Supprimer</a></td>
+		#{list as:'category', items:regularTransactions.keySet()}
+			<tr>
+				<td><a href="#" data-action="expand" data-category="${category}">${category}</a></td>
+				<td colspan="3"></td>
 			</tr>
+
+			#{list as:'transaction', items:regularTransactions.get(category)}
+				<tr class="${(transaction.done == true) ? 'transaction-done-ok' : 'transaction-done-ko'}" data-category="${category}">
+					<td>${transaction.configuration.label}</td>
+					<td>${transaction.configuration.amount.formatCurrency(messages.get('currency'))}</td>
+					<td>${transaction.date.toDate().format()}</td>
+					<td><a href="@{Application.deactivateRegularTransaction(transaction.configuration.id)}" data-action="delete">X</a></td>
+				</tr>
+			#{/list}
 		#{/list}
 	</tbody>
 </table>
 
-#{form @Application.createRegularTransaction(), id:'createRegularTransactionTableForm', method:'POST', style:'display: none;'}
-	<input name="accountId" type="hidden" value="${accountId}">
-	<input name="year" type="hidden" value="${year}">
-	<input name="month" type="hidden" value="${month}">
-
-	<input name="label" type="text" placeholder="Intitulé">
-	<input name="amount" type="text" placeholder="Montant">
-	<input name="date" type="text">
-
-	<input type="submit" value="Valider">
-#{/form}
-
-<table id="oneOff">
+<table id="oneOffTransactions">
 	<thead>
 		<tr>
 			<td>Intitulé</td>
@@ -66,104 +92,85 @@
 		#{list as:'transaction', items:oneOffTransactions}
 			<tr data-transaction-id="${transaction.id}">
 				<td class="transaction-label">${transaction.label}</td>
-				<td class="transaction-amount">${transaction.amount.formatCurrency(messages.get('currency'))}</td>
+				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
+				<td class="transaction-amount" style="display: none;">${transaction.amount}</td>
 				<td class="transaction-date">${transaction.date.toDate().format()}</td>
-				<td><a href="#" data-action="create">Ajouter</a></td>
+				<td><a href="#" data-action="create">+</a></td>
 			</tr>
 		#{/list}
 	</tbody>
 </table>
 
-<div id="dialog-form">
-	#{form @Application.createRegularTransaction(), id:'createRegularTransactionDialogForm', method:'POST'}
-		<input name="accountId" type="hidden" value="${accountId}">
-		<input name="transactionId" type="hidden">
-
-		<div>
-			<label>Intitulé</label>
-			<input name="label" type="text" disabled="disabled">
-		</div>
-
-		<div>
-			<label>Montant</label>
-			<input name="amount" type="text" disabled="disabled">
-		</div>
-
-		<div>
-			<label>Date</label>
-			<input name="date" type="text">
-		</div>
-	#{/form}
-</div>
-
 <script type="text/javascript">
 	$(function() {
-		var regularTransactions = $('table#regular > tbody');
-		var oneOffTransactions = $('table#oneOff > tbody');
-
-		$('#createRegularTransactionTableForm').find('input[name="date"]').datepicker({
-			showOn : 'button',
-			buttonImage : '',
-			buttonImageOnly : true
-		});
-		$('#createRegularTransactionTableForm').find('input[name="date"]').datepicker('option', 'dateFormat', 'dd/mm/yy');
+		var regularTransactions = $('#regularTransactions > tbody');
+		var oneOffTransactions = $('#oneOffTransactions > tbody');
+		var form = $('#createRegularTransactionForm');
 
 		/* Dialog configuration */
 		$('#dialog-form').dialog({
-			autoOpen : false,
-			height : 300,
-			width : 350,
-			modal : true,
-			buttons : {
-				'Valider' : function() {
-					$('#createRegularTransactionDialogForm').submit();
+			autoOpen: false,
+			buttons: {
+				'Valider': function() {
+					form.submit();
 				},
-				'Annuler' : function() {
+				'Annuler': function() {
 					$(this).dialog('close');
 				}
-			}
-		});
-		$('#dialog-form').find('input[name="date"]').datepicker({
-			showOn : 'button',
-			buttonImage : '',
-			buttonImageOnly : true
-		});
-		$('#dialog-form').find('input[name="date"]').datepicker('option', 'dateFormat', 'dd/mm/yy');
-
-		/* Regular transaction creation from regular transactions table */
-		$('#createRegularTransactionLink').click(function() {
-			$('#createRegularTransactionTr').hide();
-			$('#createRegularTransactionTableForm').show();
-
-			return false;
+			},
+			height: 300,
+			modal: true,
+			width: 350,
 		});
 
-		$('#createRegularTransactionTableForm').submit(function() {
+		/* Datepicker input */
+		$('#transactionDate').datepicker({
+			buttonImage: '',
+			buttonImageOnly: true,
+			dateFormat: 'dd/mm/yy',
+			showOn: 'button'
+		});
+
+		/* Form submission */
+		form.submit(function() {
 			return confirm('Êtes-vous sûr de vouloir ajouter cette transaction permanente ?');
 		});
 
-		/* Regular transaction creation from one-off transactions table */
-		oneOffTransactions.find('a[data-action="create"]').click(function() {
-			var tr = $(this).closest('tr[data-transaction-id]');
-
-			$('#dialog-form').find('input[name="transactionId"]').val(tr.data('transaction-id'));
-
-			$('#dialog-form').find('input[name="label"]').val(tr.find('.transaction-label').text());
-			$('#dialog-form').find('input[name="amount"]').val(tr.find('.transaction-amount').text());
-			$('#dialog-form').find('input[name="date"]').val(tr.find('.transaction-date').text());
+		/* Regular transaction creation from regular transactions table */
+		$('#createRegularTransactionLink').click(function() {
+			$('#transactionId').val('').prop('disabled', true);
+			$('#transactionCategory').val('');
+			$('#transactionLabel').val('').prop('disabled', false);
+			$('#transactionAmount').val('').prop('disabled', false);
+			$('#transactionDate').val('');
 
 			$('#dialog-form').dialog('open');
 
 			return false;
 		});
 
-		$('#createRegularTransactionDialogForm').submit(function() {
-			return confirm('Êtes-vous sûr de vouloir ajouter cette transaction permanente ?');
-		});
-
 		/* Regular transaction deletion from regular transactions table */
 		regularTransactions.find('a[data-action="delete"]').click(function() {
 			return confirm('Êtes-vous sûr de vouloir supprimer cette transaction permanente ?');
+		});
+
+		/* Regular transaction creation from one-off transactions table */
+		oneOffTransactions.find('a[data-action="create"]').click(function() {
+			var tr = $(this).closest('tr[data-transaction-id]');
+			var transactionId = tr.data('transaction-id');
+			var label = tr.find('.transaction-label').text();
+			var amount = tr.find('.transaction-amount').text();
+			var date = tr.find('.transaction-date').text();
+
+			$('#transactionId').val(transactionId).prop('disabled', false);
+			$('#transactionCategory').val('');
+			$('#transactionLabel').val(label).prop('disabled', true);
+			$('#transactionAmount').val(amount).prop('disabled', true);
+			$('#transactionDate').val(date);
+
+			$('#dialog-form').dialog('open');
+
+			return false;
 		});
 	});
 </script>

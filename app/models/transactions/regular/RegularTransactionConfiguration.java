@@ -1,11 +1,12 @@
-package models.transactions;
+package models.transactions.regular;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import models.transactions.Transaction;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -19,11 +20,16 @@ public class RegularTransactionConfiguration extends Transaction {
 	public RegularTransactionCategory category;
 
 	@ManyToOne
-	public Periodicity periodicity;
+	public RegularTransactionPeriodicity periodicity;
 
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime firstDueDate;
 
-	@OneToMany(mappedBy = "configuration", cascade = CascadeType.ALL)
+	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+	public DateTime lastDueDate;
+
+	public boolean active;
+
+	@OneToMany(mappedBy = "configuration")
 	public List<RegularTransaction> transactions;
 }

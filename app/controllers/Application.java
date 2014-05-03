@@ -1,14 +1,17 @@
 package controllers;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import jobs.transactions.RegularTransactionScheduler;
 import models.Account;
-import models.transactions.OneOffTransaction;
-import models.transactions.Periodicity;
-import models.transactions.RegularTransaction;
-import models.transactions.RegularTransactionCategory;
-import models.transactions.RegularTransactionConfiguration;
+import models.transactions.oneoff.OneOffTransaction;
+import models.transactions.regular.RegularTransaction;
+import models.transactions.regular.RegularTransactionCategory;
+import models.transactions.regular.RegularTransactionConfiguration;
+import models.transactions.regular.RegularTransactionPeriodicity;
 
 import org.joda.time.DateTime;
 
@@ -36,88 +39,59 @@ public class Application extends Controller {
 
 		List<Integer> years = Arrays.asList(year - 3, year - 2, year - 1, year);
 		List<Integer> months = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+
 		List<RegularTransactionCategory> categories = RegularTransactionCategory.findAll();
-		List<RegularTransaction> regularTransactions = RegularTransaction.findByAccountIdYearMonth(accountId, year, month);
+
+		Map<String, List<RegularTransaction>> regularTransactions = new HashMap<>();
+		for (RegularTransactionCategory category : categories) {
+			regularTransactions.put(category.label, RegularTransaction.findByAccountIdCategoryIdYearMonth(accountId, category.id, year, month));
+		}
+
 		List<OneOffTransaction> oneOffTransactions = OneOffTransaction.findByAccountIdYearMonth(accountId, year, month);
 
 		render(accountId, years, year, months, month, categories, regularTransactions, oneOffTransactions);
 	}
 
-	public static void createRegularTransaction(Long accountId, Integer year, Integer month, String label, Double amount, DateTime date) {
-		System.out.println(accountId);
-		System.out.println(year);
-		System.out.println(month);
-		System.out.println(label);
-		System.out.println(amount);
-		System.out.println(date);
-		if (accountId == null || year == null || month == null) {
+	public static void createRegularTransaction(Long accountId, Long transactionId, Long categoryId, String label, Double amount, DateTime date) {
+		if (accountId == null || categoryId == null || date == null) {
 			index();
 		}
 
-		RegularTransactionConfiguration configuration = new RegularTransactionConfiguration();
-		configuration.account = Account.findById(accountId);
-		configuration.label = label;
-		configuration.amount = amount;
-		configuration.periodicity = Periodicity.find("byLabel", "Mensuelle").first();
-		configuration.firstDueDate = date;
-		configuration.save();
-
-		RegularTransaction transaction = new RegularTransaction();
-		transaction.configuration = configuration;
-		transaction.date = date;
-		transaction.done = false;
-		transaction.save();
-
-		showAccount(accountId, year, month);
-	}
-
-	public static void createRegularTransaction(Long transactionId, DateTime date) {
-		System.out.println(transactionId);
-		System.out.println(date);
-		if (transactionId == null || date == null) {
-			index();
-		}
-
-		OneOffTransaction oneOffTransaction = OneOffTransaction.findById(transactionId);
-		{
-			DateTime dateTime = oneOffTransaction.date;
-
-			Account account = oneOffTransaction.account;
-			int year = dateTime.getYear();
-			int month = dateTime.getMonthOfYear();
-
-			RegularTransactionConfiguration configuration = new RegularTransactionConfiguration();
-			{
-				configuration.account = account;
-				configuration.label = oneOffTransaction.label;
-				configuration.amount = oneOffTransaction.amount;
-				configuration.periodicity = Periodicity.find("byLabel", "Mensuelle").first();
-				configuration.firstDueDate = date;
-				configuration.save();
-			}
-
-			RegularTransaction regularTransaction = new RegularTransaction();
-			{
-				regularTransaction.configuration = configuration;
-				regularTransaction.date = dateTime;
-				regularTransaction.done = true;
-				regularTransaction.save();
-			}
-
+		if (transactionId == null) {
+			createConfiguration(accountId, label, amount, categoryId, date);
+		} else {
+			OneOffTransaction oneOffTransaction = OneOffTransaction.findById(transactionId);
+			createConfiguration(accountId, oneOffTransaction.label, oneOffTransaction.amount, categoryId, date);
 			oneOffTransaction.delete();
-
-			showAccount(account.id, year, month);
 		}
+
+		showAccount(accountId, null, null);
 	}
 
-	public static void deleteRegularTransaction(Long accountId, Integer year, Integer month, Long configurationId) {
+	public static void deactivateRegularTransaction(Long configurationId) {
 		if (configurationId == null) {
 			index();
 		}
 
 		RegularTransactionConfiguration configuration = RegularTransactionConfiguration.findById(configurationId);
-		configuration.delete();
+		configuration.active = false;
+		configuration.save();
 
-		showAccount(accountId, year, month);
+		showAccount(configuration.account.id, null, null);
+	}
+
+	private static void createConfiguration(Long accountId, String label, Double amount, Long categoryId, DateTime date) {
+		RegularTransactionConfiguration configuration = new RegularTransactionConfiguration();
+		configuration.account = Account.findById(accountId);
+		configuration.label = label;
+		configuration.amount = amount;
+		configuration.category = RegularTransactionCategory.findById(categoryId);
+		configuration.periodicity = RegularTransactionPeriodicity.find("byLabel", "Mensuelle").first();
+		configuration.firstDueDate = date;
+		configuration.lastDueDate = date;
+		configuration.active = true;
+		configuration.save();
+
+		new RegularTransactionScheduler().now();
 	}
 }
