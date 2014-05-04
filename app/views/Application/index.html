@@ -1,23 +1,2 @@
 #{extends 'main.html' /}
-#{set title:'Home' /}
-
-<table>
-	<thead>
-		<tr>
-			<td>Banque</td>
-			<td>Intitulé</td>
-			<td>Solde</td>
-			<td>Synchronisation</td>
-		</tr>
-	</thead>
-	<tbody>
-		#{list as:'account', items:accounts}
-			<tr>
-				<td>${account.bank?.label}</td>
-				<td>#{a @Application.showAccount(account.id)}${account.label}#{/a}</td>
-				<td>${account.balance.formatCurrency(messages.get('currency'))}</td>
-				<td>${account.lastSync.toDate().format()}</td>
-			</tr>
-		#{/list}
-	</tbody>
-</table>
+#{set title:'Accueil' /}

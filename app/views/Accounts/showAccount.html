@@ -1,7 +1,7 @@
 #{extends 'main.html' /}
-#{set title:'Account' /}
+#{set title:'Compte' /}
 
-#{form @Application.showAccount(), method:'GET'}
+#{form @Accounts.showAccount(), method:'GET', class:'form-inline'}
 	<input name="accountId" type="hidden" value="${accountId}">
 
 	#{select 'month', items:months, value:month}
@@ -10,11 +10,11 @@
 	#{select 'year', items:years, value:year}
 	#{/select}
 
-	<input type="submit" value="Valider">
+	<button class="btn btn-primary" type="submit">Valider</button>
 #{/form}
 
 <div id="dialog-form">
-	#{form @Application.createRegularTransaction(), id:'createRegularTransactionForm', method:'POST'}
+	#{form @Accounts.createRegularTransaction(), id:'createRegularTransactionForm', method:'POST'}
 		<input name="accountId" type="hidden" value="${accountId}">
 		<input id="transactionId" name="transactionId" type="hidden">
 
@@ -42,13 +42,13 @@
 	#{/form}
 </div>
 
-<table id="regularTransactions">
+<table id="regularTransactions" class="table table-hover">
 	<thead>
 		<tr>
-			<td>Intitulé</td>
-			<td>Montant</td>
-			<td>Date</td>
-			<td>Actions</td>
+			<th>Intitulé</th>
+			<th>Montant</th>
+			<th>Date</th>
+			<th>Actions</th>
 		</tr>
 	</thead>
 
@@ -62,29 +62,29 @@
 	<tbody>
 		#{list as:'category', items:regularTransactions.keySet()}
 			<tr>
-				<td><a href="#" data-action="expand" data-category="${category}">${category}</a></td>
+				<td><a href="#" data-action="expand" data-category-id="${category.id}"><i class="icon-chevron-down"></i>&nbsp;${category.label}</a></td>
 				<td colspan="3"></td>
 			</tr>
 
 			#{list as:'transaction', items:regularTransactions.get(category)}
-				<tr class="${(transaction.done == true) ? 'transaction-done-ok' : 'transaction-done-ko'}" data-category="${category}">
+				<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-category-id="${category.id}" style="display: none;">
 					<td>${transaction.configuration.label}</td>
 					<td>${transaction.configuration.amount.formatCurrency(messages.get('currency'))}</td>
 					<td>${transaction.date.toDate().format()}</td>
-					<td><a href="@{Application.deactivateRegularTransaction(transaction.configuration.id)}" data-action="delete">X</a></td>
+					<td><a href="@{Accounts.deactivateRegularTransaction(transaction.configuration.id)}" data-action="delete">X</a></td>
 				</tr>
 			#{/list}
 		#{/list}
 	</tbody>
 </table>
 
-<table id="oneOffTransactions">
+<table id="oneOffTransactions" class="table table-hover">
 	<thead>
 		<tr>
-			<td>Intitulé</td>
-			<td>Montant</td>
-			<td>Date</td>
-			<td>Actions</td>
+			<th>Intitulé</th>
+			<th>Montant</th>
+			<th>Date</th>
+			<th>Actions</th>
 		</tr>
 	</thead>
 
@@ -134,6 +134,14 @@
 		/* Form submission */
 		form.submit(function() {
 			return confirm('Êtes-vous sûr de vouloir ajouter cette transaction permanente ?');
+		});
+
+		/* Regular transaction expansion from regular transactions table */
+		regularTransactions.find('a[data-action="expand"]').click(function() {
+			var categoryId = $(this).data('category-id');
+			regularTransactions.find('tr[data-category-id="' + categoryId + '"]').toggle();
+			
+			return false;
 		});
 
 		/* Regular transaction creation from regular transactions table */

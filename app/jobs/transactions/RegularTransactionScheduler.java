@@ -39,21 +39,25 @@ public class RegularTransactionScheduler extends Job {
 			DateTime date = configuration.lastDueDate;
 
 			if (configuration.active == true && date.getYear() == now.getYear() && date.getMonthOfYear() == now.getMonthOfYear()) {
-				createRegularTransaction(configuration);
+				generateRegularTransaction(configuration);
 			}
 		}
 		Logger.info("  END RegularTransactionScheduler.generateRegularTransactions()");
 	}
 
-	private void createRegularTransaction(RegularTransactionConfiguration configuration) {
+	private void generateRegularTransaction(RegularTransactionConfiguration configuration) {
 		Logger.info("BEGIN RegularTransactionScheduler.createRegularTransaction(" + configuration.label + ")");
 		DateTime date = configuration.lastDueDate;
-		switch (configuration.periodicity.label) {
-			case "Mensuelle":
-				date = date.plusMonths(1);
-				break;
-			default:
-				break;
+		if (date == null) {
+			date = configuration.firstDueDate;
+		} else {
+			switch (configuration.periodicity.label) {
+				case "Mensuelle":
+					date = date.plusMonths(1);
+					break;
+				default:
+					break;
+			}
 		}
 
 		RegularTransaction transaction = new RegularTransaction();

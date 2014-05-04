@@ -1,0 +1,24 @@
+#{extends 'main.html' /}
+#{set title:'Comptes' /}
+
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>Banque</th>
+			<th>Intitulé</th>
+			<th>Solde</th>
+			<th>Synchronisation</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		#{list as:'account', items:accounts}
+			<tr>
+				<td>${account.bank?.label}</td>
+				<td><a href="@{Accounts.showAccount(account.id)}">${account.label}</a></td>
+				<td>${account.balance.formatCurrency(messages.get('currency'))}</td>
+				<td>${account.lastSync.toDate().format()}</td>
+			</tr>
+		#{/list}
+	</tbody>
+</table>
