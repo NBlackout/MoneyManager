@@ -12,7 +12,7 @@ import play.jobs.Every;
 import play.jobs.Job;
 import play.libs.F.Promise;
 
-@Every("1mn")
+@Every("5mn")
 public class RegularTransactionScheduler extends Job {
 
 	@Override

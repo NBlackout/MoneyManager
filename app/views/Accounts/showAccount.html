@@ -1,9 +1,7 @@
 #{extends 'main.html' /}
 #{set title:'Compte' /}
 
-#{form @Accounts.showAccount(), method:'GET', class:'form-inline'}
-	<input name="accountId" type="hidden" value="${accountId}">
-
+#{form @Accounts.showAccount(accountId), method:'GET', class:'form-inline'}
 	#{select 'month', items:months, value:month}
 	#{/select}
 
