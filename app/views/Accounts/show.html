@@ -1,7 +1,7 @@
 #{extends 'main.html' /}
 #{set title:'Compte' /}
 
-#{form @Accounts.showAccount(accountId), method:'GET', class:'form-inline'}
+#{form @Accounts.show(accountId), method:'GET', class:'form-inline'}
 	#{select 'month', items:months, value:month}
 	#{/select}
 
@@ -12,7 +12,7 @@
 #{/form}
 
 <div id="dialog-form">
-	#{form @Accounts.createRegularTransaction(), id:'createRegularTransactionForm', method:'POST'}
+	#{form @Transactions.create(), id:'createRegularTransactionForm', method:'POST'}
 		<input name="accountId" type="hidden" value="${accountId}">
 		<input id="transactionId" name="transactionId" type="hidden">
 
@@ -69,7 +69,7 @@
 					<td>${transaction.configuration.label}</td>
 					<td>${transaction.configuration.amount.formatCurrency(messages.get('currency'))}</td>
 					<td>${transaction.date.toDate().format()}</td>
-					<td><a href="@{Accounts.deactivateRegularTransaction(transaction.configuration.id)}" data-action="delete">X</a></td>
+					<td><a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="delete"><i class="icon-off"></i></a></td>
 				</tr>
 			#{/list}
 		#{/list}
@@ -93,7 +93,7 @@
 				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
 				<td class="transaction-amount" style="display: none;">${transaction.amount}</td>
 				<td class="transaction-date">${transaction.date.toDate().format()}</td>
-				<td><a href="#" data-action="create">+</a></td>
+				<td><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>
 			</tr>
 		#{/list}
 	</tbody>

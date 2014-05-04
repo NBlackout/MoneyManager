@@ -15,7 +15,7 @@
 		#{list as:'account', items:accounts}
 			<tr>
 				<td>${account.bank?.label}</td>
-				<td><a href="@{Accounts.showAccount(account.id)}">${account.label}</a></td>
+				<td><a href="@{Accounts.show(account.id)}">${account.label}</a></td>
 				<td>${account.balance.formatCurrency(messages.get('currency'))}</td>
 				<td>${account.lastSync.toDate().format()}</td>
 			</tr>
