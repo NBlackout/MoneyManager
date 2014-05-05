@@ -35,10 +35,7 @@ public class RegularTransactionScheduler extends Job {
 		Logger.info("BEGIN RegularTransactionScheduler.generateRegularTransactions()");
 		List<RegularTransactionConfiguration> configurations = RegularTransactionConfiguration.findAll();
 		for (RegularTransactionConfiguration configuration : configurations) {
-			DateTime now = DateTime.now();
-			DateTime date = configuration.lastDueDate;
-
-			if (configuration.active == true && date.getYear() == now.getYear() && date.getMonthOfYear() == now.getMonthOfYear()) {
+			if (configuration.active == true){
 				generateRegularTransaction(configuration);
 			}
 		}
@@ -63,7 +60,7 @@ public class RegularTransactionScheduler extends Job {
 		RegularTransaction transaction = new RegularTransaction();
 		transaction.configuration = configuration;
 		transaction.date = date;
-		transaction.done = false;
+		transaction.done = date.isBefore(DateTime.now());
 		transaction.save();
 
 		configuration.lastDueDate = transaction.date;

@@ -53,7 +53,7 @@
 	<tfoot>
 		<tr id="createRegularTransactionTr">
 			<td colspan="3"></td>
-			<td><a id="createRegularTransactionLink" href="#">+</a></td>
+			<td><a id="createRegularTransactionLink" href="#"><i class="icon-plus"></i></a></td>
 		</tr>
 	</tfoot>
 
@@ -68,6 +68,7 @@
 				<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-category-id="${category.id}" style="display: none;">
 					<td>${transaction.configuration.label}</td>
 					<td>${transaction.configuration.amount.formatCurrency(messages.get('currency'))}</td>
+					<td class="transaction-amount" style="display: none;">${transaction.configuration.amount}</td>
 					<td>${transaction.date.toDate().format()}</td>
 					<td><a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="delete"><i class="icon-off"></i></a></td>
 				</tr>
@@ -133,6 +134,9 @@
 		form.submit(function() {
 			return confirm('Êtes-vous sûr de vouloir ajouter cette transaction permanente ?');
 		});
+
+		/* */
+		
 
 		/* Regular transaction expansion from regular transactions table */
 		regularTransactions.find('a[data-action="expand"]').click(function() {

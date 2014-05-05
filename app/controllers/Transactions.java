@@ -41,7 +41,6 @@ public class Transactions extends Controller {
 		configuration.category = RegularTransactionCategory.findById(categoryId);
 		configuration.periodicity = RegularTransactionPeriodicity.find("byLabel", "Mensuelle").first();
 		configuration.firstDueDate = date;
-		configuration.lastDueDate = date;
 		configuration.active = true;
 		configuration.save();
 
