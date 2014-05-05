@@ -65,7 +65,7 @@
 			</tr>
 
 			#{list as:'transaction', items:regularTransactions.get(category)}
-				<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-category-id="${category.id}" style="display: none;">
+				<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-category-id="${category.id}">
 					<td>${transaction.configuration.label}</td>
 					<td>${transaction.configuration.amount.formatCurrency(messages.get('currency'))}</td>
 					<td class="transaction-amount" style="display: none;">${transaction.configuration.amount}</td>
@@ -117,9 +117,9 @@
 					$(this).dialog('close');
 				}
 			},
-			height: 300,
+			height: 375,
 			modal: true,
-			width: 350,
+			width: 450,
 		});
 
 		/* Datepicker input */
@@ -127,6 +127,7 @@
 			buttonImage: '',
 			buttonImageOnly: true,
 			dateFormat: 'dd/mm/yy',
+			minDate: '01/${currentMonth}/${currentYear}',
 			showOn: 'button'
 		});
 

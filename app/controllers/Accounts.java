@@ -27,25 +27,30 @@ public class Accounts extends Controller {
 			index();
 		}
 
-		if (year == null || month == null) {
-			DateTime now = DateTime.now();
+		DateTime now = DateTime.now();
 
-			year = now.getYear();
-			month = now.getMonthOfYear();
-		}
+		// Year
+		int currentYear = now.getYear();
+		year = (year == null) ? currentYear : year;
+		List<Integer> years = Arrays.asList(currentYear - 3, currentYear - 2, currentYear - 1, currentYear);
 
-		List<Integer> years = Arrays.asList(year - 3, year - 2, year - 1, year);
+		// Month
+		int currentMonth = now.getMonthOfYear();
+		month = (month == null) ? currentMonth : month;
 		List<Integer> months = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
 
+		// Categories
 		List<RegularTransactionCategory> categories = RegularTransactionCategory.findAll();
 
+		// Regular transactions
 		Map<RegularTransactionCategory, List<RegularTransaction>> regularTransactions = new HashMap<>();
 		for (RegularTransactionCategory category : categories) {
 			regularTransactions.put(category, RegularTransaction.findByAccountIdCategoryIdYearMonth(accountId, category.id, year, month));
 		}
 
+		// One-off transactions
 		List<OneOffTransaction> oneOffTransactions = OneOffTransaction.findByAccountIdYearMonth(accountId, year, month);
 
-		render(accountId, years, year, months, month, categories, regularTransactions, oneOffTransactions);
+		render(accountId, currentYear, year, years, currentMonth, month, months, categories, regularTransactions, oneOffTransactions);
 	}
 }
