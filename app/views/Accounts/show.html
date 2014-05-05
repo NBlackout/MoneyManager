@@ -136,9 +136,6 @@
 			return confirm('Êtes-vous sûr de vouloir ajouter cette transaction permanente ?');
 		});
 
-		/* */
-		
-
 		/* Regular transaction expansion from regular transactions table */
 		regularTransactions.find('a[data-action="expand"]').click(function() {
 			var categoryId = $(this).data('category-id');
