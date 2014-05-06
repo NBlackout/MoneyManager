@@ -19,6 +19,8 @@ public class Account extends Model {
 	@ManyToOne
 	public Bank bank;
 
+	public long number;
+
 	public String label;
 
 	public double balance;
