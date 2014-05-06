@@ -19,40 +19,20 @@ public class Bootstrap extends Job {
 	public void doJob() {
 		Logger.info("BEGIN Bootstrap.doJob()");
 		initBanks();
-		initAccounts();
 		initPeriodicities();
 		initCategories();
-		initOneOffTransactions();
+		// initOneOffTransactions();
 		Logger.info("  END Bootstrap.doJob()");
 	}
 
 	private void initBanks() {
 		Logger.info("BEGIN Bootstrap.initBanks()");
 		if (Bank.count() == 0) {
-			for (int b = 0; b < BoostrapConfiguration.BANK_COUNT; b++) {
-				Bank bank = new Bank();
-				bank.label = "Banque " + (b + 1);
-				bank.save();
-			}
+			Bank bank = new Bank();
+			bank.label = "Crédit du Nord";
+			bank.save();
 		}
 		Logger.info("  END Bootstrap.initBanks()");
-	}
-
-	private void initAccounts() {
-		Logger.info("BEGIN Bootstrap.initAccounts()");
-		if (Account.count() == 0) {
-			for (int a = 0; a < BoostrapConfiguration.ACCOUNT_COUNT; a++) {
-				int index = (int) (Math.random() * BoostrapConfiguration.BANK_COUNT);
-
-				Account account = new Account();
-				account.bank = Bank.<Bank>findAll().get(index);
-				account.label = "Compte " + (a + 1);
-				account.balance = Math.random() * BoostrapConfiguration.ACCOUNT_MAX_BALANCE;
-				account.lastSync = DateTime.now();
-				account.save();
-			}
-		}
-		Logger.info("  END Bootstrap.initAccounts()");
 	}
 
 	private void initPeriodicities() {

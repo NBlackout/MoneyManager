@@ -5,8 +5,6 @@ import java.util.List;
 
 public class BoostrapConfiguration {
 
-	public static final int BANK_COUNT = 1;
-
 	public static final int ACCOUNT_COUNT = 5;
 
 	public static final int ACCOUNT_MAX_BALANCE = 1000000;

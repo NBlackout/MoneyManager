@@ -33,6 +33,18 @@
 						<ul class="nav">
 							<li><a href="@{Accounts.index()}">Comptes</a></li>
 						</ul>
+
+						#{if session.get('user')}
+							<span class="pull-right">${session.get('user')}</span>
+						#{/if}
+						#{else}
+							#{form @Application.login(), method:'POST', class:'navbar-form pull-right'}
+								<input name="login" type="text" placeholder="Identifiant">
+								<input name="password" type="password" placeholder="Password">
+
+								<button class="btn btn-primary" type="submit">Connexion</button>
+							#{/form}
+						#{/else}
 					</div>
 				</div>
 			</div>
