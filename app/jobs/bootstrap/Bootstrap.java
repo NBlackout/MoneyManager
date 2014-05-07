@@ -1,12 +1,17 @@
 package jobs.bootstrap;
 
+import java.util.HashMap;
+
+import jobs.banks.BankCrawler;
 import models.Account;
 import models.Bank;
+import models.BankConfiguration;
 import models.transactions.oneoff.OneOffTransaction;
 import models.transactions.regular.RegularTransactionCategory;
 import models.transactions.regular.RegularTransactionPeriodicity;
 
 import org.joda.time.DateTime;
+import org.jsoup.Connection.Method;
 
 import play.Logger;
 import play.jobs.Job;
@@ -31,6 +36,22 @@ public class Bootstrap extends Job {
 			Bank bank = new Bank();
 			bank.label = "Crédit du Nord";
 			bank.save();
+
+			BankConfiguration configuration = new BankConfiguration();
+			configuration.bank = bank;
+			configuration.url = "https://www.credit-du-nord.fr/saga/authentification";
+			configuration.method = Method.POST;
+			configuration.basicData = new HashMap<>();
+			{
+				configuration.basicData.put("pwAuth", "Authentification mot de passe");
+				configuration.basicData.put("pagecible", "vos-comptes");
+				configuration.basicData.put("bank", "credit-du-nord");
+			}
+			configuration.loginField = "username";
+			configuration.passwordField ="password";
+			configuration.save();
+
+			new BankCrawler().now();
 		}
 		Logger.info("  END Bootstrap.initBanks()");
 	}

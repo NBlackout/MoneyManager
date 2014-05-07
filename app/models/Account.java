@@ -19,7 +19,7 @@ public class Account extends Model {
 	@ManyToOne
 	public Bank bank;
 
-	public long number;
+	public String number;
 
 	public String label;
 
