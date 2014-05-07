@@ -1,4 +1,4 @@
-package jobs.bootstrap;
+package jobs.bootstraps;
 
 import java.util.Arrays;
 import java.util.List;

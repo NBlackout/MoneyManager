@@ -13,6 +13,8 @@ import play.db.jpa.Model;
 @Entity
 public class BankConfiguration extends Model {
 
+	private static final long serialVersionUID = 1814418457697053181L;
+
 	@OneToOne
 	public Bank bank;
 
@@ -21,11 +23,9 @@ public class BankConfiguration extends Model {
 	public Method method;
 
 	@ElementCollection
-	public Map<String,String> basicData;
+	public Map<String, String> basicData;
 
 	public String loginField;
-	public String loginValue;
 
 	public String passwordField;
-	public String passwordValue;
 }

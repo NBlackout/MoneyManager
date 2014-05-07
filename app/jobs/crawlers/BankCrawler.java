@@ -1,4 +1,4 @@
-package jobs.banks;
+package jobs.crawlers;
 
 import helpers.jsoup.JsoupConnection;
 import helpers.jsoup.parser.CreditDuNordParser;
@@ -22,31 +22,21 @@ import play.libs.F.Promise;
 
 public class BankCrawler extends Job {
 
-	@Override
-	public void doJob() {
-		Logger.info("BEGIN BankCrawler.doJob()");
-		crawlBanks();
-		Logger.info("  END BankCrawler.doJob()");
+	private Bank bank;
+
+	private String login;
+
+	private String password;
+
+	public BankCrawler(long bankId, String login, String password) {
+		this.bank = Bank.findById(bankId);
+		this.login = login;
+		this.password = password;
 	}
 
 	@Override
 	public Promise<?> now() {
 		Logger.info("BEGIN BankCrawler.now()");
-		crawlBanks();
-		Logger.info("  END BankCrawler.now()");
-		return null;
-	}
-
-	private void crawlBanks() {
-		Logger.info("BEGIN BankCrawler.crawlBanks()");
-		for (Bank bank : Bank.<Bank>findAll()) {
-			crawlBank(bank);
-		}
-		Logger.info("  END BankCrawler.crawlBanks()");
-	}
-
-	private void crawlBank(Bank bank) {
-		Logger.info("BEGIN BankCrawler.crawlBank(" + bank.label + ")");
 		BankConfiguration configuration = BankConfiguration.find("byBank", bank).first();
 
 		String url = configuration.url;
@@ -54,8 +44,8 @@ public class BankCrawler extends Job {
 		String userAgent = "Opera/9.80 (Windows NT 6.1; Win64; x64) Presto/2.12.388 Version/12.16";
 		Map<String, String> data = configuration.basicData;
 		{
-			data.put(configuration.loginField, configuration.loginValue);
-			data.put(configuration.passwordField, configuration.passwordValue);
+			data.put(configuration.loginField, login);
+			data.put(configuration.passwordField, password);
 		}
 
 		Response response = JsoupConnection.execute(url, method, userAgent, null, data);
@@ -67,7 +57,7 @@ public class BankCrawler extends Job {
 				for (JsoupParserResult result : results) {
 					Account account = new Account();
 					account.bank = bank;
-					account.number=result.getNumber();
+					account.number = result.getNumber();
 					account.label = result.getLabel();
 					account.balance = result.getBalance();
 					account.save();
@@ -76,6 +66,7 @@ public class BankCrawler extends Job {
 				e.printStackTrace();
 			}
 		}
-		Logger.info("  END BankCrawler.crawlBank(" + bank.label + ")");
+		Logger.info("  END BankCrawler.now()");
+		return null;
 	}
 }

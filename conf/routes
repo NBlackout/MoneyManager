@@ -4,6 +4,7 @@
 
 # Home page
 GET     /                                         Application.index
+GET     /banks/?                                  Banks.index
 GET     /accounts/?                               Accounts.index
 GET     /accounts/{accountId}/{year}/{month}/?    Accounts.show
 GET     /accounts/{accountId}/?                   Accounts.show

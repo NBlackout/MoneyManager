@@ -1,8 +1,7 @@
-package jobs.bootstrap;
+package jobs.bootstraps;
 
 import java.util.HashMap;
 
-import jobs.banks.BankCrawler;
 import models.Account;
 import models.Bank;
 import models.BankConfiguration;
@@ -48,10 +47,8 @@ public class Bootstrap extends Job {
 				configuration.basicData.put("bank", "credit-du-nord");
 			}
 			configuration.loginField = "username";
-			configuration.passwordField ="password";
+			configuration.passwordField = "password";
 			configuration.save();
-
-			new BankCrawler().now();
 		}
 		Logger.info("  END Bootstrap.initBanks()");
 	}

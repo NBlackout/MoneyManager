@@ -1,6 +1,6 @@
 package controllers;
 
-import jobs.transactions.RegularTransactionScheduler;
+import jobs.schedulers.RegularTransactionScheduler;
 import models.Account;
 import models.transactions.oneoff.OneOffTransaction;
 import models.transactions.regular.RegularTransactionCategory;

@@ -1,0 +1,73 @@
+#{extends 'main.html' /}
+#{set title:'Banques' /}
+
+<div id="dialog-form">
+	#{form @Banks.synchronize(), id:'synchronizeForm', method:'POST'}
+		<input id="bankId" name="bankId" type="hidden">
+
+		<div>
+			<label>Identifiant</label>
+			<input name="login" type="text" placeholder="Identifiant">
+		</div>
+
+		<div>
+			<label>Mot de passe</label>
+			<input name="password" type="password" placeholder="Mot de passe">
+		</div>
+	#{/form}
+</div>
+
+#{if banks}
+	<table id="accounts" class="table table-hover">
+		<thead>
+			<tr>
+				<th>Intitulé</th>
+				<th>Comptes</th>
+				<th>Synchronisation</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			#{list as:'bank', items:banks}
+				<tr data-bank-id="${bank.id}">
+					<td>${bank?.label}</td>
+					<td>${bank.accounts?.size()}</td>
+					<td><a href="#" data-action="refresh"><i class="icon-refresh"></i></a></td>
+				</tr>
+			#{/list}
+		</tbody>
+	</table>
+#{/if}
+
+<script type="text/javascript">
+	$(function() {
+		var form = $('#synchronizeForm');
+
+		/* Dialog configuration */
+		$('#dialog-form').dialog({
+			autoOpen: false,
+			buttons: {
+				'Valider': function() {
+					form.submit();
+				},
+				'Annuler': function() {
+					$(this).dialog('close');
+				}
+			},
+			height: 250,
+			modal: true,
+			width: 300,
+		});
+
+		$('a[data-action="refresh"]').click(function() {
+			var tr = $(this).closest('tr[data-bank-id]');
+			var bankId = tr.data('bank-id');
+
+			$('#bankId').val(bankId);
+
+			$('#dialog-form').dialog('open');
+
+			return false;
+		});
+	});
+</script>
