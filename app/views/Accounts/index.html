@@ -20,17 +20,9 @@
 					<td>${account.number}</td>
 					<td><a href="@{Accounts.show(account.id)}">${account.label}</a></td>
 					<td>${account.balance.formatCurrency(messages.get('currency'))}</td>
-					<td><a href="#" data-action="refresh"><i class="icon-refresh"></i></a>${account.lastSync?.toDate()?.format()}</td>
+					<td><a href="@{Accounts.synchronize(account.id)}"><i class="icon-refresh"></i></a>${account.lastSync?.toDate()?.format()}</td>
 				</tr>
 			#{/list}
 		</tbody>
 	</table>
 #{/if}
-
-<script type="text/javascript">
-	$(function() {
-		$('a[data-action="refresh"]').click(function() {
-			return false;
-		});
-	});
-</script>

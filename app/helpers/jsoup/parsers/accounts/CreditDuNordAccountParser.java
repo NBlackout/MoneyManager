@@ -1,4 +1,4 @@
-package helpers.jsoup.parser;
+package helpers.jsoup.parsers.accounts;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-public class CreditDuNordParser implements JsoupParser {
+public class CreditDuNordAccountParser implements AccountParser {
 
 	private static final String LABEL_PREFIX = "(" + "<div class=" + "\\\\" + "\"" + "libelleCompteTDB" + "\\\\" + "\"" + ">" + ")";
 	private static final String LABEL_GROUP = "(" + "?<label>" + "[^<]*" + ")";
@@ -26,8 +26,8 @@ public class CreditDuNordParser implements JsoupParser {
 	private static final String VALUE_EUR_GROUP = "(" + "?<valueEUR>" + "[0-9\\S]*[,][0-9\\S]*" + ")";
 
 	@Override
-	public List<JsoupParserResult> parse(Document document) {
-		List<JsoupParserResult> results = new LinkedList<>();
+	public List<AccountParserResult> parse(Document document) {
+		List<AccountParserResult> results = new LinkedList<>();
 
 		Element element = document.getElementById("appliSouscription");
 		Element script = element.getElementsByTag("script").first();
@@ -42,10 +42,10 @@ public class CreditDuNordParser implements JsoupParser {
 		Matcher matcher = pattern.matcher(content);
 
 		while (matcher.find()) {
-			JsoupParserResult result = new JsoupParserResult();
-			result.setNumber(normalizeWhitespaces(matcher.group("number")));
-			result.setLabel(normalizeWhitespaces(matcher.group("label")));
-			result.setBalance(Double.parseDouble(normalizeWhitespaces(matcher.group("valueEUR")).replace(" ","").replace(",", ".")));
+			AccountParserResult result = new AccountParserResult();
+			result.setNumber(normalizeWhitespaces(matcher.group("number")).trim());
+			result.setLabel(normalizeWhitespaces(matcher.group("label")).trim());
+			result.setBalance(Double.parseDouble(normalizeWhitespaces(matcher.group("valueEUR")).replace(" ","").trim().replace(",", ".")));
 
 			results.add(result);
 		}

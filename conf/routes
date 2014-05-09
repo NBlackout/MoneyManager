@@ -8,6 +8,7 @@ GET     /banks/?                                  Banks.index
 GET     /accounts/?                               Accounts.index
 GET     /accounts/{accountId}/{year}/{month}/?    Accounts.show
 GET     /accounts/{accountId}/?                   Accounts.show
+GET     /accounts/synchronize/{accountId}/?       Accounts.synchronize
 
 # Ignore favicon requests
 GET     /favicon.ico                              404

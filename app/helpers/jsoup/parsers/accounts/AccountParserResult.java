@@ -1,6 +1,6 @@
-package helpers.jsoup.parser;
+package helpers.jsoup.parsers.accounts;
 
-public class JsoupParserResult {
+public class AccountParserResult {
 
 	private String number;
 

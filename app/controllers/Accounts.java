@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jobs.crawlers.AccountCrawler;
 import models.Account;
 import models.transactions.oneoff.OneOffTransaction;
 import models.transactions.regular.RegularTransaction;
@@ -52,5 +53,11 @@ public class Accounts extends Controller {
 		List<OneOffTransaction> oneOffTransactions = OneOffTransaction.findByAccountIdYearMonth(accountId, year, month);
 
 		render(accountId, currentYear, year, years, currentMonth, month, months, categories, regularTransactions, oneOffTransactions);
+	}
+	
+	public static void synchronize(long accountId) {
+		new AccountCrawler(accountId).now();
+
+		index();
 	}
 }

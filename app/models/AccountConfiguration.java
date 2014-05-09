@@ -11,12 +11,10 @@ import org.jsoup.Connection.Method;
 import play.db.jpa.Model;
 
 @Entity
-public class BankConfiguration extends Model {
-
-	private static final long serialVersionUID = 1814418457697053181L;
+public class AccountConfiguration extends Model {
 
 	@OneToOne
-	public Bank bank;
+	public Account account;
 
 	public String url;
 
@@ -24,11 +22,4 @@ public class BankConfiguration extends Model {
 
 	@ElementCollection
 	public Map<String, String> basicData;
-
-	public String loginField;
-
-	public String passwordField;
-	
-	@ElementCollection
-	public Map<String, String> cookies;
 }
