@@ -1,16 +1,13 @@
 package jobs.bootstraps;
 
-import java.util.HashMap;
-
 import models.Account;
 import models.Bank;
-import models.BankConfiguration;
+import models.BankWebSite;
 import models.transactions.oneoff.OneOffTransaction;
 import models.transactions.regular.RegularTransactionCategory;
 import models.transactions.regular.RegularTransactionPeriodicity;
 
 import org.joda.time.DateTime;
-import org.jsoup.Connection.Method;
 
 import play.Logger;
 import play.jobs.Job;
@@ -34,21 +31,41 @@ public class Bootstrap extends Job {
 		if (Bank.count() == 0) {
 			Bank bank = new Bank();
 			bank.label = "Crédit du Nord";
+			bank.webSite = BankWebSite.CreditDuNord;
 			bank.save();
 
-			BankConfiguration configuration = new BankConfiguration();
-			configuration.bank = bank;
-			configuration.url = "https://www.credit-du-nord.fr/saga/authentification";
-			configuration.method = Method.POST;
-			configuration.basicData = new HashMap<>();
-			{
-				configuration.basicData.put("pwAuth", "Authentification mot de passe");
-				configuration.basicData.put("pagecible", "vos-comptes");
-				configuration.basicData.put("bank", "credit-du-nord");
-			}
-			configuration.loginField = "username";
-			configuration.passwordField = "password";
-			configuration.save();
+			// // Login access data
+			// String url = "https://www.credit-du-nord.fr/saga/authentification";
+			// Method method = Method.POST;
+			// Map<String, String> staticData = new HashMap<>();
+			// {
+			// staticData.put("pwAuth", "Authentification mot de passe");
+			// staticData.put("pagecible", "vos-comptes");
+			// staticData.put("bank", "credit-du-nord");
+			// }
+			// String loginField = "username";
+			// String passwordField = "password";
+			//
+			// LoginAccessData loginAccessData = new LoginAccessData(url, method, staticData, loginField, passwordField);
+			//
+			// // Accounts access data
+			// String url = "https://www.credit-du-nord.fr/vos-comptes/particuliers/transac_tableau_de_bord";
+			// Method method = Method.GET;
+			// Map<String, String> staticData = null;
+			//
+			// AccountsAccessData accountsAccessData = new AccountsAccessData(url, method, staticData);
+			//
+			// // Transactions access data
+			// String url = "https://www.credit-du-nord.fr/vos-comptes/IPT/appmanager/transac/particuliers?_nfpb=true&_windowLabel=T26000359611279636908072&wsrp-urlType=blockingAction";
+			// Method method = Method.POST;
+			// Map<String, String> staticData = new HashMap<>();
+			// {
+			// staticData.put("execution", "e1s1");
+			// staticData.put("_eventId", "clicDetailCompte");
+			// }
+			// String accountField = "idCompteClique";
+			//
+			// TransactionsAccessData transactionsAccessData = new TransactionsAccessData(url, method, staticData, accountField);
 		}
 		Logger.info("  END Bootstrap.initBanks()");
 	}
@@ -84,7 +101,7 @@ public class Bootstrap extends Job {
 			int currentYear = now.getYear();
 			int currentMonth = now.getMonthOfYear();
 
-			for (Account account : Account.<Account>findAll()) {
+			for (Account account : Account.<Account> findAll()) {
 				for (int y = currentYear - BoostrapConfiguration.MAX_YEARS_HISTORY; y <= currentYear; y++) {
 					for (int m = 1; m <= 12; m++) {
 						int maxDays = new DateTime(y, m, 1, 0, 0).dayOfMonth().getMaximumValue();

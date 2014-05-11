@@ -3,6 +3,7 @@ package models;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.Type;
@@ -19,6 +20,9 @@ public class Bank extends Model {
 
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime lastSync;
+	
+	@Enumerated
+	public BankWebSite webSite;
 	
 	@OneToMany(mappedBy = "bank")
 	public List<Account> accounts;

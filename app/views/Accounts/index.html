@@ -1,6 +1,22 @@
 #{extends 'main.html' /}
 #{set title:'Comptes' /}
 
+<div id="dialog-form">
+	#{form @Accounts.synchronize(), id:'synchronizeForm', method:'POST'}
+		<input id="accountId" name="accountId" type="hidden">
+
+		<div>
+			<label>Identifiant</label>
+			<input name="login" type="text" placeholder="Identifiant">
+		</div>
+
+		<div>
+			<label>Mot de passe</label>
+			<input name="password" type="password" placeholder="Mot de passe">
+		</div>
+	#{/form}
+</div>
+
 #{if accounts}
 	<table class="table table-hover">
 		<thead>
@@ -15,14 +31,47 @@
 
 		<tbody>
 			#{list as:'account', items:accounts}
-				<tr>
+				<tr data-account-id="${account.id}">
 					<td>${account.bank?.label}</td>
 					<td>${account.number}</td>
 					<td><a href="@{Accounts.show(account.id)}">${account.label}</a></td>
 					<td>${account.balance.formatCurrency(messages.get('currency'))}</td>
-					<td><a href="@{Accounts.synchronize(account.id)}"><i class="icon-refresh"></i></a>${account.lastSync?.toDate()?.format()}</td>
+					<td><a href="#" data-action="refresh"><i class="icon-refresh"></i></a>${account.lastSync?.toDate()?.format()}</td>
 				</tr>
 			#{/list}
 		</tbody>
 	</table>
+	
+<script type="text/javascript">
+	$(function() {
+		var form = $('#synchronizeForm');
+
+		/* Dialog configuration */
+		$('#dialog-form').dialog({
+			autoOpen: false,
+			buttons: {
+				'Valider': function() {
+					form.submit();
+				},
+				'Annuler': function() {
+					$(this).dialog('close');
+				}
+			},
+			height: 250,
+			modal: true,
+			width: 300,
+		});
+
+		$('a[data-action="refresh"]').click(function() {
+			var tr = $(this).closest('tr[data-account-id]');
+			var accountId = tr.data('account-id');
+
+			$('#accountId').val(accountId);
+
+			$('#dialog-form').dialog('open');
+
+			return false;
+		});
+	});
+</script>
 #{/if}

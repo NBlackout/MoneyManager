@@ -2,7 +2,7 @@ package controllers;
 
 import java.util.List;
 
-import jobs.crawlers.BankCrawler;
+import jobs.parsers.BankParser;
 import models.Bank;
 import play.mvc.Controller;
 
@@ -15,7 +15,7 @@ public class Banks extends Controller {
 	}
 
 	public static void synchronize(long bankId, String login, String password) {
-		new BankCrawler(bankId, login, password).now();
+		new BankParser(bankId, login, password).now();
 
 		index();
 	}

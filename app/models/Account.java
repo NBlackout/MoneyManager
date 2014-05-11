@@ -24,6 +24,8 @@ public class Account extends Model {
 	public String label;
 
 	public double balance;
+	
+	public String urlNumber;
 
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime lastSync;

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jobs.crawlers.AccountCrawler;
+import jobs.parsers.AccountParser;
 import models.Account;
 import models.transactions.oneoff.OneOffTransaction;
 import models.transactions.regular.RegularTransaction;
@@ -55,8 +55,8 @@ public class Accounts extends Controller {
 		render(accountId, currentYear, year, years, currentMonth, month, months, categories, regularTransactions, oneOffTransactions);
 	}
 	
-	public static void synchronize(long accountId) {
-		new AccountCrawler(accountId).now();
+	public static void synchronize(long accountId, String login, String password) {
+		new AccountParser(accountId, login, password).now();
 
 		index();
 	}

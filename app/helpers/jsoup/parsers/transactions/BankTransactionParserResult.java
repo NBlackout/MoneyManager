@@ -2,7 +2,7 @@ package helpers.jsoup.parsers.transactions;
 
 import org.joda.time.DateTime;
 
-public class TransactionParserResult {
+public class BankTransactionParserResult {
 
 	private String label;
 
