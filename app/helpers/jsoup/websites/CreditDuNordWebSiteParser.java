@@ -1,9 +1,9 @@
 package helpers.jsoup.websites;
 
 import helpers.jsoup.JsoupConnection;
-import helpers.jsoup.parsers.accounts.BankAccountParserResult;
+import helpers.jsoup.parsers.accounts.AccountParserResult;
 import helpers.jsoup.parsers.accounts.CreditDuNordAccountParser;
-import helpers.jsoup.parsers.transactions.BankTransactionParserResult;
+import helpers.jsoup.parsers.transactions.TransactionParserResult;
 import helpers.jsoup.parsers.transactions.CreditDuNordTransactionParser;
 
 import java.io.IOException;
@@ -17,7 +17,7 @@ import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
 
-public class CreditDuNordWebSiteParser implements IBankWebSiteParser {
+public class CreditDuNordWebSiteParser implements IWebSiteParser {
 
 	private String login;
 	private String password;
@@ -29,8 +29,8 @@ public class CreditDuNordWebSiteParser implements IBankWebSiteParser {
 	}
 
 	@Override
-	public List<BankAccountParserResult> retrieveAccounts() {
-		List<BankAccountParserResult> results = null;
+	public List<AccountParserResult> retrieveAccounts() {
+		List<AccountParserResult> results = null;
 
 		if (cookies == null) {
 			authenticate();
@@ -55,8 +55,8 @@ public class CreditDuNordWebSiteParser implements IBankWebSiteParser {
 	}
 
 	@Override
-	public List<BankTransactionParserResult> retrieveTransactions(Account account) {
-		List<BankTransactionParserResult> results = null;
+	public List<TransactionParserResult> retrieveTransactions(Account account) {
+		List<TransactionParserResult> results = null;
 
 		if (cookies == null) {
 			authenticate();

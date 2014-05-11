@@ -70,7 +70,7 @@
 					<td>${transaction.configuration.amount.formatCurrency(messages.get('currency'))}</td>
 					<td class="transaction-amount" style="display: none;">${transaction.configuration.amount}</td>
 					<td>${transaction.date.toDate().format()}</td>
-					<td><a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="delete"><i class="icon-off"></i></a></td>
+					<td><a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="delete"><i class="${transaction.configuration.active == true ? 'icon-step-forward' : 'icon-off'}"></i></a></td>
 				</tr>
 			#{/list}
 		#{/list}

@@ -1,9 +1,9 @@
 package jobs.parsers;
 
-import helpers.jsoup.parsers.accounts.BankAccountParserResult;
-import helpers.jsoup.parsers.transactions.BankTransactionParserResult;
+import helpers.jsoup.parsers.accounts.AccountParserResult;
+import helpers.jsoup.parsers.transactions.TransactionParserResult;
 import helpers.jsoup.websites.CreditDuNordWebSiteParser;
-import helpers.jsoup.websites.IBankWebSiteParser;
+import helpers.jsoup.websites.IWebSiteParser;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class AccountParser extends Job {
 	@Override
 	public Promise<?> now() {
 		Logger.info("BEGIN AccountCrawler.now()");
-		IBankWebSiteParser parser = null;
+		IWebSiteParser parser = null;
 
 		switch (account.bank.webSite) {
 		case CreditDuNord:
@@ -43,8 +43,8 @@ public class AccountParser extends Job {
 			break;
 		}
 
-		List<BankTransactionParserResult> results = parser.retrieveTransactions(account);
-		for (BankTransactionParserResult result : results) {
+		List<TransactionParserResult> results = parser.retrieveTransactions(account);
+		for (TransactionParserResult result : results) {
 			OneOffTransaction transaction = new OneOffTransaction();
 			transaction.account = account;
 			transaction.label = result.getLabel();

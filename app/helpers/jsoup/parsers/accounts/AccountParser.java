@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.jsoup.nodes.Document;
 
-public interface BankAccountParser {
+public interface AccountParser {
 
-	public List<BankAccountParserResult> parse(Document document);
+	public List<AccountParserResult> parse(Document document);
 }

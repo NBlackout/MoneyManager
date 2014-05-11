@@ -1,7 +1,7 @@
 package models;
 
 import helpers.jsoup.JsoupConnection;
-import helpers.jsoup.parsers.accounts.BankAccountParserResult;
+import helpers.jsoup.parsers.accounts.AccountParserResult;
 import helpers.jsoup.parsers.accounts.CreditDuNordAccountParser;
 
 import java.io.IOException;

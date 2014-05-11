@@ -11,7 +11,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-public class CreditDuNordTransactionParser implements BankTransactionParser {
+public class CreditDuNordTransactionParser implements TransactionParser {
 
 	private static final String SEP = "('[,]')";
 
@@ -23,8 +23,8 @@ public class CreditDuNordTransactionParser implements BankTransactionParser {
 	private static final String VALUE_EUR_GROUP = "valueEUR";
 
 	@Override
-	public List<BankTransactionParserResult> parse(Document document) {
-		List<BankTransactionParserResult> results = new LinkedList<>();
+	public List<TransactionParserResult> parse(Document document) {
+		List<TransactionParserResult> results = new LinkedList<>();
 
 		Element element = document.getElementById("appliSouscription");
 		Element script = element.getElementsByTag("script").first();
@@ -42,7 +42,7 @@ public class CreditDuNordTransactionParser implements BankTransactionParser {
 
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
 		while (matcher.find()) {
-			BankTransactionParserResult result = new BankTransactionParserResult();
+			TransactionParserResult result = new TransactionParserResult();
 			result.setLabel(extract(matcher.group(LABEL_GROUP)));
 			result.setAmount(Double.parseDouble(extract(matcher.group(VALUE_EUR_GROUP)).replace(" ", "").replace(",", ".")));
 			result.setDate(DateTime.parse(extract(matcher.group(DATE_GROUP)), formatter));
