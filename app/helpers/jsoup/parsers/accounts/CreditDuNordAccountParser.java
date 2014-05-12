@@ -45,10 +45,10 @@ public class CreditDuNordAccountParser implements AccountParser {
 			Document doc = Jsoup.parse(matcher.group(LABEL_AND_NUMBER_GROUP).replace("\\\"", "\""));
 
 			AccountParserResult result = new AccountParserResult();
-			result.setNumber(extract(doc.select("div.libelleCompteTDB").first().text()));
-			result.setLabel(extract(doc.select("div.numCompteTDB").first().text()));
-			result.setBalance(Double.parseDouble(extract(matcher.group(VALUE_EUR_GROUP)).replaceAll(" |EUR", "").replace(",", ".")));
-			result.setUrlNumber(extract(matcher.group(URL_NUMBER_GROUP)));
+			result.setNumber(normalize(doc.select("div.libelleCompteTDB").first().text()));
+			result.setLabel(normalize(doc.select("div.numCompteTDB").first().text()));
+			result.setBalance(Double.parseDouble(normalize(matcher.group(VALUE_EUR_GROUP)).replaceAll("[ ]|EUR", "").replace(",", ".")));
+			result.setUrlNumber(normalize(matcher.group(URL_NUMBER_GROUP)));
 
 			results.add(result);
 		}
@@ -56,7 +56,7 @@ public class CreditDuNordAccountParser implements AccountParser {
 		return results;
 	}
 
-	private String extract(String string) {
-		return string.replace("<br/>&nbsp;", "").replaceAll("\\p{javaSpaceChar}+", " ").trim();
+	private String normalize(String string) {
+		return Jsoup.parse(string).text().replaceAll("\\p{javaSpaceChar}", " ").trim();
 	}
 }

@@ -44,12 +44,15 @@ public class AccountParser extends Job {
 
 		List<TransactionParserResult> results = parser.retrieveTransactions(account);
 		for (TransactionParserResult result : results) {
-			OneOffTransaction transaction = new OneOffTransaction();
-			transaction.account = account;
-			transaction.label = result.getLabel();
-			transaction.amount = result.getAmount();
-			transaction.date = result.getDate();
-			transaction.save();
+			OneOffTransaction transaction = OneOffTransaction.find("byLabel", result.getLabel()).first();
+			if (transaction == null) {
+				transaction = new OneOffTransaction();
+				transaction.account = account;
+				transaction.label = result.getLabel();
+				transaction.amount = result.getAmount();
+				transaction.date = result.getDate();
+				transaction.save();
+			}
 		}
 
 		account.lastSync = DateTime.now();

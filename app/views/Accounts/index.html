@@ -36,7 +36,7 @@
 					<td>${account.number}</td>
 					<td><a href="@{Accounts.show(account.id)}">${account.label}</a></td>
 					<td>${account.balance.formatCurrency(messages.get('currency'))}</td>
-					<td><a href="#" data-action="refresh"><i class="icon-refresh"></i></a>${account.lastSync?.toDate()?.format()}</td>
+					<td><a href="#" data-action="refresh"><i class="icon-refresh"></i></a>${account.lastSync?.toDate()?.format(messages.get('datetime.format'))}</td>
 				</tr>
 			#{/list}
 		</tbody>

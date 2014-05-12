@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
@@ -48,9 +49,9 @@ public class CreditDuNordTransactionParser implements TransactionParser {
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
 		while (matcher.find()) {
 			TransactionParserResult result = new TransactionParserResult();
-			result.setLabel(extract(matcher.group(LABEL_GROUP)));
-			result.setAmount(Double.parseDouble(extract(matcher.group(VALUE_EUR_GROUP)).replace(" ", "").replace(",", ".")));
-			result.setDate(DateTime.parse(extract(matcher.group(DATE_GROUP)), formatter));
+			result.setLabel(normalize(matcher.group(LABEL_GROUP)));
+			result.setAmount(Double.parseDouble(normalize(matcher.group(VALUE_EUR_GROUP)).replace(" ", "").replace(",", ".")));
+			result.setDate(DateTime.parse(normalize(matcher.group(DATE_GROUP)), formatter));
 
 			results.add(result);
 		}
@@ -58,7 +59,7 @@ public class CreditDuNordTransactionParser implements TransactionParser {
 		return results;
 	}
 
-	private String extract(String string) {
-		return string.replace("<br/>&nbsp;", "").replaceAll("\\p{javaSpaceChar}+", " ").trim();
+	private String normalize(String string) {
+		return Jsoup.parse(string).text().replaceAll("\\p{javaSpaceChar}", " ").trim();
 	}
 }

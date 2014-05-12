@@ -1,1 +1,6 @@
+# Date
+date.format=dd/MM/yyyy
+datetime.format=dd/MM/yyyy hh:mm:ss
+
+# Currency
 currency=EUR

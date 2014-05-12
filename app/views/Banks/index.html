@@ -32,7 +32,7 @@
 				<tr data-bank-id="${bank.id}">
 					<td>${bank?.label}</td>
 					<td>${bank.accounts?.size()}</td>
-					<td><a href="#" data-action="refresh"><i class="icon-refresh"></i></a>${bank.lastSync?.toDate()?.format()}</td>
+					<td><a href="#" data-action="refresh"><i class="icon-refresh"></i></a>${bank.lastSync?.toDate()?.format(messages.get('datetime.format'))}</td>
 				</tr>
 			#{/list}
 		</tbody>

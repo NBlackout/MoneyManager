@@ -44,13 +44,16 @@ public class BankParser extends Job {
 
 		List<AccountParserResult> results = parser.retrieveAccounts();
 		for (AccountParserResult result : results) {
-			Account account = new Account();
-			account.bank = bank;
-			account.number = result.getNumber();
-			account.label = result.getLabel();
-			account.balance = result.getBalance();
-			account.urlNumber = result.getUrlNumber();
-			account.save();
+			Account account = Account.find("byLabel", result.getLabel()).first();
+			if (account == null) {
+				account = new Account();
+				account.bank = bank;
+				account.number = result.getNumber();
+				account.label = result.getLabel();
+				account.balance = result.getBalance();
+				account.urlNumber = result.getUrlNumber();
+				account.save();
+			}
 		}
 
 		bank.lastSync = DateTime.now();
