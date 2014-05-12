@@ -1,4 +1,4 @@
-package helpers.jsoup.websites;
+package helpers.jsoup.parsers.websites;
 
 import helpers.jsoup.parsers.accounts.AccountParserResult;
 import helpers.jsoup.parsers.transactions.TransactionParserResult;

@@ -20,10 +20,10 @@ public class Bank extends Model {
 
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime lastSync;
-	
+
 	@Enumerated
 	public BankWebSite webSite;
-	
+
 	@OneToMany(mappedBy = "bank")
 	public List<Account> accounts;
 }

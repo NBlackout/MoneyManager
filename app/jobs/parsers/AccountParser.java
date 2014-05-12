@@ -1,9 +1,8 @@
 package jobs.parsers;
 
-import helpers.jsoup.parsers.accounts.AccountParserResult;
 import helpers.jsoup.parsers.transactions.TransactionParserResult;
-import helpers.jsoup.websites.CreditDuNordWebSiteParser;
-import helpers.jsoup.websites.IWebSiteParser;
+import helpers.jsoup.parsers.websites.CreditDuNordWebSiteParser;
+import helpers.jsoup.parsers.websites.IWebSiteParser;
 
 import java.util.List;
 
@@ -36,11 +35,11 @@ public class AccountParser extends Job {
 		IWebSiteParser parser = null;
 
 		switch (account.bank.webSite) {
-		case CreditDuNord:
-			parser = new CreditDuNordWebSiteParser(login, password);
-			break;
-		default:
-			break;
+			case CreditDuNord:
+				parser = new CreditDuNordWebSiteParser(login, password);
+				break;
+			default:
+				break;
 		}
 
 		List<TransactionParserResult> results = parser.retrieveTransactions(account);

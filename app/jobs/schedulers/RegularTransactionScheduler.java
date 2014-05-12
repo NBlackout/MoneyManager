@@ -8,7 +8,6 @@ import models.transactions.regular.RegularTransactionConfiguration;
 import org.joda.time.DateTime;
 
 import play.Logger;
-import play.jobs.Every;
 import play.jobs.Job;
 import play.libs.F.Promise;
 

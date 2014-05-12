@@ -16,10 +16,15 @@ public class CreditDuNordTransactionParser implements TransactionParser {
 	private static final String SEP = "('[,]')";
 
 	private static final String ID_GROUP = "id";
+
 	private static final String DATE_GROUP = "date";
+
 	private static final String DATE_VALUE_GROUP = "dateValue";
+
 	private static final String LABEL_GROUP = "label";
+
 	private static final String VALUE_FRF_GROUP = "valueFRF";
+
 	private static final String VALUE_EUR_GROUP = "valueEUR";
 
 	@Override
@@ -30,12 +35,12 @@ public class CreditDuNordTransactionParser implements TransactionParser {
 		Element script = element.getElementsByTag("script").first();
 		String content = script.data();
 
-		String id = "(?<" + ID_GROUP + ">" + "[^']*)";
-		String date = "(?<" + DATE_GROUP + ">" + "[^']*)";
+		String id = "(?<" + ID_GROUP + ">" + "[^']+)";
+		String date = "(?<" + DATE_GROUP + ">" + "[^']+)";
 		String dateValue = "(?<" + DATE_VALUE_GROUP + ">" + "[^']*)";
-		String label = "(?<" + LABEL_GROUP + ">" + "[^']*)";
-		String valueFrf = "(?<" + VALUE_FRF_GROUP + ">" + "[^']*)";
-		String valueEur = "(?<" + VALUE_EUR_GROUP + ">" + "[^']*)";
+		String label = "(?<" + LABEL_GROUP + ">" + "[^']+)";
+		String valueFrf = "(?<" + VALUE_FRF_GROUP + ">" + "[^']+)";
+		String valueEur = "(?<" + VALUE_EUR_GROUP + ">" + "[^']+)";
 
 		Pattern pattern = Pattern.compile("[\\[]'" + id + SEP + date + SEP + dateValue + SEP + label + SEP + valueFrf + SEP + valueEur + "'[\\]]");
 		Matcher matcher = pattern.matcher(content);

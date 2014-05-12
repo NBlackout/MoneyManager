@@ -15,7 +15,7 @@ public class JsoupConnection {
 		Response response = null;
 
 		Connection connection = Jsoup.connect(url);
-		connection.timeout(5000);
+		connection.timeout(10000);
 		connection.method(method);
 
 		if (userAgent != null) {

@@ -54,7 +54,7 @@ public class Accounts extends Controller {
 
 		render(accountId, currentYear, year, years, currentMonth, month, months, categories, regularTransactions, oneOffTransactions);
 	}
-	
+
 	public static void synchronize(long accountId, String login, String password) {
 		new AccountParser(accountId, login, password).now();
 

@@ -1,10 +1,10 @@
-package helpers.jsoup.websites;
+package helpers.jsoup.parsers.websites;
 
 import helpers.jsoup.JsoupConnection;
 import helpers.jsoup.parsers.accounts.AccountParserResult;
 import helpers.jsoup.parsers.accounts.CreditDuNordAccountParser;
-import helpers.jsoup.parsers.transactions.TransactionParserResult;
 import helpers.jsoup.parsers.transactions.CreditDuNordTransactionParser;
+import helpers.jsoup.parsers.transactions.TransactionParserResult;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -20,7 +20,9 @@ import org.jsoup.nodes.Document;
 public class CreditDuNordWebSiteParser implements IWebSiteParser {
 
 	private String login;
+
 	private String password;
+
 	private Map<String, String> cookies;
 
 	public CreditDuNordWebSiteParser(String login, String password) {
@@ -36,9 +38,9 @@ public class CreditDuNordWebSiteParser implements IWebSiteParser {
 			authenticate();
 		}
 
-		String url = "https://www.credit-du-nord.fr/vos-comptes/particuliers/transac_tableau_de_bord";
+		String url = "https://www.credit-du-nord.fr/vos-comptes/particuliers";
 		Method method = Method.GET;
-		String userAgent = null;
+		String userAgent = "Opera/9.80 (Windows NT 6.1; Win64; x64) Presto/2.12.388 Version/12.17";
 		Map<String, String> data = null;
 
 		Response response = JsoupConnection.execute(url, method, userAgent, cookies, data);
@@ -64,7 +66,7 @@ public class CreditDuNordWebSiteParser implements IWebSiteParser {
 
 		String url = "https://www.credit-du-nord.fr/vos-comptes/IPT/appmanager/transac/particuliers?_nfpb=true&_windowLabel=T26000359611279636908072&wsrp-urlType=blockingAction";
 		Method method = Method.POST;
-		String userAgent = null;
+		String userAgent = "Opera/9.80 (Windows NT 6.1; Win64; x64) Presto/2.12.388 Version/12.17";
 		Map<String, String> data = new HashMap<>();
 		{
 			data.put("execution", "e1s1");
@@ -88,7 +90,7 @@ public class CreditDuNordWebSiteParser implements IWebSiteParser {
 	private void authenticate() {
 		String url = "https://www.credit-du-nord.fr/saga/authentification";
 		Method method = Method.POST;
-		String userAgent = "";
+		String userAgent = "Opera/9.80 (Windows NT 6.1; Win64; x64) Presto/2.12.388 Version/12.17";
 		Map<String, String> data = new HashMap<>();
 		{
 			data.put("pwAuth", "Authentification mot de passe");

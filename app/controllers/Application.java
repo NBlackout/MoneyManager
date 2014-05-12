@@ -9,7 +9,7 @@ public class Application extends Controller {
 	}
 
 	public static void login(String login, String password) {
-		session.put("user", login);
+		Controller.session.put("user", login);
 
 		index();
 	}
