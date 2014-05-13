@@ -4,9 +4,8 @@ import java.util.List;
 
 import jobs.parsers.BankParser;
 import models.Bank;
-import play.mvc.Controller;
 
-public class Banks extends Controller {
+public class Banks extends SuperController {
 
 	public static void index() {
 		List<Bank> banks = Bank.findAll();

@@ -1,3 +1,9 @@
+%{
+	String returnUrl = request.url;
+	Long userId = (session.get('user.id')) ? Long.parseLong(session.get('user.id')) : null;
+	String userFullName = session.get('user.fullName');
+}%
+
 <!DOCTYPE html>
 
 <html>
@@ -35,15 +41,40 @@
 							<li><a href="@{Accounts.index()}">Comptes</a></li>
 						</ul>
 
-						#{if session.get('user')}
-							<span class="pull-right">${session.get('user')}</span>
+						#{if userId}
+							<ul class="nav pull-right">
+								<li class="dropdown">
+									<a class="dropdown-toggle" href="#" data-toggle="dropdown">${userFullName}&nbsp;<b class="caret"></b></a>
+									<ul class="dropdown-menu user-dropdown-menu">
+										<li class="dropdown">
+											<div>
+												<form class="navbar-form" action="@{SuperController.logOut()}" method="POST">
+													<input name="returnUrl" type="hidden" value="${returnUrl}">
+
+													<button type="submit" class="btn btn-link">&{'button.sign.out'}</button>
+												</form>
+											</div>
+										</li>
+									</ul>
+								</li>
+							</ul>
 						#{/if}
 						#{else}
-							#{form @Application.login(), method:'POST', class:'navbar-form pull-right'}
-								<input name="login" type="text" placeholder="Identifiant">
+							#{form @SuperController.logIn(), method:'POST', class:'navbar-form pull-right'}
+								<input name="returnUrl" type="hidden" value="${returnUrl}">
+
+								<input name="login" type="text" placeholder="Identifiant" value="${flash.login}">
 								<input name="password" type="password" placeholder="Password">
 
-								<button class="btn btn-primary" type="submit">Connexion</button>
+								<div class="btn-group">
+									<button type="submit" class="btn btn-primary">&{'button.sign.in'}</button>
+									<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
+									<ul class="dropdown-menu">
+										<li>
+											<a href="@{Users.signUp()}">&{'button.sign.up'}</a>
+										</li>
+									</ul>
+								</div>
 							#{/form}
 						#{/else}
 					</div>

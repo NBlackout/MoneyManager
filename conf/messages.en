@@ -1,6 +1,30 @@
 # Date
 date.format=MM/dd/yyyy
-datetime.format=MM/dd/yyyy hh:mm:ss
+datetime.format=MM/dd/yyyy HH:mm:ss
 
 # Currency
 currency=USD
+
+# Title
+title.home=Home
+title.user.sign.up=Sign up
+
+# Button
+button.back=Back
+button.sign.in=Sign in
+button.sign.out=Sign out
+button.sign.up=Sign up
+button.create=Create
+button.save=Save
+
+# User
+user.login=Login
+user.password=Password
+user.password.retype=Retype password
+user.firstName=First name
+user.lastName=Last name
+
+# Error
+error.field.required=This field is required
+error.user.password.wrong=Wrong password
+error.user.passwords.not.equals=The two passwords must be equals

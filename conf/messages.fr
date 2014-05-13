@@ -1,6 +1,30 @@
 # Date
 date.format=dd/MM/yyyy
-datetime.format=dd/MM/yyyy hh:mm:ss
+datetime.format=dd/MM/yyyy HH:mm:ss
 
 # Currency
 currency=EUR
+
+# Title
+title.home=Accueil
+title.user.sign.up=Inscription
+
+# Button
+button.back=Retour
+button.sign.in=Connexion
+button.sign.out=Déconnexion
+button.sign.up=Inscription
+button.create=Créer
+button.save=Enregistrer
+
+# User
+user.login=Identifiant
+user.password=Mot de passe
+user.password.retype=Retaper le mot de passe
+user.firstName=Prénom
+user.lastName=Nom
+
+# Error
+error.field.required=Ce champs est requis
+error.user.password.wrong=Mauvais mot de passe
+error.user.passwords.not.equals=Les mots de passe doivent être égaux

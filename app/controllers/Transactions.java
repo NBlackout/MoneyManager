@@ -9,9 +9,7 @@ import models.transactions.regular.RegularTransactionPeriodicity;
 
 import org.joda.time.DateTime;
 
-import play.mvc.Controller;
-
-public class Transactions extends Controller {
+public class Transactions extends SuperController {
 
 	public static void create(Long accountId, Long transactionId, Long categoryId, String label, Double amount, DateTime date) {
 		if (transactionId == null) {

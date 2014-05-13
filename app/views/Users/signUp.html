@@ -1,0 +1,67 @@
+#{extends 'main.html' /}
+#{set title:messages.get('title.user.sign.up') /}
+
+<fieldset>
+	<legend>&{'title.user.sign.up'}</legend>
+
+	#{form @Users.register(), method:'POST', class:'form-horizontal'}
+		<input name="returnUrl" type="hidden" value="${returnUrl}">
+
+		<div class="control-group#{ifError 'login'} error#{/ifError}">
+			<label class="control-label required" for="login">&{'user.login'}</label>
+			<div class="controls">
+				<input id="login" name="login" type="text" value="${flash.login}" placeholder="&{'user.login'}">
+				#{ifError 'login'}
+					<span class="help-inline">#{error 'login' /}</span>
+				#{/ifError}
+			</div>
+		</div>
+
+		<div class="control-group#{ifError 'password'} error#{/ifError}">
+			<label class="control-label required" for="password">&{'user.password'}</label>
+			<div class="controls">
+				<input id="password" name="password" type="password" placeholder="&{'user.password'}">
+				#{ifError 'password'}
+					<span class="help-inline">#{error 'password' /}</span>
+				#{/ifError}
+			</div>
+		</div>
+
+		<div class="control-group#{ifError 'passwordRetype'} error#{/ifError}">
+			<label class="control-label required" for="passwordRetype">&{'user.password.retype'}</label>
+			<div class="controls">
+				<input id="passwordRetype" name="passwordRetype" type="password" placeholder="&{'user.password.retype'}">
+				#{ifError 'passwordRetype'}
+					<span class="help-inline">#{error 'passwordRetype' /}</span>
+				#{/ifError}
+			</div>
+		</div>
+
+		<div class="control-group#{ifError 'firstName'} error#{/ifError}">
+			<label class="control-label required" for="firstName">&{'user.firstName'}</label>
+			<div class="controls">
+				<input id="firstName" name="firstName" type="text" value="${flash.firstName}" placeholder="&{'user.firstName'}">
+				#{ifError 'firstName'}
+					<span class="help-inline">#{error 'firstName' /}</span>
+				#{/ifError}
+			</div>
+		</div>
+
+		<div class="control-group#{ifError 'lastName'} error#{/ifError}">
+			<label class="control-label required" for="lastName">&{'user.lastName'}</label>
+			<div class="controls">
+				<input id="lastName" name="lastName" type="text" value="${flash.lastName}" placeholder="&{'user.lastName'}">
+				#{ifError 'lastName'}
+					<span class="help-inline">#{error 'lastName' /}</span>
+				#{/ifError}
+			</div>
+		</div>
+
+		<div class="control-group">
+			<div class="controls">
+				<button class="btn btn-primary" type="submit">&{'button.create'}</button>
+				#{backButton /}
+			</div>
+		</div>
+	#{/form}
+</fieldset>

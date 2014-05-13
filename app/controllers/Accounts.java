@@ -13,9 +13,7 @@ import models.transactions.regular.RegularTransactionCategory;
 
 import org.joda.time.DateTime;
 
-import play.mvc.Controller;
-
-public class Accounts extends Controller {
+public class Accounts extends SuperController {
 
 	public static void index() {
 		List<Account> accounts = Account.findAll();

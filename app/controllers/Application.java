@@ -1,16 +1,8 @@
 package controllers;
 
-import play.mvc.Controller;
-
-public class Application extends Controller {
+public class Application extends SuperController {
 
 	public static void index() {
 		render();
-	}
-
-	public static void login(String login, String password) {
-		Controller.session.put("user", login);
-
-		index();
 	}
 }
