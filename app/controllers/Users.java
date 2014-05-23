@@ -1,8 +1,9 @@
 package controllers;
 
+import models.User;
+
 import org.apache.commons.lang.StringUtils;
 
-import models.User;
 import play.libs.Crypto;
 
 public class Users extends SuperController {

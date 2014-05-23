@@ -1,7 +1,5 @@
 package controllers;
 
-import org.apache.commons.lang.StringUtils;
-
 import models.User;
 import play.data.validation.Required;
 import play.libs.Crypto;

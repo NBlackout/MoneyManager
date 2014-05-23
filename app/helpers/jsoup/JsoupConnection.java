@@ -11,16 +11,23 @@ import org.jsoup.Jsoup;
 
 public class JsoupConnection {
 
-	public static Response execute(String url, Method method, String userAgent, Map<String, String> cookies, Map<String, String> data) {
+	public static Response get(String url, Map<String, String> cookies) {
+		return execute(url, Method.GET, cookies, null);
+	}
+
+	public static Response post(String url, Map<String, String> cookies, Map<String, String> data) {
+		return execute(url, Method.POST, cookies, data);
+	}
+
+	private static Response execute(String url, Method method, Map<String, String> cookies, Map<String, String> data) {
 		Response response = null;
 
 		Connection connection = Jsoup.connect(url);
-		connection.timeout(10000);
 		connection.method(method);
 
-		if (userAgent != null) {
-			connection.userAgent(userAgent);
-		}
+		connection.timeout(10000);
+		connection.ignoreContentType(true);
+		connection.maxBodySize(0);
 
 		if (cookies != null) {
 			connection.cookies(cookies);

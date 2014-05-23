@@ -1,16 +1,8 @@
 package jobs.parsers;
 
-import helpers.jsoup.parsers.transactions.TransactionParserResult;
 import helpers.jsoup.parsers.websites.CreditDuNordWebSiteParser;
 import helpers.jsoup.parsers.websites.IWebSiteParser;
-
-import java.util.List;
-
 import models.Account;
-import models.transactions.oneoff.OneOffTransaction;
-
-import org.joda.time.DateTime;
-
 import play.Logger;
 import play.jobs.Job;
 import play.libs.F.Promise;
@@ -42,21 +34,22 @@ public class AccountParser extends Job {
 				break;
 		}
 
-		List<TransactionParserResult> results = parser.retrieveTransactions(account);
-		for (TransactionParserResult result : results) {
-			OneOffTransaction transaction = OneOffTransaction.find("byLabel", result.getLabel()).first();
-			if (transaction == null) {
-				transaction = new OneOffTransaction();
-				transaction.account = account;
-				transaction.label = result.getLabel();
-				transaction.amount = result.getAmount();
-				transaction.date = result.getDate();
-				transaction.save();
-			}
-		}
-
-		account.lastSync = DateTime.now();
-		account.save();
+		parser.doIt();
+		// List<TransactionParserResult> results = parser.retrieveTransactions(account);
+		// for (TransactionParserResult result : results) {
+		// OneOffTransaction transaction = OneOffTransaction.find("byLabel", result.getLabel()).first();
+		// if (transaction == null) {
+		// transaction = new OneOffTransaction();
+		// transaction.account = account;
+		// transaction.label = result.getLabel();
+		// transaction.amount = result.getAmount();
+		// transaction.date = result.getDate();
+		// transaction.save();
+		// }
+		// }
+		//
+		// account.lastSync = DateTime.now();
+		// account.save();
 		Logger.info("  END AccountCrawler.now()");
 		return null;
 	}

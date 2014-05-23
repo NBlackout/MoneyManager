@@ -12,4 +12,6 @@ public interface IWebSiteParser {
 	public List<AccountParserResult> retrieveAccounts();
 
 	public List<TransactionParserResult> retrieveTransactions(Account account);
+
+	public void doIt();
 }
