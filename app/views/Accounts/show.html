@@ -34,7 +34,7 @@
 		</div>
 
 		<div>
-			<label>Date</label>
+			<label>Date de valeur</label>
 			<input id="transactionDate" name="date" type="text">
 		</div>
 	#{/form}
@@ -67,7 +67,7 @@
 			#{list as:'transaction', items:regularTransactions.get(category)}
 				<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-category-id="${category.id}">
 					<td>${transaction.configuration.label}</td>
-					<td>${transaction.configuration.amount.formatCurrency(messages.get('currency'))}</td>
+					<td class="span1">${transaction.configuration.amount.formatCurrency(messages.get('currency'))}</td>
 					<td class="transaction-amount" style="display: none;">${transaction.configuration.amount}</td>
 					<td>${transaction.date.toDate().format(messages.get('date.format'))}</td>
 					<td><a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="delete"><i class="${transaction.configuration.active == true ? 'icon-step-forward' : 'icon-off'}"></i></a></td>
@@ -82,7 +82,8 @@
 		<tr>
 			<th>Intitulé</th>
 			<th>Montant</th>
-			<th>Date</th>
+			<th>Date de valeur</th>
+			<th>Date de comptabilisation</th>
 			<th>Actions</th>
 		</tr>
 	</thead>
@@ -93,7 +94,8 @@
 				<td class="transaction-label">${transaction.label}</td>
 				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
 				<td class="transaction-amount" style="display: none;">${transaction.amount}</td>
-				<td class="transaction-date">${transaction.date.toDate().format(messages.get('date.format'))}</td>
+				<td class="transaction-date">${transaction.valueDate.toDate().format(messages.get('date.format'))}</td>
+				<td>${transaction.recordingDate.toDate().format(messages.get('date.format'))}</td>
 				<td><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>
 			</tr>
 		#{/list}

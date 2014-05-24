@@ -1,4 +1,4 @@
-package jobs.parsers;
+package jobs.synchronizers;
 
 import helpers.jsoup.parsers.accounts.AccountParserResult;
 import helpers.jsoup.parsers.websites.CreditDuNordWebSiteParser;
@@ -15,7 +15,7 @@ import play.Logger;
 import play.jobs.Job;
 import play.libs.F.Promise;
 
-public class BankParser extends Job {
+public class BankSynchronizer extends Job {
 
 	private Bank bank;
 
@@ -23,7 +23,7 @@ public class BankParser extends Job {
 
 	private String password;
 
-	public BankParser(long bankId, String login, String password) {
+	public BankSynchronizer(long bankId, String login, String password) {
 		this.bank = Bank.findById(bankId);
 		this.login = login;
 		this.password = password;
@@ -31,7 +31,7 @@ public class BankParser extends Job {
 
 	@Override
 	public Promise<?> now() {
-		Logger.info("BEGIN BankParser.now()");
+		Logger.info("BEGIN BankSynchronizer.now()");
 		IWebSiteParser parser = null;
 
 		switch (bank.webSite) {
@@ -48,17 +48,19 @@ public class BankParser extends Job {
 			if (account == null) {
 				account = new Account();
 				account.bank = bank;
-				account.number = result.getNumber();
+				account.agency = result.getAgency();
+				account.rank = result.getRank();
+				account.series = result.getSeries();
+				account.subAccount = result.getSubAccount();
 				account.label = result.getLabel();
 				account.balance = result.getBalance();
-				account.urlNumber = result.getUrlNumber();
 				account.save();
 			}
 		}
 
 		bank.lastSync = DateTime.now();
 		bank.save();
-		Logger.info("  END BankParser.now()");
+		Logger.info("  END BankSynchronizer.now()");
 		return null;
 	}
 }

@@ -24,6 +24,7 @@ public class Bootstrap extends Job {
 		Logger.info("BEGIN Bootstrap.initBanks()");
 		if (Bank.count() == 0) {
 			Bank bank = new Bank();
+			bank.number = "30076";
 			bank.label = "Crédit du Nord";
 			bank.webSite = BankWebSite.CreditDuNord;
 			bank.save();

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jobs.parsers.AccountParser;
+import jobs.synchronizers.AccountSynchronizer;
 import models.Account;
 import models.transactions.oneoff.OneOffTransaction;
 import models.transactions.regular.RegularTransaction;
@@ -54,7 +54,7 @@ public class Accounts extends SuperController {
 	}
 
 	public static void synchronize(long accountId, String login, String password) {
-		new AccountParser(accountId, login, password).now();
+		new AccountSynchronizer(accountId, login, password).now();
 
 		index();
 	}

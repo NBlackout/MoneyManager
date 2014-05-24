@@ -16,5 +16,7 @@ public class Transaction extends Model {
 
 	public String label;
 
+	public String additionalLabel;
+
 	public double amount;
 }

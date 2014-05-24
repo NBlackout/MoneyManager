@@ -2,23 +2,31 @@ package helpers.jsoup.parsers.accounts;
 
 public class AccountParserResult {
 
-	private String number;
+	private String agency;
+
+	private String rank;
+
+	private String series;
+
+	private String subAccount;
 
 	private String label;
 
 	private double balance;
 
-	private String urlNumber;
-
 	// @formatter:off
-	public String getNumber() { return number; }
+	public String getAgency() { return agency; }
+	public String getRank() { return rank; }
+	public String getSeries() { return series; }
+	public String getSubAccount() { return subAccount; }
 	public String getLabel() { return label; }
 	public double getBalance() { return balance; }
-	public String getUrlNumber() { return urlNumber; }
 
-	public void setNumber(String number) { this.number = number; }
+	public void setAgency(String agency) { this.agency = agency; }
+	public void setRank(String rank) { this.rank = rank; }
+	public void setSeries(String series) { this.series = series; }
+	public void setSubAccount(String subAccount) { this.subAccount = subAccount; }
 	public void setLabel(String label) { this.label = label; }
 	public void setBalance(double balance) { this.balance = balance; }
-	public void setUrlNumber(String urlNumber) { this.urlNumber = urlNumber; }
 	// @formatter:on
 }

@@ -19,14 +19,33 @@ public class Account extends Model {
 	@ManyToOne
 	public Bank bank;
 
-	public String number;
+	public String agency;
+
+	public String rank;
+
+	public String series;
+
+	public String subAccount;
 
 	public String label;
 
 	public double balance;
 
-	public String urlNumber;
-
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime lastSync;
+
+	public String getNumber() {
+		StringBuilder builder = new StringBuilder();
+		{
+			builder.append(agency);
+			builder.append(" ");
+			builder.append(rank);
+			builder.append(" ");
+			builder.append(series);
+			builder.append(" ");
+			builder.append(subAccount);
+		}
+
+		return builder.toString();
+	}
 }

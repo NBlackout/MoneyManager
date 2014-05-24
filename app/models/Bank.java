@@ -16,6 +16,8 @@ public class Bank extends Model {
 
 	private static final long serialVersionUID = -7683571188654748135L;
 
+	public String number;
+
 	public String label;
 
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")

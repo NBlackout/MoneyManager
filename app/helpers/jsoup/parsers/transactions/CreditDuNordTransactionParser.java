@@ -1,65 +1,49 @@
 package helpers.jsoup.parsers.transactions;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
-public class CreditDuNordTransactionParser implements TransactionParser {
-
-	private static final String SEP = "('[,]')";
-
-	private static final String ID_GROUP = "id";
-
-	private static final String DATE_GROUP = "date";
-
-	private static final String DATE_VALUE_GROUP = "dateValue";
-
-	private static final String LABEL_GROUP = "label";
-
-	private static final String VALUE_FRF_GROUP = "valueFRF";
-
-	private static final String VALUE_EUR_GROUP = "valueEUR";
+public class CreditDuNordTransactionParser implements ITransactionParser {
 
 	@Override
-	public List<TransactionParserResult> parse(Document document) {
+	public List<TransactionParserResult> parse(ByteArrayInputStream input) {
 		List<TransactionParserResult> results = new LinkedList<>();
 
-		Element element = document.getElementById("appliSouscription");
-		Element script = element.getElementsByTag("script").first();
-		String content = script.data();
+		try (InputStreamReader isr = new InputStreamReader(input); BufferedReader reader = new BufferedReader(isr)) {
+			DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
 
-		String id = "(?<" + ID_GROUP + ">" + "[^']+)";
-		String date = "(?<" + DATE_GROUP + ">" + "[^']+)";
-		String dateValue = "(?<" + DATE_VALUE_GROUP + ">" + "[^']*)";
-		String label = "(?<" + LABEL_GROUP + ">" + "[^']+)";
-		String valueFrf = "(?<" + VALUE_FRF_GROUP + ">" + "[^']+)";
-		String valueEur = "(?<" + VALUE_EUR_GROUP + ">" + "[^']+)";
+			String line = reader.readLine();
+			while ((line = reader.readLine()) != null) {
+				String[] split = line.split("\t", -1);
+				if (split != null && split.length == 10) {
+					Double amount = Double.parseDouble((split[4].trim().isEmpty() == false) ? split[4].trim().replace(",", ".") : split[5].trim().replace(",", "."));
+					String label = split[8];
+					String additionalLabel = (split[9].trim().isEmpty() == false) ? split[9] : null;
+					DateTime valueDate = DateTime.parse(split[7], formatter);
+					DateTime recordingDate = DateTime.parse(split[6], formatter);
 
-		Pattern pattern = Pattern.compile("[\\[]'" + id + SEP + date + SEP + dateValue + SEP + label + SEP + valueFrf + SEP + valueEur + "'[\\]]");
-		Matcher matcher = pattern.matcher(content);
+					TransactionParserResult result = new TransactionParserResult();
+					result.setLabel(label);
+					result.setAdditionalLabel(additionalLabel);
+					result.setAmount(amount);
+					result.setValueDate(valueDate);
+					result.setRecordingDate(recordingDate);
 
-		DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MM/yyyy");
-		while (matcher.find()) {
-			TransactionParserResult result = new TransactionParserResult();
-			result.setLabel(normalize(matcher.group(LABEL_GROUP)));
-			result.setAmount(Double.parseDouble(normalize(matcher.group(VALUE_EUR_GROUP)).replace(" ", "").replace(",", ".")));
-			result.setDate(DateTime.parse(normalize(matcher.group(DATE_GROUP)), formatter));
-
-			results.add(result);
+					results.add(result);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 		return results;
-	}
-
-	private String normalize(String string) {
-		return Jsoup.parse(string).text().replaceAll("\\p{javaSpaceChar}", " ").trim();
 	}
 }

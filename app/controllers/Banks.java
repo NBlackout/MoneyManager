@@ -2,7 +2,7 @@ package controllers;
 
 import java.util.List;
 
-import jobs.parsers.BankParser;
+import jobs.synchronizers.BankSynchronizer;
 import models.Bank;
 
 public class Banks extends SuperController {
@@ -14,7 +14,7 @@ public class Banks extends SuperController {
 	}
 
 	public static void synchronize(long bankId, String login, String password) {
-		new BankParser(bankId, login, password).now();
+		new BankSynchronizer(bankId, login, password).now();
 
 		index();
 	}
