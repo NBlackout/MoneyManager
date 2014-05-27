@@ -1,7 +1,21 @@
+#{set 'styles'}
+	#{stylesheet 'browser-reset.css', media:'screen' /}
+	#{stylesheet 'bootstrap-2.3.2.min.css', media:'screen' /}
+	#{stylesheet 'bootstrap-responsive-2.3.2.min.css', media:'screen' /}
+	#{stylesheet 'jquery-ui-1.10.4.cupertino.min.css', media:'screen' /}
+	#{stylesheet 'main.css', media:'screen' /}
+#{/set}
+
+#{set 'scripts'}
+	#{script 'jquery-1.11.0.min.js', charset:'_response_encoding' /}
+	#{script 'bootstrap-2.3.2.min.js', charset:'_response_encoding' /}
+	#{script 'jquery-ui-1.10.4.min.js', charset:'_response_encoding' /}
+#{/set}
+
 %{
 	String returnUrl = request.url;
-	Long userId = (session.get('user.id')) ? Long.parseLong(session.get('user.id')) : null;
-	String userFullName = session.get('user.fullName');
+	Long customerId = (session.get('customer.id')) ? Long.parseLong(session.get('customer.id')) : null;
+	String customerFullName = session.get('customer.fullName');
 }%
 
 <!DOCTYPE html>
@@ -11,23 +25,22 @@
 		<title>#{get 'title' /}</title>
 		<meta charset="${_response_encoding}">
 		<link rel="shortcut icon" type="image/png" href="@{'/public/images/favicon.png'}">
-
-		<link rel="stylesheet" media="screen" href="@{'/public/stylesheets/browser-reset.css'}">
-		<link rel="stylesheet" media="screen" href="@{'/public/stylesheets/bootstrap-2.3.2.min.css'}">
-		<link rel="stylesheet" media="screen" href="@{'/public/stylesheets/bootstrap-responsive-2.3.2.min.css'}">
-		<link rel="stylesheet" media="screen" href="@{'/public/stylesheets/jquery-ui-1.10.4.cupertino.min.css'}">
-		<link rel="stylesheet" media="screen" href="@{'/public/stylesheets/main.css'}">
-
-		<script src="@{'/public/javascripts/jquery-1.11.0.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-		<script src="@{'/public/javascripts/bootstrap-2.3.2.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
-		<script src="@{'/public/javascripts/jquery-ui-1.10.4.min.js'}" type="text/javascript" charset="${_response_encoding}"></script>
+		#{get 'styles' /}
+		#{get 'scripts' /}
+		
+		<script type="text/javascript">
+			var messages = {
+				'actions.cancel': '&{"actions.cancel"}',
+				'actions.validate': '&{"actions.validate"}'
+			};
+		</script>
 	</head>
 
 	<body>
 		<div class="navbar navbar-static-top">
 			<div class="navbar-inner">
 				<div class="container">	
-					<a class="brand" href="@{Application.index()}">MoneyManager</a>
+					<a class="brand" href="@{Application.index()}">${play.configuration['application.name']}</a>
 
 					<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
 						<span class="icon-bar"></span>
@@ -37,21 +50,22 @@
 
 					<div class="nav-collapse collapse">
 						<ul class="nav">
-							<li><a href="@{Banks.index()}">Banques</a></li>
-							<li><a href="@{Accounts.index()}">Comptes</a></li>
+							<li><a href="@{Banks.index()}">&{'labels.banks'}</a></li>
+							<li><a href="@{Customers.index()}">&{'labels.customers'}</a></li>
+							<li><a href="@{Accounts.index()}">&{'labels.accounts'}</a></li>
 						</ul>
 
-						#{if userId}
+						#{if customerId}
 							<ul class="nav pull-right">
 								<li class="dropdown">
-									<a class="dropdown-toggle" href="#" data-toggle="dropdown">${userFullName}&nbsp;<b class="caret"></b></a>
+									<a class="dropdown-toggle" href="#" data-toggle="dropdown">${customerFullName}&nbsp;<b class="caret"></b></a>
 									<ul class="dropdown-menu user-dropdown-menu">
 										<li class="dropdown">
 											<div>
 												<form class="navbar-form" action="@{SuperController.logOut()}" method="POST">
 													<input name="returnUrl" type="hidden" value="${returnUrl}">
 
-													<button type="submit" class="btn btn-link">&{'button.sign.out'}</button>
+													<button type="submit" class="btn btn-link">&{'actions.sign.out'}</button>
 												</form>
 											</div>
 										</li>
@@ -63,15 +77,15 @@
 							#{form @SuperController.logIn(), method:'POST', class:'navbar-form pull-right'}
 								<input name="returnUrl" type="hidden" value="${returnUrl}">
 
-								<input name="login" type="text" placeholder="Identifiant" value="${flash.login}">
-								<input name="password" type="password" placeholder="Password">
+								<input name="login" type="text" placeholder="&{'labels.login'}" value="${flash.login}">
+								<input name="password" type="password" placeholder="&{'labels.password'}">
 
 								<div class="btn-group">
-									<button type="submit" class="btn btn-primary">&{'button.sign.in'}</button>
+									<button type="submit" class="btn btn-primary">&{'actions.sign.in'}</button>
 									<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
 									<ul class="dropdown-menu">
 										<li>
-											<a href="@{Users.signUp()}">&{'button.sign.up'}</a>
+											<a href="@{Customers.create()}">&{'actions.sign.up'}</a>
 										</li>
 									</ul>
 								</div>

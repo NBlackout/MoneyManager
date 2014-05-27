@@ -1,6 +1,6 @@
 package models;
 
-public enum BankWebSite {
+public enum BankType {
 
 	CreditDuNord;
 }

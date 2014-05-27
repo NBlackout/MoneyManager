@@ -14,10 +14,7 @@ public class Account extends Model {
 	private static final long serialVersionUID = 8814425930298906224L;
 
 	@ManyToOne
-	public User user;
-
-	@ManyToOne
-	public Bank bank;
+	public Customer customer;
 
 	public String agency;
 

@@ -24,17 +24,17 @@
 		</div>
 
 		<div>
-			<label>Intitulé</label>
-			<input id="transactionLabel" name="label" type="text" placeholder="Intitulé">
+			<label>&{'labels.label'}</label>
+			<input id="transactionLabel" name="label" type="text" placeholder="&{'labels.label'}">
 		</div>
 
 		<div>
-			<label>Montant</label>
-			<input id="transactionAmount" name="amount" type="text" placeholder="Montant">
+			<label>&{'labels.amount'}</label>
+			<input id="transactionAmount" name="amount" type="text" placeholder="&{'labels.amount'}">
 		</div>
 
 		<div>
-			<label>Date de valeur</label>
+			<label>&{'labels.valueDate'}</label>
 			<input id="transactionDate" name="date" type="text">
 		</div>
 	#{/form}
@@ -43,10 +43,10 @@
 <table id="regularTransactions" class="table table-hover">
 	<thead>
 		<tr>
-			<th>Intitulé</th>
-			<th>Montant</th>
-			<th>Date</th>
-			<th>Actions</th>
+			<th>&{'labels.label'}</th>
+			<th>&{'labels.amount'}</th>
+			<th>${'labels.date'}</th>
+			<th>&{'labels.actions'}</th>
 		</tr>
 	</thead>
 
@@ -80,11 +80,11 @@
 <table id="oneOffTransactions" class="table table-hover">
 	<thead>
 		<tr>
-			<th>Intitulé</th>
-			<th>Montant</th>
-			<th>Date de valeur</th>
-			<th>Date de comptabilisation</th>
-			<th>Actions</th>
+			<th>&{'labels.label'}</th>
+			<th>&{'labels.amount'}</th>
+			<th>&{'labels.valueDate'}</th>
+			<th>&{'labels.recordingDate'}</th>
+			<th>&{'labels.actions'}</th>
 		</tr>
 	</thead>
 
@@ -108,17 +108,18 @@
 		var oneOffTransactions = $('#oneOffTransactions > tbody');
 		var form = $('#createRegularTransactionForm');
 
+		var buttons = {};
+		buttons[messages['actions.validate']] = function() {
+			form.submit();
+		};
+		buttons[messages['actions.cancel']] = function() {
+			$('#dialog-form').dialog('close')
+		};
+
 		/* Dialog configuration */
 		$('#dialog-form').dialog({
 			autoOpen: false,
-			buttons: {
-				'Valider': function() {
-					form.submit();
-				},
-				'Annuler': function() {
-					$(this).dialog('close');
-				}
-			},
+			buttons: buttons,
 			height: 375,
 			modal: true,
 			width: 450,
@@ -142,7 +143,7 @@
 		regularTransactions.find('a[data-action="expand"]').click(function() {
 			var categoryId = $(this).data('category-id');
 			regularTransactions.find('tr[data-category-id="' + categoryId + '"]').toggle();
-			
+
 			return false;
 		});
 

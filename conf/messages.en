@@ -5,26 +5,43 @@ datetime.format=MM/dd/yyyy HH:mm:ss
 # Currency
 currency=USD
 
-# Title
-title.home=Home
-title.user.sign.up=Sign up
+# Titles
+titles.application.index=Home
+titles.banks.index=Banks
+titles.user.sign.up=Sign up
+titles.customers.index=Customers
+titles.customers.create=Customer creation
+titles.customers.edit=Customer edition
 
-# Button
-button.back=Back
-button.sign.in=Sign in
-button.sign.out=Sign out
-button.sign.up=Sign up
-button.create=Create
-button.save=Save
+# Actions
+actions.cancel=Cancel
+actions.create=Create
+actions.save=Save
+actions.sign.in=Sign in
+actions.sign.out=Sign out
+actions.sign.up=Sign up
+actions.validate=Validate
 
-# User
-user.login=Login
-user.password=Password
-user.password.retype=Retype password
-user.firstName=First name
-user.lastName=Last name
+# Labels
+labels.accounts=Accounts
+labels.actions=Actions
+labels.amount=Amount
+labels.balance=Balance
+labels.bank=Bank
+labels.banks=Banks
+labels.customers=Customers
+labels.date=Date
+labels.firstName=First name
+labels.lastName=Last name
+labels.label=Label
+labels.lastSync=Last synchronization
+labels.login=Login
+labels.number=Number
+labels.password=Password
+labels.password.retyped=Retype password
+labels.recordingDate=Recording date
+labels.valueDate=Value date
 
-# Error
-error.field.required=This field is required
-error.user.password.wrong=Wrong password
-error.user.passwords.not.equals=The two passwords must be equals
+# Errors
+errors.field.required=This field is required
+errors.passwords.not.equals=The two passwords must be equals

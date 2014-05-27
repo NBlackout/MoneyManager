@@ -1,7 +1,7 @@
 package jobs.bootstraps;
 
 import models.Bank;
-import models.BankWebSite;
+import models.BankType;
 import models.transactions.regular.RegularTransactionCategory;
 import models.transactions.regular.RegularTransactionPeriodicity;
 import play.Logger;
@@ -26,7 +26,7 @@ public class Bootstrap extends Job {
 			Bank bank = new Bank();
 			bank.number = "30076";
 			bank.label = "Crédit du Nord";
-			bank.webSite = BankWebSite.CreditDuNord;
+			bank.type = BankType.CreditDuNord;
 			bank.save();
 		}
 		Logger.info("  END Bootstrap.initBanks()");

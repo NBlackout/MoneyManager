@@ -1,6 +1,6 @@
 package controllers;
 
-import models.User;
+import models.Customer;
 import play.data.validation.Required;
 import play.libs.Crypto;
 import play.mvc.Controller;
@@ -18,17 +18,13 @@ public class SuperController extends Controller {
 		redirect((returnUrl != null) ? returnUrl : Router.getFullUrl("Application.index"));
 	}
 
-	protected static void updateSession(User user) {
-		if (user != null) {
-			session.put("user.id", user.id);
-			session.put("user.login", user.login);
-			session.put("user.password", user.password);
-			session.put("user.fullName", user.firstName + " " + user.lastName);
+	protected static void updateSession(Customer customer) {
+		if (customer != null) {
+			session.put("customer.id", customer.id);
+			session.put("customer.fullName", customer.firstName + " " + customer.lastName);
 		} else {
-			session.remove("user.id");
-			session.remove("user.login");
-			session.remove("user.password");
-			session.remove("user.fullName");
+			session.remove("customer.id");
+			session.remove("customer.fullName");
 		}
 	}
 
@@ -36,16 +32,9 @@ public class SuperController extends Controller {
 		validation.required(login).message("error.field.required");
 		validation.required(password).message("error.field.required");
 
-		User user = null;
-		if (!validation.hasErrors()) {
-			user = User.find("byLoginAndPassword", login, Crypto.encryptAES(password)).first();
-			if (user == null) {
-				validation.addError("login", "error.user.not.found");
-			}
-		}
-
-		if (!validation.hasErrors()) {
-			updateSession(user);
+		Customer customer = Customer.find("byLoginAndPassword", login, Crypto.encryptAES(password)).first();
+		if (validation.hasErrors() == false && customer != null) {
+			updateSession(customer);
 		} else {
 			keepValidation();
 		}
@@ -53,7 +42,7 @@ public class SuperController extends Controller {
 		redirectSafely(returnUrl);
 	}
 
-	public static void logOut(@Required String returnUrl) {
+	public static void logOut(String returnUrl) {
 		updateSession(null);
 
 		redirectSafely(returnUrl);

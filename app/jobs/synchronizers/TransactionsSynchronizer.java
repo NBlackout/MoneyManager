@@ -13,20 +13,15 @@ import org.joda.time.DateTime;
 
 import play.Logger;
 import play.jobs.Job;
+import play.libs.Crypto;
 import play.libs.F.Promise;
 
-public class AccountSynchronizer extends Job {
+public class TransactionsSynchronizer extends Job {
 
 	private Account account;
 
-	private String login;
-
-	private String password;
-
-	public AccountSynchronizer(long accountId, String login, String password) {
+	public TransactionsSynchronizer(long accountId) {
 		this.account = Account.findById(accountId);
-		this.login = login;
-		this.password = password;
 	}
 
 	@Override
@@ -34,31 +29,25 @@ public class AccountSynchronizer extends Job {
 		Logger.info("BEGIN AccountSynchronizer.now()");
 		IWebSiteParser parser = null;
 
-		switch (account.bank.webSite) {
+		switch (account.customer.bank.type) {
 			case CreditDuNord:
-				parser = new CreditDuNordWebSiteParser(login, password);
+				parser = new CreditDuNordWebSiteParser();
 				break;
 			default:
 				break;
 		}
 
-		List<TransactionParserResult> results = parser.retrieveTransactions(account);
+		List<TransactionParserResult> results = parser.retrieveTransactions(account, account.customer.login, Crypto.decryptAES(account.customer.password));
 		for (TransactionParserResult result : results) {
-			String label = result.getLabel();
-			String additionalLabel = result.getAdditionalLabel();
-			double amount = result.getAmount();
-			DateTime valueDate = result.getValueDate();
-			DateTime recordingDate = result.getRecordingDate();
-
-			long count = OneOffTransaction.count("byLabelAndAmountAndValueDate", label, amount, valueDate);
+			long count = OneOffTransaction.count("byLabelAndAmountAndValueDate", result.getLabel(), result.getAmount(), result.getValueDate());
 			if (count == 0) {
 				OneOffTransaction transaction = new OneOffTransaction();
 				transaction.account = account;
-				transaction.label = label;
-				transaction.additionalLabel = additionalLabel;
-				transaction.amount = amount;
-				transaction.valueDate = valueDate;
-				transaction.recordingDate = recordingDate;
+				transaction.label = result.getLabel();
+				transaction.additionalLabel = result.getAdditionalLabel();
+				transaction.amount = result.getAmount();
+				transaction.valueDate = result.getValueDate();
+				transaction.recordingDate = result.getRecordingDate();
 				transaction.save();
 			}
 		}

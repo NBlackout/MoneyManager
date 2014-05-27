@@ -9,7 +9,7 @@ import models.Account;
 
 public interface IWebSiteParser {
 
-	public List<AccountParserResult> retrieveAccounts();
+	public List<AccountParserResult> retrieveAccounts(String login, String password);
 
-	public List<TransactionParserResult> retrieveTransactions(Account account);
+	public List<TransactionParserResult> retrieveTransactions(Account account, String login, String password);
 }

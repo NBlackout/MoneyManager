@@ -5,26 +5,43 @@ datetime.format=dd/MM/yyyy HH:mm:ss
 # Currency
 currency=EUR
 
-# Title
-title.home=Accueil
-title.user.sign.up=Inscription
+# Titles
+titles.application.index=Accueil
+titles.banks.index=Banques
+titles.user.sign.up=Inscription
+titles.customers.index=Clients
+titles.customers.create=Création d'un client
+titles.customers.edit=Édition d'un client
 
-# Button
-button.back=Retour
-button.sign.in=Connexion
-button.sign.out=Déconnexion
-button.sign.up=Inscription
-button.create=Créer
-button.save=Enregistrer
+# Actions
+actions.cancel=Annuler
+actions.create=Créer
+actions.save=Enregistrer
+actions.sign.in=Connexion
+actions.sign.out=Déconnexion
+actions.sign.up=Inscription
+actions.validate=Valider
 
-# User
-user.login=Identifiant
-user.password=Mot de passe
-user.password.retype=Retaper le mot de passe
-user.firstName=Prénom
-user.lastName=Nom
+# Labels
+labels.accounts=Comptes
+labels.actions=Actions
+labels.amount=Montant
+labels.balance=Solde
+labels.bank=Banque
+labels.banks=Banques
+labels.customers=Clients
+labels.date=Date
+labels.firstName=Prénom
+labels.lastName=Nom
+labels.label=Intitulé
+labels.lastSync=Dernière synchronization
+labels.login=Identifiant
+labels.number=Numéro
+labels.password=Mot de passe
+labels.password.retype=Retaper le mot de passe
+labels.recordingDate=Date de comptabilisation
+labels.valueDate=Date de valeur
 
-# Error
-error.field.required=Ce champs est requis
-error.user.password.wrong=Mauvais mot de passe
-error.user.passwords.not.equals=Les mots de passe doivent être égaux
+# Errors
+errors.field.required=Ce champs est requis
+errors.passwords.not.equals=Les mots de passe doivent être égaux
