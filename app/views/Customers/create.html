@@ -9,7 +9,7 @@
 			<label class="control-label required" for="bankId">&{'labels.bank'}</label>
 			<div class="controls">
 				#{select 'bankId', items:banks, labelProperty:'label', id:'bankId', value:'flash.bankId'}
-					#{option}It#{/option}
+					#{option}#{/option}
 				#{/select}
 				#{ifError 'bankId'}
 					<span class="help-inline">#{error 'bankId' /}</span>

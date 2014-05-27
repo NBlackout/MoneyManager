@@ -41,10 +41,6 @@ public class Accounts extends SuperController {
 				if (year == date.getYear() && month == date.getMonthOfYear()) {
 					date = period;
 				}
-
-				if (year == currentYear && month == currentMonth) {
-					break;
-				}
 			}
 		}
 

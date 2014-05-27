@@ -13,20 +13,35 @@ import org.joda.time.DateTime;
 
 import play.Logger;
 import play.jobs.Job;
+import play.jobs.On;
 import play.libs.Crypto;
 import play.libs.F.Promise;
 
+@On("0 0 0 * * ?")
 public class TransactionsSynchronizer extends Job {
 
-	private Account account;
+	private Account customAccount;
 
 	public TransactionsSynchronizer(long accountId) {
-		this.account = Account.findById(accountId);
+		this.customAccount = Account.findById(accountId);
 	}
 
 	@Override
 	public Promise<?> now() {
-		Logger.info("BEGIN AccountSynchronizer.now()");
+		Logger.info("BEGIN TransactionsSynchronizer.now()");
+		if (customAccount != null) {
+			synchronize(customAccount);
+		} else {
+			for (Account account : Account.<Account>findAll()) {
+				synchronize(account);
+			}
+		}
+		Logger.info("  END TransactionsSynchronizer.now()");
+		return null;
+	}
+
+	private void synchronize(Account account) {
+		Logger.info("BEGIN TransactionsSynchronizer.synchronize(" + account.label + ")");
 		IWebSiteParser parser = null;
 
 		switch (account.customer.bank.type) {
@@ -37,12 +52,12 @@ public class TransactionsSynchronizer extends Job {
 				break;
 		}
 
-		List<TransactionParserResult> results = parser.retrieveTransactions(account, account.customer.login, Crypto.decryptAES(account.customer.password));
+		List<TransactionParserResult> results = parser.retrieveTransactions(customAccount, customAccount.customer.login, Crypto.decryptAES(customAccount.customer.password));
 		for (TransactionParserResult result : results) {
 			long count = OneOffTransaction.count("byLabelAndAmountAndValueDate", result.getLabel(), result.getAmount(), result.getValueDate());
 			if (count == 0) {
 				OneOffTransaction transaction = new OneOffTransaction();
-				transaction.account = account;
+				transaction.account = customAccount;
 				transaction.label = result.getLabel();
 				transaction.additionalLabel = result.getAdditionalLabel();
 				transaction.amount = result.getAmount();
@@ -52,9 +67,8 @@ public class TransactionsSynchronizer extends Job {
 			}
 		}
 
-		account.lastSync = DateTime.now();
-		account.save();
-		Logger.info("  END AccountSynchronizer.now()");
-		return null;
+		customAccount.lastSync = DateTime.now();
+		customAccount.save();
+		Logger.info("  END TransactionsSynchronizer.synchronize(" + account.label + ")");
 	}
 }

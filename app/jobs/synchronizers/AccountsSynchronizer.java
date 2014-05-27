@@ -19,15 +19,28 @@ import play.libs.F.Promise;
 
 public class AccountsSynchronizer extends Job {
 
-	private Bank bank;
+	private Bank customBank;
 
 	public AccountsSynchronizer(long bankId) {
-		this.bank = Bank.findById(bankId);
+		this.customBank = Bank.findById(bankId);
 	}
 
 	@Override
 	public Promise<?> now() {
-		Logger.info("BEGIN BankSynchronizer.now()");
+		Logger.info("BEGIN AccountsSynchronizer.now()");
+		if (customBank != null) {
+			synchronize(customBank);
+		} else {
+			for (Bank bank : Bank.<Bank>findAll()) {
+				synchronize(bank);
+			}
+		}
+		Logger.info("  END AccountsSynchronizer.now()");
+		return null;
+	}
+
+	private void synchronize(Bank bank) {
+		Logger.info("BEGIN AccountsSynchronizer.synchronize(" + bank.label + ")");
 		IWebSiteParser parser = null;
 
 		switch (bank.type) {
@@ -58,7 +71,6 @@ public class AccountsSynchronizer extends Job {
 
 		bank.lastSync = DateTime.now();
 		bank.save();
-		Logger.info("  END BankSynchronizer.now()");
-		return null;
+		Logger.info("  END AccountsSynchronizer.synchronize(" + bank.label + ")");
 	}
 }
