@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 public class Transactions extends SuperController {
 
 	public static void create(Long accountId, Long transactionId, Long categoryId, String label, Double amount, DateTime date) {
+
 		if (transactionId == null) {
 			createConfiguration(accountId, label, amount, categoryId, date);
 		} else {
@@ -20,7 +21,7 @@ public class Transactions extends SuperController {
 			oneOffTransaction.delete();
 		}
 
-		Accounts.show(accountId, null, null);
+		Accounts.show(accountId, null);
 	}
 
 	public static void deactivate(Long configurationId) {
@@ -28,7 +29,7 @@ public class Transactions extends SuperController {
 		configuration.active = false;
 		configuration.save();
 
-		Accounts.show(configuration.account.id, null, null);
+		Accounts.show(configuration.account.id, null);
 	}
 
 	private static void createConfiguration(Long accountId, String label, Double amount, Long categoryId, DateTime date) {

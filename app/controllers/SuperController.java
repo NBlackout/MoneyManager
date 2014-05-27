@@ -1,7 +1,6 @@
 package controllers;
 
-import models.Customer;
-import play.data.validation.Required;
+import models.User;
 import play.libs.Crypto;
 import play.mvc.Controller;
 import play.mvc.Router;
@@ -18,13 +17,15 @@ public class SuperController extends Controller {
 		redirect((returnUrl != null) ? returnUrl : Router.getFullUrl("Application.index"));
 	}
 
-	protected static void updateSession(Customer customer) {
-		if (customer != null) {
-			session.put("customer.id", customer.id);
-			session.put("customer.fullName", customer.firstName + " " + customer.lastName);
+	protected static void updateSession(User user) {
+		if (user != null) {
+			session.put("user.id", user.id);
+			session.put("user.login", user.login);
+			session.put("user.locale", user.locale);
 		} else {
-			session.remove("customer.id");
-			session.remove("customer.fullName");
+			session.remove("user.id");
+			session.remove("user.login");
+			session.remove("user.locale");
 		}
 	}
 
@@ -32,9 +33,9 @@ public class SuperController extends Controller {
 		validation.required(login).message("error.field.required");
 		validation.required(password).message("error.field.required");
 
-		Customer customer = Customer.find("byLoginAndPassword", login, Crypto.encryptAES(password)).first();
-		if (validation.hasErrors() == false && customer != null) {
-			updateSession(customer);
+		User user = User.find("byLoginAndPassword", login, Crypto.encryptAES(password)).first();
+		if (validation.hasErrors() == false && user != null) {
+			updateSession(user);
 		} else {
 			keepValidation();
 		}

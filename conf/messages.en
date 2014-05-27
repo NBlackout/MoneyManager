@@ -1,5 +1,6 @@
-# Date
+# Dates
 date.format=MM/dd/yyyy
+date.format.month=MMMM yyyy
 datetime.format=MM/dd/yyyy HH:mm:ss
 
 # Currency
@@ -8,7 +9,7 @@ currency=USD
 # Titles
 titles.application.index=Home
 titles.banks.index=Banks
-titles.user.sign.up=Sign up
+titles.users.sign.up=Sign up
 titles.customers.index=Customers
 titles.customers.create=Customer creation
 titles.customers.edit=Customer edition
@@ -34,11 +35,12 @@ labels.date=Date
 labels.firstName=First name
 labels.lastName=Last name
 labels.label=Label
+labels.language=Language
 labels.lastSync=Last synchronization
 labels.login=Login
 labels.number=Number
 labels.password=Password
-labels.password.retyped=Retype password
+labels.password.bis=Retype password
 labels.recordingDate=Recording date
 labels.valueDate=Value date
 

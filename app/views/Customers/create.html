@@ -8,13 +8,15 @@
 		<div class="control-group#{ifError 'bankId'} error#{/ifError}">
 			<label class="control-label required" for="bankId">&{'labels.bank'}</label>
 			<div class="controls">
-				#{select 'bankId', items:banks, labelProperty:'label', id:'bankId', value:'flash.bankId' /}
+				#{select 'bankId', items:banks, labelProperty:'label', id:'bankId', value:'flash.bankId'}
+					#{option}It#{/option}
+				#{/select}
 				#{ifError 'bankId'}
 					<span class="help-inline">#{error 'bankId' /}</span>
 				#{/ifError}
 			</div>
 		</div>
-		
+
 		<div class="control-group#{ifError 'login'} error#{/ifError}">
 			<label class="control-label required" for="login">&{'labels.login'}</label>
 			<div class="controls">
@@ -35,12 +37,12 @@
 			</div>
 		</div>
 
-		<div class="control-group#{ifError 'passwordRetyped'} error#{/ifError}">
-			<label class="control-label required" for="passwordRetyped">&{'labels.password.retype'}</label>
+		<div class="control-group#{ifError 'passwordBis'} error#{/ifError}">
+			<label class="control-label required" for="passwordBis">&{'labels.password.bis'}</label>
 			<div class="controls">
-				<input id="passwordRetyped" name="passwordRetyped" type="password" placeholder="&{'labels.password.retype'}">
-				#{ifError 'passwordRetyped'}
-					<span class="help-inline">#{error 'passwordRetyped' /}</span>
+				<input id="passwordBis" name="passwordBis" type="password" placeholder="&{'labels.password.bis'}">
+				#{ifError 'passwordBis'}
+					<span class="help-inline">#{error 'passwordBis' /}</span>
 				#{/ifError}
 			</div>
 		</div>

@@ -1,15 +1,15 @@
 #{set 'styles'}
 	#{stylesheet 'browser-reset.css', media:'screen' /}
-	#{stylesheet 'bootstrap-2.3.2.min.css', media:'screen' /}
-	#{stylesheet 'bootstrap-responsive-2.3.2.min.css', media:'screen' /}
-	#{stylesheet 'jquery-ui-1.10.4.cupertino.min.css', media:'screen' /}
+	#{stylesheet 'bootstrap/bootstrap-2.3.2.min.css', media:'screen' /}
+	#{stylesheet 'bootstrap/bootstrap-responsive-2.3.2.min.css', media:'screen' /}
+	#{stylesheet 'jquery-ui/jquery-ui-1.10.4.cupertino.min.css', media:'screen' /}
 	#{stylesheet 'main.css', media:'screen' /}
 #{/set}
 
 #{set 'scripts'}
-	#{script 'jquery-1.11.0.min.js', charset:'_response_encoding' /}
-	#{script 'bootstrap-2.3.2.min.js', charset:'_response_encoding' /}
-	#{script 'jquery-ui-1.10.4.min.js', charset:'_response_encoding' /}
+	#{script 'jquery/jquery-1.11.0.min.js', charset:'_response_encoding' /}
+	#{script 'bootstrap/bootstrap-2.3.2.min.js', charset:'_response_encoding' /}
+	#{script 'jquery-ui/jquery-ui-1.10.4.min.js', charset:'_response_encoding' /}
 #{/set}
 
 %{
@@ -85,7 +85,7 @@
 									<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
 									<ul class="dropdown-menu">
 										<li>
-											<a href="@{Customers.create()}">&{'actions.sign.up'}</a>
+											<a href="@{Users.signUp()}">&{'actions.sign.up'}</a>
 										</li>
 									</ul>
 								</div>

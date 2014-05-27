@@ -20,18 +20,15 @@ public class OneOffTransaction extends Transaction {
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime recordingDate;
 
-	public static List<OneOffTransaction> findByAccountIdYearMonth(Long accountId, Integer year, Integer month) {
+	public static List<OneOffTransaction> findByAccountIdAndDate(Long accountId, DateTime date) {
 		if (accountId == null) {
 			throw new IllegalArgumentException("accountId cannot be null");
 		}
-		if (year == null) {
-			throw new IllegalArgumentException("year cannot be null");
-		}
-		if (month == null) {
-			throw new IllegalArgumentException("month cannot be null");
+		if (date == null) {
+			throw new IllegalArgumentException("date cannot be null");
 		}
 
-		DateTime minDate = new DateTime(year, month, 1, 0, 0);
+		DateTime minDate = new DateTime(date.getYear(), date.getMonthOfYear(), 1, 0, 0);
 		DateTime maxDate = minDate.plusMonths(1);
 
 		JPAQuery query = OneOffTransaction.find("account.id = :accountId AND valueDate >= :minDate AND valueDate < :maxDate ORDER BY valueDate DESC, id DESC");

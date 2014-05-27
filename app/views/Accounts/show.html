@@ -1,14 +1,14 @@
 #{extends 'main.html' /}
 #{set title:'Compte' /}
 
-#{form @Accounts.show(accountId), method:'GET', class:'form-inline'}
-	#{select 'month', items:months, value:month}
-	#{/select}
+#{form @Accounts.show(accountId), method:'POST', class:'form-inline'}
+	<select name="date">
+		#{list as:'period', items:periods}
+			<option value="${period}"#{if period == date} selected="selected"#{/if}>${period.toDate().format(messages.get('date.format.month'))}</option>
+		#{/list}
+	</select>
 
-	#{select 'year', items:years, value:year}
-	#{/select}
-
-	<button class="btn btn-primary" type="submit">Valider</button>
+	<button class="btn btn-primary" type="submit">&{'actions.validate'}</button>
 #{/form}
 
 <div id="dialog-form">
@@ -18,7 +18,7 @@
 
 		<div>
 			<label>Catégorie</label>
-			#{select 'categoryId', items:categories, valueProperty:'id', labelProperty:'label', id:'transactionCategory'}
+			#{select 'categoryId', items:categories, labelProperty:'label', id:'transactionCategory'}
 				#{option}#{/option}
 			#{/select}
 		</div>
@@ -67,7 +67,7 @@
 			#{list as:'transaction', items:regularTransactions.get(category)}
 				<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-category-id="${category.id}">
 					<td>${transaction.configuration.label}</td>
-					<td class="span1">${transaction.configuration.amount.formatCurrency(messages.get('currency'))}</td>
+					<td>${transaction.configuration.amount.formatCurrency(messages.get('currency'))}</td>
 					<td class="transaction-amount" style="display: none;">${transaction.configuration.amount}</td>
 					<td>${transaction.date.toDate().format(messages.get('date.format'))}</td>
 					<td><a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="delete"><i class="${transaction.configuration.active == true ? 'icon-step-forward' : 'icon-off'}"></i></a></td>

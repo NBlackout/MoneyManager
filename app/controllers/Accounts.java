@@ -1,7 +1,7 @@
 package controllers;
 
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,22 +21,32 @@ public class Accounts extends SuperController {
 		render(accounts);
 	}
 
-	public static void show(Long accountId, Integer year, Integer month) {
+	public static void show(Long accountId, DateTime date) {
 		if (accountId == null) {
 			index();
 		}
 
 		DateTime now = DateTime.now();
-
-		// Year
 		int currentYear = now.getYear();
-		year = (year == null) ? currentYear : year;
-		List<Integer> years = Arrays.asList(currentYear - 3, currentYear - 2, currentYear - 1, currentYear);
-
-		// Month
 		int currentMonth = now.getMonthOfYear();
-		month = (month == null) ? currentMonth : month;
-		List<Integer> months = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+
+		// Date
+		date = (date == null) ? now : date;
+		List<DateTime> periods = new LinkedList<>();
+		for (int year = currentYear - 3; year <= currentYear; year++) {
+			for (int month = 1; month <= 12; month++) {
+				DateTime period = new DateTime(year, month, 1, 0, 0);
+				periods.add(period);
+
+				if (year == date.getYear() && month == date.getMonthOfYear()) {
+					date = period;
+				}
+
+				if (year == currentYear && month == currentMonth) {
+					break;
+				}
+			}
+		}
 
 		// Categories
 		List<RegularTransactionCategory> categories = RegularTransactionCategory.findAll();
@@ -44,13 +54,13 @@ public class Accounts extends SuperController {
 		// Regular transactions
 		Map<RegularTransactionCategory, List<RegularTransaction>> regularTransactions = new HashMap<>();
 		for (RegularTransactionCategory category : categories) {
-			regularTransactions.put(category, RegularTransaction.findByAccountIdCategoryIdYearMonth(accountId, category.id, year, month));
+			regularTransactions.put(category, RegularTransaction.findByAccountIdAndCategoryIdAndDate(accountId, category.id, date));
 		}
 
 		// One-off transactions
-		List<OneOffTransaction> oneOffTransactions = OneOffTransaction.findByAccountIdYearMonth(accountId, year, month);
+		List<OneOffTransaction> oneOffTransactions = OneOffTransaction.findByAccountIdAndDate(accountId, date);
 
-		render(accountId, currentYear, year, years, currentMonth, month, months, categories, regularTransactions, oneOffTransactions);
+		render(accountId, periods, date, currentYear, currentMonth, categories, regularTransactions, oneOffTransactions);
 	}
 
 	public static void synchronize(long accountId) {

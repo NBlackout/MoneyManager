@@ -23,21 +23,18 @@ public class RegularTransaction extends Model {
 
 	public boolean done;
 
-	public static List<RegularTransaction> findByAccountIdCategoryIdYearMonth(Long accountId, Long categoryId, Integer year, Integer month) {
+	public static List<RegularTransaction> findByAccountIdAndCategoryIdAndDate(Long accountId, Long categoryId, DateTime date) {
 		if (accountId == null) {
 			throw new IllegalArgumentException("accountId cannot be null");
 		}
 		if (categoryId == null) {
 			throw new IllegalArgumentException("categoryId cannot be null");
 		}
-		if (year == null) {
-			throw new IllegalArgumentException("year cannot be null");
-		}
-		if (month == null) {
-			throw new IllegalArgumentException("month cannot be null");
+		if (date == null) {
+			throw new IllegalArgumentException("date cannot be null");
 		}
 
-		DateTime minDate = new DateTime(year, month, 1, 0, 0);
+		DateTime minDate = new DateTime(date.getYear(), date.getMonthOfYear(), 1, 0, 0);
 		DateTime maxDate = minDate.plusMonths(1);
 
 		JPAQuery query = RegularTransaction.find("configuration.account.id = :accountId AND configuration.category.id = :categoryId AND date >= :minDate AND date < :maxDate ORDER BY date DESC");
