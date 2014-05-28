@@ -8,7 +8,7 @@
 		<div class="control-group#{ifError 'bankId'} error#{/ifError}">
 			<label class="control-label required" for="bankId">&{'labels.bank'}</label>
 			<div class="controls">
-				#{select 'bankId', items:banks, labelProperty:'label', id:'bankId', value:'flash.bankId'}
+				#{select 'bankId', items:banks, labelProperty:'label', id:'bankId', value:flash.bankId}
 					#{option}#{/option}
 				#{/select}
 				#{ifError 'bankId'}

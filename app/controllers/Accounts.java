@@ -8,8 +8,8 @@ import java.util.Map;
 import jobs.synchronizers.TransactionsSynchronizer;
 import models.Account;
 import models.transactions.oneoff.OneOffTransaction;
+import models.transactions.regular.Category;
 import models.transactions.regular.RegularTransaction;
-import models.transactions.regular.RegularTransactionCategory;
 
 import org.joda.time.DateTime;
 
@@ -45,11 +45,11 @@ public class Accounts extends SuperController {
 		}
 
 		// Categories
-		List<RegularTransactionCategory> categories = RegularTransactionCategory.findAll();
+		List<Category> categories = Category.findAll();
 
 		// Regular transactions
-		Map<RegularTransactionCategory, List<RegularTransaction>> regularTransactions = new HashMap<>();
-		for (RegularTransactionCategory category : categories) {
+		Map<Category, List<RegularTransaction>> regularTransactions = new HashMap<>();
+		for (Category category : categories) {
 			regularTransactions.put(category, RegularTransaction.findByAccountIdAndCategoryIdAndDate(accountId, category.id, date));
 		}
 

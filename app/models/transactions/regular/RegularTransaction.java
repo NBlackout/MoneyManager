@@ -16,7 +16,7 @@ public class RegularTransaction extends Model {
 	private static final long serialVersionUID = -5828603636916049605L;
 
 	@ManyToOne
-	public RegularTransactionConfiguration configuration;
+	public Configuration configuration;
 
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime date;

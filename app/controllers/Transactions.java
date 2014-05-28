@@ -1,11 +1,11 @@
 package controllers;
 
-import jobs.schedulers.RegularTransactionScheduler;
+import jobs.generators.RegularTransactionGenerator;
 import models.Account;
 import models.transactions.oneoff.OneOffTransaction;
-import models.transactions.regular.RegularTransactionCategory;
-import models.transactions.regular.RegularTransactionConfiguration;
-import models.transactions.regular.RegularTransactionPeriodicity;
+import models.transactions.regular.Category;
+import models.transactions.regular.Configuration;
+import models.transactions.regular.Periodicity;
 
 import org.joda.time.DateTime;
 
@@ -14,7 +14,6 @@ import play.data.binding.As;
 public class Transactions extends SuperController {
 
 	public static void create(Long accountId, Long transactionId, Long categoryId, String label, Double amount, @As("dd/MM/yyyy") DateTime date) {
-		System.out.println(params.get("date"));
 		if (transactionId == null) {
 			createConfiguration(accountId, label, amount, categoryId, date);
 		} else {
@@ -27,7 +26,7 @@ public class Transactions extends SuperController {
 	}
 
 	public static void deactivate(Long configurationId) {
-		RegularTransactionConfiguration configuration = RegularTransactionConfiguration.findById(configurationId);
+		Configuration configuration = Configuration.findById(configurationId);
 		configuration.active = false;
 		configuration.save();
 
@@ -35,16 +34,16 @@ public class Transactions extends SuperController {
 	}
 
 	private static void createConfiguration(Long accountId, String label, Double amount, Long categoryId, DateTime date) {
-		RegularTransactionConfiguration configuration = new RegularTransactionConfiguration();
+		Configuration configuration = new Configuration();
 		configuration.account = Account.findById(accountId);
 		configuration.label = label;
 		configuration.amount = amount;
-		configuration.category = RegularTransactionCategory.findById(categoryId);
-		configuration.periodicity = RegularTransactionPeriodicity.find("byLabel", "Mensuelle").first();
+		configuration.category = Category.findById(categoryId);
+		configuration.periodicity = Periodicity.find("byLabel", "Mensuelle").first();
 		configuration.firstDueDate = date;
 		configuration.active = true;
 		configuration.save();
 
-		new RegularTransactionScheduler().now();
+		new RegularTransactionGenerator().now();
 	}
 }

@@ -4,6 +4,7 @@ import helpers.jsoup.parsers.transactions.TransactionParserResult;
 import helpers.jsoup.parsers.websites.CreditDuNordWebSiteParser;
 import helpers.jsoup.parsers.websites.IWebSiteParser;
 
+import java.util.Arrays;
 import java.util.List;
 
 import models.Account;
@@ -13,14 +14,16 @@ import org.joda.time.DateTime;
 
 import play.Logger;
 import play.jobs.Job;
-import play.jobs.On;
 import play.libs.Crypto;
 import play.libs.F.Promise;
 
-@On("0 0 0 * * ?")
 public class TransactionsSynchronizer extends Job {
 
 	private Account customAccount;
+
+	public TransactionsSynchronizer() {
+		this.customAccount = null;
+	}
 
 	public TransactionsSynchronizer(long accountId) {
 		this.customAccount = Account.findById(accountId);
@@ -29,14 +32,12 @@ public class TransactionsSynchronizer extends Job {
 	@Override
 	public Promise<?> now() {
 		Logger.info("BEGIN TransactionsSynchronizer.now()");
-		if (customAccount != null) {
-			synchronize(customAccount);
-		} else {
-			for (Account account : Account.<Account>findAll()) {
-				synchronize(account);
-			}
+		List<Account> accounts = (customAccount != null) ? Arrays.asList(customAccount) : Account.<Account>findAll();
+		for (Account account : accounts) {
+			synchronize(account);
 		}
 		Logger.info("  END TransactionsSynchronizer.now()");
+
 		return null;
 	}
 
@@ -52,12 +53,12 @@ public class TransactionsSynchronizer extends Job {
 				break;
 		}
 
-		List<TransactionParserResult> results = parser.retrieveTransactions(customAccount, customAccount.customer.login, Crypto.decryptAES(customAccount.customer.password));
+		List<TransactionParserResult> results = parser.retrieveTransactions(account, account.customer.login, Crypto.decryptAES(account.customer.password));
 		for (TransactionParserResult result : results) {
 			long count = OneOffTransaction.count("byLabelAndAmountAndValueDate", result.getLabel(), result.getAmount(), result.getValueDate());
 			if (count == 0) {
 				OneOffTransaction transaction = new OneOffTransaction();
-				transaction.account = customAccount;
+				transaction.account = account;
 				transaction.label = result.getLabel();
 				transaction.additionalLabel = result.getAdditionalLabel();
 				transaction.amount = result.getAmount();
@@ -67,8 +68,8 @@ public class TransactionsSynchronizer extends Job {
 			}
 		}
 
-		customAccount.lastSync = DateTime.now();
-		customAccount.save();
+		account.lastSync = DateTime.now();
+		account.save();
 		Logger.info("  END TransactionsSynchronizer.synchronize(" + account.label + ")");
 	}
 }

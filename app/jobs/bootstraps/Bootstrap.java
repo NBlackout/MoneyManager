@@ -2,8 +2,8 @@ package jobs.bootstraps;
 
 import models.Bank;
 import models.BankType;
-import models.transactions.regular.RegularTransactionCategory;
-import models.transactions.regular.RegularTransactionPeriodicity;
+import models.transactions.regular.Category;
+import models.transactions.regular.Periodicity;
 import play.Logger;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
@@ -34,11 +34,11 @@ public class Bootstrap extends Job {
 
 	private void initPeriodicities() {
 		Logger.info("BEGIN Bootstrap.initPeriodicities()");
-		if (RegularTransactionPeriodicity.count() == 0) {
+		if (Periodicity.count() == 0) {
 			for (String label : BoostrapConfiguration.PERIODICITY_LABELS) {
-				RegularTransactionPeriodicity regularTransactionPeriodicity = new RegularTransactionPeriodicity();
-				regularTransactionPeriodicity.label = label;
-				regularTransactionPeriodicity.save();
+				Periodicity periodicity = new Periodicity();
+				periodicity.label = label;
+				periodicity.save();
 			}
 		}
 		Logger.info("  END Bootstrap.initPeriodicities()");
@@ -46,11 +46,11 @@ public class Bootstrap extends Job {
 
 	private void initCategories() {
 		Logger.info("BEGIN Bootstrap.initCategories()");
-		if (RegularTransactionCategory.count() == 0) {
+		if (Category.count() == 0) {
 			for (String label : BoostrapConfiguration.CATEGORY_LABELS) {
-				RegularTransactionCategory regularTransactionCategory = new RegularTransactionCategory();
-				regularTransactionCategory.label = label;
-				regularTransactionCategory.save();
+				Category category = new Category();
+				category.label = label;
+				category.save();
 			}
 		}
 		Logger.info("  END Bootstrap.initCategories()");

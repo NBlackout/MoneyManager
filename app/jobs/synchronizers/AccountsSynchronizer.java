@@ -4,6 +4,7 @@ import helpers.jsoup.parsers.accounts.AccountParserResult;
 import helpers.jsoup.parsers.websites.CreditDuNordWebSiteParser;
 import helpers.jsoup.parsers.websites.IWebSiteParser;
 
+import java.util.Arrays;
 import java.util.List;
 
 import models.Account;
@@ -21,6 +22,10 @@ public class AccountsSynchronizer extends Job {
 
 	private Bank customBank;
 
+	public AccountsSynchronizer() {
+		this.customBank = null;
+	}
+
 	public AccountsSynchronizer(long bankId) {
 		this.customBank = Bank.findById(bankId);
 	}
@@ -28,14 +33,12 @@ public class AccountsSynchronizer extends Job {
 	@Override
 	public Promise<?> now() {
 		Logger.info("BEGIN AccountsSynchronizer.now()");
-		if (customBank != null) {
-			synchronize(customBank);
-		} else {
-			for (Bank bank : Bank.<Bank>findAll()) {
-				synchronize(bank);
-			}
+		List<Bank> banks = (customBank != null) ? Arrays.asList(customBank) : Bank.<Bank>findAll();
+		for (Bank bank : banks) {
+			synchronize(bank);
 		}
 		Logger.info("  END AccountsSynchronizer.now()");
+
 		return null;
 	}
 
