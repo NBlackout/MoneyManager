@@ -4,11 +4,10 @@ import jobs.generators.RegularTransactionGenerator;
 import jobs.synchronizers.AccountsSynchronizer;
 import jobs.synchronizers.TransactionsSynchronizer;
 import play.Logger;
-import play.jobs.Every;
 import play.jobs.Job;
+import play.jobs.On;
 
-//@On("0 0 0 * * ?")
-@Every("2mn")
+@On("0 0 * * * ?")
 public class JobTrigger extends Job {
 
 	@Override
