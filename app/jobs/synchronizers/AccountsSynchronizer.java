@@ -56,24 +56,26 @@ public class AccountsSynchronizer extends Job {
 
 		for (Customer customer : bank.customers) {
 			List<AccountParserResult> results = parser.retrieveAccounts(customer.login, Crypto.decryptAES(customer.password));
-			for (AccountParserResult result : results) {
-				Account account = Account.find("byLabel", result.getLabel()).first();
-				if (account == null) {
-					account = new Account();
-					account.customer = customer;
-					account.agency = result.getAgency();
-					account.rank = result.getRank();
-					account.series = result.getSeries();
-					account.subAccount = result.getSubAccount();
-					account.label = result.getLabel();
-					account.balance = result.getBalance();
-					account.save();
+			if (results != null) {
+				for (AccountParserResult result : results) {
+					Account account = Account.find("byLabel", result.getLabel()).first();
+					if (account == null) {
+						account = new Account();
+						account.customer = customer;
+						account.agency = result.getAgency();
+						account.rank = result.getRank();
+						account.series = result.getSeries();
+						account.subAccount = result.getSubAccount();
+						account.label = result.getLabel();
+						account.balance = result.getBalance();
+						account.save();
+					}
 				}
+
+				bank.lastSync = DateTime.now();
+				bank.save();
 			}
 		}
-
-		bank.lastSync = DateTime.now();
-		bank.save();
 		Logger.info("  END AccountsSynchronizer.synchronize(" + bank.label + ")");
 	}
 }

@@ -44,6 +44,6 @@ public class Transactions extends SuperController {
 		configuration.active = true;
 		configuration.save();
 
-		new RegularTransactionGenerator().now();
+		new RegularTransactionGenerator(configuration.id).now();
 	}
 }

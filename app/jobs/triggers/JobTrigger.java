@@ -8,7 +8,7 @@ import play.jobs.Every;
 import play.jobs.Job;
 
 //@On("0 0 0 * * ?")
-@Every("5mn")
+@Every("2mn")
 public class JobTrigger extends Job {
 
 	@Override

@@ -3,6 +3,7 @@ package models.transactions.oneoff;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import models.transactions.Transaction;
 
@@ -10,6 +11,7 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 @Entity
+@Table(name = "`OneOffTransaction`")
 public class OneOffTransaction extends Transaction {
 
 	private static final long serialVersionUID = 855382573468954474L;

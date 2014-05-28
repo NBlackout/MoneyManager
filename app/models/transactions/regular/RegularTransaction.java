@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -11,6 +12,7 @@ import org.joda.time.DateTime;
 import play.db.jpa.Model;
 
 @Entity
+@Table(name = "`RegularTransaction`")
 public class RegularTransaction extends Model {
 
 	private static final long serialVersionUID = -5828603636916049605L;
