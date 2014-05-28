@@ -5,9 +5,10 @@
 # Home page
 GET     /                                         Application.index
 GET     /banks/?                                  Banks.index
+GET     /customers/?                              Customers.index
 GET     /accounts/?                               Accounts.index
 GET     /accounts/{accountId}/?                   Accounts.show
-POST    /accounts/{accountId}/?                   Accounts.show
+GET     /accounts/{accountId}/{year}/{month}?     Accounts.show
 GET     /accounts/synchronize/{accountId}/?       Accounts.synchronize
 
 # Ignore favicon requests

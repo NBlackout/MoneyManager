@@ -21,7 +21,7 @@ public class Accounts extends SuperController {
 		render(accounts);
 	}
 
-	public static void show(Long accountId, DateTime date) {
+	public static void show(Long accountId, Integer year, Integer month) {
 		if (accountId == null) {
 			index();
 		}
@@ -30,17 +30,16 @@ public class Accounts extends SuperController {
 		int currentYear = now.getYear();
 		int currentMonth = now.getMonthOfYear();
 
-		// Date
-		date = (date == null) ? now : date;
-		List<DateTime> periods = new LinkedList<>();
-		for (int year = currentYear - 3; year <= currentYear; year++) {
-			for (int month = 1; month <= 12; month++) {
-				DateTime period = new DateTime(year, month, 1, 0, 0);
-				periods.add(period);
+		if (year == null || month == null) {
+			year = currentYear;
+			month = currentMonth;
+		}
 
-				if (year == date.getYear() && month == date.getMonthOfYear()) {
-					date = period;
-				}
+		// Dates
+		List<DateTime> dates = new LinkedList<>();
+		for (int y = currentYear - 3; y <= currentYear; y++) {
+			for (int m = 1; m <= 12; m++) {
+				dates.add(new DateTime(y, m, 1, 0, 0));
 			}
 		}
 
@@ -50,13 +49,13 @@ public class Accounts extends SuperController {
 		// Regular transactions
 		Map<Category, List<RegularTransaction>> regularTransactions = new HashMap<>();
 		for (Category category : categories) {
-			regularTransactions.put(category, RegularTransaction.findByAccountIdAndCategoryIdAndDate(accountId, category.id, date));
+			regularTransactions.put(category, RegularTransaction.findByAccountIdAndCategoryIdAndYearAndMonth(accountId, category.id, year, month));
 		}
 
 		// One-off transactions
-		List<OneOffTransaction> oneOffTransactions = OneOffTransaction.findByAccountIdAndDate(accountId, date);
+		List<OneOffTransaction> oneOffTransactions = OneOffTransaction.findByAccountIdAndYearAndMonth(accountId, year, month);
 
-		render(accountId, periods, date, currentYear, currentMonth, categories, regularTransactions, oneOffTransactions);
+		render(accountId, year, month, currentYear, currentMonth, dates, categories, regularTransactions, oneOffTransactions);
 	}
 
 	public static void synchronize(long accountId) {

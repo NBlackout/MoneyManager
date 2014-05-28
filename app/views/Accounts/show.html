@@ -1,17 +1,20 @@
 #{extends 'main.html' /}
 #{set title:'Compte' /}
 
-#{form @Accounts.show(accountId), method:'POST', class:'form-inline'}
-	<select name="date">
-		#{list as:'period', items:periods}
-			<option value="${period}"#{if period == date} selected="selected"#{/if}>${period.toDate().format(messages.get('date.format.month'))}</option>
+#{form @Accounts.show(accountId), method:'GET', id:'dateForm', class:'form-inline'}
+	<input id="dateYear" type="hidden" value="${year}">
+	<input id="dateMonth" type="hidden" value="${month}">
+
+	<select id="dates">
+		#{list as:'date', items:dates}
+			<option data-year="${date.toDate().format('yyyy')}" data-month="${date.toDate().format('M')}">${date.toDate().format(messages.get('date.format.month'))}</option>
 		#{/list}
 	</select>
 
 	<button class="btn btn-primary" type="submit">&{'actions.validate'}</button>
 #{/form}
 
-<div id="dialog-form">
+<div id="dialog">
 	#{form @Transactions.create(), id:'createRegularTransactionForm', method:'POST'}
 		<input name="accountId" type="hidden" value="${accountId}">
 		<input id="transactionId" name="transactionId" type="hidden">
@@ -70,7 +73,7 @@
 					<td>${transaction.configuration.amount.formatCurrency(messages.get('currency'))}</td>
 					<td class="transaction-amount" style="display: none;">${transaction.configuration.amount}</td>
 					<td>${transaction.date.toDate().format(messages.get('date.format'))}</td>
-					<td><a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="delete"><i class="${transaction.configuration.active == true ? 'icon-step-forward' : 'icon-off'}"></i></a></td>
+					<td><a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="delete"><i class="${transaction.configuration.active == true ? 'icon-stepForward' : 'icon-off'}"></i></a></td>
 				</tr>
 			#{/list}
 		#{/list}
@@ -103,21 +106,50 @@
 </table>
 
 <script type="text/javascript">
-	$(function() {
-		var regularTransactions = $('#regularTransactions > tbody');
-		var oneOffTransactions = $('#oneOffTransactions > tbody');
+	var dialog = $('#dialog');
+
+	function initDateForm() {
+		var dates = $('#dates');
+		var form = $('#dateForm');
+
+		dates.find('option').each(function() {
+			var date = $(this);
+			var year = date.data('year');
+			var month = date.data('month');
+
+			if (year == $('#dateYear').val() && month == $('#dateMonth').val()) {
+				date.attr('selected', 'selected');
+
+				return false;
+			}
+		});
+
+		form.submit(function() {
+			var date = $('#dates :selected');
+			var year = date.data('year');
+			var month = date.data('month');
+
+			window.location = form.attr('action') + '/' + year + '/' + month;
+
+
+			return false;
+		});
+	};
+
+	function initDialog() {
 		var form = $('#createRegularTransactionForm');
 
+		/* Buttons configuration */
 		var buttons = {};
 		buttons[messages['actions.validate']] = function() {
 			form.submit();
 		};
 		buttons[messages['actions.cancel']] = function() {
-			$('#dialog-form').dialog('close')
+			$('#dialog').dialog('close')
 		};
 
 		/* Dialog configuration */
-		$('#dialog-form').dialog({
+		$('#dialog').dialog({
 			autoOpen: false,
 			buttons: buttons,
 			height: 375,
@@ -138,6 +170,10 @@
 		form.submit(function() {
 			return confirm('Êtes-vous sûr de vouloir ajouter cette transaction permanente ?');
 		});
+	};
+
+	function initRegularTransactionsTable() {
+		var regularTransactions = $('#regularTransactions > tbody');
 
 		/* Regular transaction expansion from regular transactions table */
 		regularTransactions.find('a[data-action="expand"]').click(function() {
@@ -155,7 +191,7 @@
 			$('#transactionAmount').val('').prop('disabled', false);
 			$('#transactionDate').val('');
 
-			$('#dialog-form').dialog('open');
+			$('#dialog').dialog('open');
 
 			return false;
 		});
@@ -164,6 +200,10 @@
 		regularTransactions.find('a[data-action="delete"]').click(function() {
 			return confirm('Êtes-vous sûr de vouloir supprimer cette transaction permanente ?');
 		});
+	};
+
+	function initOneOffTransactionsTable() {
+		var oneOffTransactions = $('#oneOffTransactions > tbody');
 
 		/* Regular transaction creation from one-off transactions table */
 		oneOffTransactions.find('a[data-action="create"]').click(function() {
@@ -179,9 +219,16 @@
 			$('#transactionAmount').val(amount).prop('disabled', true);
 			$('#transactionDate').val(date);
 
-			$('#dialog-form').dialog('open');
+			dialog.dialog('open');
 
 			return false;
 		});
+	};
+
+	$(function() {
+		initDateForm();
+		initDialog();
+		initRegularTransactionsTable();
+		initOneOffTransactionsTable();
 	});
 </script>

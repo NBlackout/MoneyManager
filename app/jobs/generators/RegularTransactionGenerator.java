@@ -3,6 +3,7 @@ package jobs.generators;
 import java.util.Arrays;
 import java.util.List;
 
+import models.transactions.oneoff.OneOffTransaction;
 import models.transactions.regular.Configuration;
 import models.transactions.regular.RegularTransaction;
 
@@ -56,10 +57,20 @@ public class RegularTransactionGenerator extends Job {
 			}
 		}
 
+		boolean done = false;
+
+		OneOffTransaction oneOffTransaction = OneOffTransaction.findByAccountIdAndLabelAndAmountAndDate(configuration.account.id, configuration.label, configuration.amount, date);
+		if (oneOffTransaction != null) {
+			date = oneOffTransaction.valueDate;
+			done = date.isBefore(DateTime.now());
+
+			oneOffTransaction.delete();
+		}
+
 		RegularTransaction transaction = new RegularTransaction();
 		transaction.configuration = configuration;
 		transaction.date = date;
-		transaction.done = date.isBefore(DateTime.now());
+		transaction.done = done;
 		transaction.save();
 
 		configuration.lastDueDate = transaction.date;
