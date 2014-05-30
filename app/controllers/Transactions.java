@@ -1,8 +1,5 @@
 package controllers;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import jobs.generators.RegularTransactionGenerator;
 import models.Account;
 import models.transactions.oneoff.OneOffTransaction;
@@ -13,7 +10,6 @@ import models.transactions.regular.Periodicity;
 import org.joda.time.DateTime;
 
 import play.data.binding.As;
-import play.mvc.Router;
 
 public class Transactions extends SuperController {
 
@@ -27,12 +23,7 @@ public class Transactions extends SuperController {
 
 		createConfiguration(accountId, label, amount, categoryId, date);
 
-		Map<String, Object> params = new HashMap<>();
-		{
-			params.put("accountId", accountId);
-			params.put("date", date);
-		}
-		redirect(Router.reverse("Accounts.show", params).url);
+		Accounts.show(accountId, date.getYear(), date.getMonthOfYear());
 	}
 
 	public static void deactivate(Long configurationId) {
@@ -40,11 +31,16 @@ public class Transactions extends SuperController {
 		configuration.active = false;
 		configuration.save();
 
-		Map<String, Object> params = new HashMap<>();
-		{
-			params.put("accountId", configuration.account.id);
-		}
-		redirect(Router.reverse("Accounts.show", params).url);
+		Accounts.show(configuration.account.id, null, null);
+	}
+
+	public static void generate(Long configurationId) {
+		new RegularTransactionGenerator(configurationId).now();
+
+		Configuration configuration = Configuration.findById(configurationId);
+		DateTime date = configuration.lastDueDate;
+
+		Accounts.show(configuration.account.id, date.getYear(), date.getMonthOfYear());
 	}
 
 	private static void createConfiguration(Long accountId, String label, Double amount, Long categoryId, DateTime date) {
