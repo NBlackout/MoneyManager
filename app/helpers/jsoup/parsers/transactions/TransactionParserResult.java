@@ -10,21 +10,17 @@ public class TransactionParserResult {
 
 	private double amount;
 
-	private DateTime valueDate;
-
-	private DateTime recordingDate;
+	private DateTime date;
 
 	// @formatter:off
 	public String getLabel() { return label; }
 	public String getAdditionalLabel() { return additionalLabel; }
 	public double getAmount() { return amount; }
-	public DateTime getValueDate() { return valueDate; }
-	public DateTime getRecordingDate() { return recordingDate; }
+	public DateTime getDate() { return date; }
 
 	public void setLabel(String label) { this.label = label; }
 	public void setAdditionalLabel(String additionalLabel) { this.additionalLabel = additionalLabel; }
 	public void setAmount(double amount) { this.amount = amount; }
-	public void setValueDate(DateTime valueDate) { this.valueDate = valueDate; }
-	public void setRecordingDate(DateTime recordingDate) { this.recordingDate = recordingDate; }
+	public void setDate(DateTime date) { this.date = date; }
 	// @formatter:on
 }

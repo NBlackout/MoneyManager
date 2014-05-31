@@ -32,17 +32,15 @@ labels.bank=Bank
 labels.banks=Banks
 labels.customers=Customers
 labels.date=Date
+labels.date.lastSync=Last synchronization date
 labels.firstName=First name
 labels.lastName=Last name
 labels.label=Label
 labels.language=Language
-labels.lastSync=Last synchronization
 labels.login=Login
 labels.number=Number
 labels.password=Password
 labels.password.bis=Retype password
-labels.recordingDate=Recording date
-labels.valueDate=Value date
 
 # Errors
 errors.field.required=This field is required

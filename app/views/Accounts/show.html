@@ -37,7 +37,7 @@
 		</div>
 
 		<div>
-			<label>&{'labels.valueDate'}</label>
+			<label>&{'labels.date'}</label>
 			<input id="transactionDate" name="date" type="text" placeholder="&{'labels.date'}">
 		</div>
 	#{/form}
@@ -88,8 +88,7 @@
 		<tr>
 			<th>&{'labels.label'}</th>
 			<th>&{'labels.amount'}</th>
-			<th>&{'labels.valueDate'}</th>
-			<th>&{'labels.recordingDate'}</th>
+			<th>&{'labels.date'}</th>
 			<th>&{'labels.actions'}</th>
 		</tr>
 	</thead>
@@ -100,8 +99,7 @@
 				<td class="transaction-label">${transaction.label}</td>
 				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
 				<td class="transaction-amount" style="display: none;">${transaction.amount}</td>
-				<td class="transaction-date">${transaction.valueDate.toDate().format(messages.get('date.format'))}</td>
-				<td>${transaction.recordingDate.toDate().format(messages.get('date.format'))}</td>
+				<td class="transaction-date">${transaction.date.toDate().format(messages.get('date.format'))}</td>
 				<td><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>
 			</tr>
 		#{/list}

@@ -32,17 +32,15 @@ labels.bank=Banque
 labels.banks=Banques
 labels.customers=Clients
 labels.date=Date
+labels.date.lastSync=Date de dernière synchronization
 labels.firstName=Prénom
 labels.lastName=Nom
 labels.label=Intitulé
 labels.language=Langue
-labels.lastSync=Dernière synchronization
 labels.login=Identifiant
 labels.number=Numéro
 labels.password=Mot de passe
 labels.password.bis=Retaper le mot de passe
-labels.recordingDate=Date de comptabilisation
-labels.valueDate=Date de valeur
 
 # Errors
 errors.field.required=Ce champs est requis

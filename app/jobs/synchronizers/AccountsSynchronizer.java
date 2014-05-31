@@ -1,6 +1,7 @@
 package jobs.synchronizers;
 
 import helpers.jsoup.parsers.accounts.AccountParserResult;
+import helpers.jsoup.parsers.transactions.TransactionParserResult;
 import helpers.jsoup.parsers.websites.CreditDuNordWebSiteParser;
 import helpers.jsoup.parsers.websites.IWebSiteParser;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import models.Account;
 import models.Bank;
 import models.Customer;
+import models.transactions.oneoff.OneOffTransaction;
 
 import org.joda.time.DateTime;
 
@@ -54,26 +56,50 @@ public class AccountsSynchronizer extends Job {
 				break;
 		}
 
-		for (Customer customer : bank.customers) {
-			List<AccountParserResult> results = parser.retrieveAccounts(customer.login, Crypto.decryptAES(customer.password));
-			if (results != null) {
-				for (AccountParserResult result : results) {
-					Account account = Account.find("byLabel", result.getLabel()).first();
-					if (account == null) {
-						account = new Account();
-						account.customer = customer;
-						account.agency = result.getAgency();
-						account.rank = result.getRank();
-						account.series = result.getSeries();
-						account.subAccount = result.getSubAccount();
-						account.label = result.getLabel();
-						account.balance = result.getBalance();
-						account.save();
-					}
-				}
+		if (parser != null) {
+			for (Customer customer : bank.customers) {
+				String login = customer.login;
+				String password = Crypto.decryptAES(customer.password);
 
-				bank.lastSync = DateTime.now();
-				bank.save();
+				List<AccountParserResult> aResults = parser.retrieveAccounts(login, password);
+				if (aResults != null) {
+					for (AccountParserResult aResult : aResults) {
+						Account account = Account.find("byLabel", aResult.getLabel()).first();
+						if (account == null) {
+							account = new Account();
+							account.customer = customer;
+							account.agency = aResult.getAgency();
+							account.rank = aResult.getRank();
+							account.series = aResult.getSeries();
+							account.subAccount = aResult.getSubAccount();
+							account.label = aResult.getLabel();
+							account.balance = aResult.getBalance();
+							account.save();
+						}
+
+						List<TransactionParserResult> tResults = parser.retrieveTransactions(account, login, password);
+						if (tResults != null) {
+							for (TransactionParserResult tResult : tResults) {
+								long count = OneOffTransaction.count("byLabelAndAmountAndDate", tResult.getLabel(), tResult.getAmount(), tResult.getDate());
+								if (count == 0) {
+									OneOffTransaction transaction = new OneOffTransaction();
+									transaction.account = account;
+									transaction.label = tResult.getLabel();
+									transaction.additionalLabel = tResult.getAdditionalLabel();
+									transaction.amount = tResult.getAmount();
+									transaction.date = tResult.getDate();
+									transaction.save();
+								}
+							}
+
+							account.lastSync = DateTime.now();
+							account.save();
+						}
+					}
+
+					bank.lastSync = DateTime.now();
+					bank.save();
+				}
 			}
 		}
 		Logger.info("  END AccountsSynchronizer.synchronize(" + bank.label + ")");

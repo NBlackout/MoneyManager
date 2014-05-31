@@ -17,10 +17,7 @@ public class OneOffTransaction extends Transaction {
 	private static final long serialVersionUID = 855382573468954474L;
 
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
-	public DateTime valueDate;
-
-	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
-	public DateTime recordingDate;
+	public DateTime date;
 
 	public static List<OneOffTransaction> findByAccountIdAndYearAndMonth(Long accountId, Integer year, Integer month) {
 		if (accountId == null) {
@@ -36,7 +33,7 @@ public class OneOffTransaction extends Transaction {
 		DateTime minDate = new DateTime(year, month, 1, 0, 0);
 		DateTime maxDate = minDate.plusMonths(1);
 
-		JPAQuery query = OneOffTransaction.find("account.id = :accountId AND valueDate >= :minDate AND valueDate < :maxDate ORDER BY valueDate DESC, id DESC");
+		JPAQuery query = OneOffTransaction.find("account.id = :accountId AND date >= :minDate AND date < :maxDate ORDER BY date DESC, id DESC");
 		query.setParameter("accountId", accountId);
 		query.setParameter("minDate", minDate);
 		query.setParameter("maxDate", maxDate);
@@ -58,7 +55,7 @@ public class OneOffTransaction extends Transaction {
 		DateTime minDate = new DateTime(date.getYear(), date.getMonthOfYear(), 1, 0, 0);
 		DateTime maxDate = minDate.plusMonths(1);
 
-		JPAQuery query = OneOffTransaction.find("account.id = :accountId AND label = :label AND amount = :amount AND valueDate >= :minDate AND valueDate < :maxDate ORDER BY valueDate DESC, id DESC");
+		JPAQuery query = OneOffTransaction.find("account.id = :accountId AND label = :label AND amount = :amount AND date >= :minDate AND date < :maxDate ORDER BY date DESC, id DESC");
 		query.setParameter("accountId", accountId);
 		query.setParameter("label", label);
 		query.setParameter("amount", amount);

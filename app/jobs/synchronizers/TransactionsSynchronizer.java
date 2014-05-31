@@ -56,15 +56,14 @@ public class TransactionsSynchronizer extends Job {
 		List<TransactionParserResult> results = parser.retrieveTransactions(account, account.customer.login, Crypto.decryptAES(account.customer.password));
 		if (results != null) {
 			for (TransactionParserResult result : results) {
-				long count = OneOffTransaction.count("byLabelAndAmountAndValueDate", result.getLabel(), result.getAmount(), result.getValueDate());
+				long count = OneOffTransaction.count("byLabelAndAmountAndDate", result.getLabel(), result.getAmount(), result.getDate());
 				if (count == 0) {
 					OneOffTransaction transaction = new OneOffTransaction();
 					transaction.account = account;
 					transaction.label = result.getLabel();
 					transaction.additionalLabel = result.getAdditionalLabel();
 					transaction.amount = result.getAmount();
-					transaction.valueDate = result.getValueDate();
-					transaction.recordingDate = result.getRecordingDate();
+					transaction.date = result.getDate();
 					transaction.save();
 				}
 			}

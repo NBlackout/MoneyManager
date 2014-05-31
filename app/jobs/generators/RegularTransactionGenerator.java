@@ -61,7 +61,7 @@ public class RegularTransactionGenerator extends Job {
 
 		OneOffTransaction oneOffTransaction = OneOffTransaction.findByAccountIdAndLabelAndAmountAndDate(configuration.account.id, configuration.label, configuration.amount, date);
 		if (oneOffTransaction != null) {
-			date = oneOffTransaction.valueDate;
+			date = oneOffTransaction.date;
 			done = date.isBefore(DateTime.now());
 
 			oneOffTransaction.delete();

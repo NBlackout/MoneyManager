@@ -27,15 +27,13 @@ public class CreditDuNordTransactionParser implements ITransactionParser {
 					Double amount = Double.parseDouble((split[4].trim().isEmpty() == false) ? split[4].trim().replace(",", ".") : split[5].trim().replace(",", "."));
 					String label = split[8].replace("[\\s]+", " ").trim();
 					String additionalLabel = (split[9].replace("[\\s]+", " ").trim().isEmpty() == false) ? split[9].replace("[\\s]+", " ").trim() : null;
-					DateTime valueDate = DateTime.parse(split[7].trim(), formatter);
-					DateTime recordingDate = DateTime.parse(split[6].trim(), formatter);
+					DateTime date = DateTime.parse(split[7].trim(), formatter);
 
 					TransactionParserResult result = new TransactionParserResult();
 					result.setLabel(label);
 					result.setAdditionalLabel(additionalLabel);
 					result.setAmount(amount);
-					result.setValueDate(valueDate);
-					result.setRecordingDate(recordingDate);
+					result.setDate(date);
 
 					results.add(result);
 				}

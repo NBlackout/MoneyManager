@@ -22,11 +22,13 @@ import org.jsoup.nodes.Document;
 
 public class CreditDuNordWebSiteParser implements IWebSiteParser {
 
+	private Map<String, String> cookies;
+
 	@Override
 	public List<AccountParserResult> retrieveAccounts(String login, String password) {
 		List<AccountParserResult> results = null;
 
-		Map<String, String> cookies = getAuthenticationCookies(login, password);
+		cookies = getAuthenticationCookies(login, password);
 		String url = "https://www.credit-du-nord.fr/vos-comptes/particuliers";
 
 		Response response = JsoupConnection.get(url, cookies);
@@ -48,7 +50,10 @@ public class CreditDuNordWebSiteParser implements IWebSiteParser {
 	public List<TransactionParserResult> retrieveTransactions(Account account, String login, String password) {
 		List<TransactionParserResult> results = null;
 
-		Map<String, String> cookies = getAuthenticationCookies(login, password);
+		if (cookies == null) {
+			cookies = getAuthenticationCookies(login, password);
+		}
+
 		String url1 = "https://www.credit-du-nord.fr/vos-comptes/particuliers/V1_transactional_portal_page_26";
 
 		Response response1 = JsoupConnection.get(url1, cookies);
