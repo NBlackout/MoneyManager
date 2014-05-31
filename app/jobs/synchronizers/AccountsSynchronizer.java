@@ -64,6 +64,7 @@ public class AccountsSynchronizer extends Job {
 				List<AccountParserResult> aResults = parser.retrieveAccounts(login, password);
 				if (aResults != null) {
 					for (AccountParserResult aResult : aResults) {
+						// Retrieve account data
 						Account account = Account.find("byLabel", aResult.getLabel()).first();
 						if (account == null) {
 							account = new Account();
@@ -77,6 +78,7 @@ public class AccountsSynchronizer extends Job {
 							account.save();
 						}
 
+						// Retrieve transactions data
 						List<TransactionParserResult> tResults = parser.retrieveTransactions(account, login, password);
 						if (tResults != null) {
 							for (TransactionParserResult tResult : tResults) {

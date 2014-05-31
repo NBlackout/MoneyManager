@@ -103,8 +103,6 @@ public class CreditDuNordWebSiteParser implements IWebSiteParser {
 	}
 
 	private Map<String, String> getAuthenticationCookies(String login, String password) {
-		Map<String, String> cookies = null;
-
 		String url = "https://www.credit-du-nord.fr/saga/authentification";
 		Map<String, String> data = new HashMap<>();
 		{
