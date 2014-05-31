@@ -6,6 +6,10 @@ import play.libs.Crypto;
 public class Users extends SuperController {
 
 	public static void signUp() {
+		if (session.contains("user.id")) {
+			Application.index();
+		}
+
 		render();
 	}
 
@@ -16,7 +20,14 @@ public class Users extends SuperController {
 		validation.required(passwordBis).message("errors.field.required");
 		validation.required(locale).message("errors.field.required");
 
-		if (validation.hasError("passwordBis") == false && password.equals(passwordBis) == false) {
+		if (validation.hasError("login") == false) {
+			long count = User.count("byLogin", login);
+			if (count != 0) {
+				validation.addError("login", "errors.login.already.used");
+			}
+		}
+
+		if (validation.hasError("password") == false && validation.hasError("passwordBis") == false && password.equals(passwordBis) == false) {
 			validation.addError("passwordBis", "errors.passwords.not.equals");
 		}
 
@@ -29,6 +40,7 @@ public class Users extends SuperController {
 			user.save();
 
 			SuperController.updateSession(user);
+			Application.index();
 		} else {
 			keepValidation();
 			signUp();

@@ -47,4 +47,5 @@ labels.password.bis=Retype password
 
 # Errors
 errors.field.required=This field is required
+errors.login.already.used=Login already used
 errors.passwords.not.equals=The two passwords must be equals

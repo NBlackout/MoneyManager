@@ -5,8 +5,6 @@
 	<legend>&{'titles.users.sign.up'}</legend>
 
 	#{form @Users.save(), method:'POST', class:'form-horizontal'}
-		<input name="returnUrl" type="hidden" value="${returnUrl}">
-
 		<div class="control-group#{ifError 'login'} error#{/ifError}">
 			<label class="control-label required" for="login">&{'labels.login'}</label>
 			<div class="controls">

@@ -47,4 +47,5 @@ labels.password.bis=Retaper le mot de passe
 
 # Errors
 errors.field.required=Ce champs est requis
+errors.login.already.used=L'identifiant est déjà utilisé
 errors.passwords.not.equals=Les mots de passe doivent être égaux

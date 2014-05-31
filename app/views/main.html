@@ -13,9 +13,11 @@
 #{/set}
 
 %{
+	String applicationName = play.configuration['application.name'];
+
 	String returnUrl = request.url;
-	Long customerId = (session.get('customer.id')) ? Long.parseLong(session.get('customer.id')) : null;
-	String customerFullName = session.get('customer.fullName');
+	Long userId = (session.get('user.id')) ? Long.parseLong(session.get('user.id')) : null;
+	String userLogin = session.get('user.login');
 }%
 
 <!DOCTYPE html>
@@ -40,7 +42,7 @@
 		<div class="navbar navbar-static-top">
 			<div class="navbar-inner">
 				<div class="container">	
-					<a class="brand" href="@{Application.index()}">${play.configuration['application.name']}</a>
+					<a class="brand" href="@{Application.index()}">${applicationName}</a>
 
 					<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
 						<span class="icon-bar"></span>
@@ -55,10 +57,10 @@
 							<li><a href="@{Accounts.index()}">&{'labels.accounts'}</a></li>
 						</ul>
 
-						#{if customerId}
+						#{if userId}
 							<ul class="nav pull-right">
 								<li class="dropdown">
-									<a class="dropdown-toggle" href="#" data-toggle="dropdown">${customerFullName}&nbsp;<b class="caret"></b></a>
+									<a class="dropdown-toggle" href="#" data-toggle="dropdown">${userLogin}&nbsp;<b class="caret"></b></a>
 									<ul class="dropdown-menu user-dropdown-menu">
 										<li class="dropdown">
 											<div>
