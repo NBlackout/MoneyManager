@@ -57,10 +57,12 @@ public class RegularTransactionGenerator extends Job {
 			}
 		}
 
+		Double amount = null;
 		boolean done = false;
 
-		OneOffTransaction oneOffTransaction = OneOffTransaction.findByAccountIdAndLabelAndAmountAndDate(configuration.account.id, configuration.label, configuration.amount, date);
+		OneOffTransaction oneOffTransaction = OneOffTransaction.findByAccountIdAndLabelAndDate(configuration.account.id, configuration.label, date);
 		if (oneOffTransaction != null) {
+			amount = oneOffTransaction.amount;
 			date = oneOffTransaction.date;
 			done = date.isBefore(DateTime.now());
 
@@ -69,6 +71,7 @@ public class RegularTransactionGenerator extends Job {
 
 		RegularTransaction transaction = new RegularTransaction();
 		transaction.configuration = configuration;
+		transaction.amount = amount;
 		transaction.date = date;
 		transaction.done = done;
 		transaction.save();

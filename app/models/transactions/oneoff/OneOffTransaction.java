@@ -3,18 +3,30 @@ package models.transactions.oneoff;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import models.transactions.Transaction;
+import models.Account;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
+import play.db.jpa.Model;
+
 @Entity
 @Table(name = "`OneOffTransaction`")
-public class OneOffTransaction extends Transaction {
+public class OneOffTransaction extends Model {
 
 	private static final long serialVersionUID = 855382573468954474L;
+
+	@ManyToOne
+	public Account account;
+
+	public String label;
+
+	public String additionalLabel;
+
+	public double amount;
 
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime date;
@@ -41,7 +53,7 @@ public class OneOffTransaction extends Transaction {
 		return query.fetch();
 	}
 
-	public static OneOffTransaction findByAccountIdAndLabelAndAmountAndDate(Long accountId, String label, double amount, DateTime date) {
+	public static OneOffTransaction findByAccountIdAndLabelAndDate(Long accountId, String label, DateTime date) {
 		if (accountId == null) {
 			throw new IllegalArgumentException("accountId cannot be null");
 		}
@@ -55,10 +67,9 @@ public class OneOffTransaction extends Transaction {
 		DateTime minDate = new DateTime(date.getYear(), date.getMonthOfYear(), 1, 0, 0);
 		DateTime maxDate = minDate.plusMonths(1);
 
-		JPAQuery query = OneOffTransaction.find("account.id = :accountId AND label = :label AND amount = :amount AND date >= :minDate AND date < :maxDate ORDER BY date DESC, id DESC");
+		JPAQuery query = OneOffTransaction.find("account.id = :accountId AND label = :label AND date >= :minDate AND date < :maxDate ORDER BY date DESC, id DESC");
 		query.setParameter("accountId", accountId);
 		query.setParameter("label", label);
-		query.setParameter("amount", amount);
 		query.setParameter("minDate", minDate);
 		query.setParameter("maxDate", maxDate);
 

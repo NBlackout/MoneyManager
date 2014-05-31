@@ -36,6 +36,7 @@ labels.date.lastSync=Last synchronization date
 labels.firstName=First name
 labels.lastName=Last name
 labels.label=Label
+labels.label.friendly=Friendly label
 labels.language=Language
 labels.login=Login
 labels.number=Number

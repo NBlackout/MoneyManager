@@ -7,22 +7,31 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import models.transactions.Transaction;
+import models.Account;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
+import play.db.jpa.Model;
+
 @Entity
 @Table(name = "`Configuration`")
-public class Configuration extends Transaction {
+public class Configuration extends Model {
 
 	private static final long serialVersionUID = -5828603636916049605L;
+
+	@ManyToOne
+	public Account account;
 
 	@ManyToOne
 	public Category category;
 
 	@ManyToOne
 	public Periodicity periodicity;
+
+	public String label;
+
+	public String friendlyLabel;
 
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime firstDueDate;

@@ -2,7 +2,6 @@ package jobs.triggers;
 
 import jobs.generators.RegularTransactionGenerator;
 import jobs.synchronizers.AccountsSynchronizer;
-import jobs.synchronizers.TransactionsSynchronizer;
 import play.Logger;
 import play.jobs.Job;
 import play.jobs.On;
@@ -14,7 +13,6 @@ public class JobTrigger extends Job {
 	public void doJob() {
 		Logger.info("BEGIN JobTrigger.doJob()");
 		new AccountsSynchronizer().now();
-		new TransactionsSynchronizer().now();
 		new RegularTransactionGenerator().now();
 		Logger.info("  END JobTrigger.doJob()");
 	}

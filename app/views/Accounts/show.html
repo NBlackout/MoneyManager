@@ -16,7 +16,6 @@
 
 <div id="dialog">
 	#{form @Transactions.create(), id:'createRegularTransactionForm', method:'POST'}
-		<input name="accountId" type="hidden" value="${accountId}">
 		<input id="transactionId" name="transactionId" type="hidden">
 
 		<div>
@@ -27,13 +26,8 @@
 		</div>
 
 		<div>
-			<label>&{'labels.label'}</label>
-			<input id="transactionLabel" name="label" type="text" placeholder="&{'labels.label'}">
-		</div>
-
-		<div>
-			<label>&{'labels.amount'}</label>
-			<input id="transactionAmount" name="amount" type="text" placeholder="&{'labels.amount'}">
+			<label>&{'labels.label.friendly'}</label>
+			<input id="transactionFriendlyLabel" name="friendlyLabel" type="text" placeholder="&{'labels.label.friendly'}">
 		</div>
 
 		<div>
@@ -53,13 +47,6 @@
 		</tr>
 	</thead>
 
-	<tfoot>
-		<tr id="createRegularTransactionTr">
-			<td colspan="3"></td>
-			<td><a id="createRegularTransactionLink" href="#"><i class="icon-plus"></i></a></td>
-		</tr>
-	</tfoot>
-
 	<tbody>
 		#{list as:'category', items:regularTransactions.keySet()}
 			<tr>
@@ -69,9 +56,8 @@
 
 			#{list as:'transaction', items:regularTransactions.get(category)}
 				<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-category-id="${category.id}">
-					<td>${transaction.configuration.label}</td>
-					<td>${transaction.configuration.amount.formatCurrency(messages.get('currency'))}</td>
-					<td class="transaction-amount" style="display: none;">${transaction.configuration.amount}</td>
+					<td>${transaction.configuration.friendlyLabel}</td>
+					<td>${transaction.amount?.formatCurrency(messages.get('currency'))}</td>
 					<td>${transaction.date.toDate().format(messages.get('date.format'))}</td>
 					<td>
 						<a href="@{Transactions.generate(transaction.configuration.id)}"><i class="icon-cog"></i></a>
@@ -96,9 +82,8 @@
 	<tbody>
 		#{list as:'transaction', items:oneOffTransactions}
 			<tr data-transaction-id="${transaction.id}">
-				<td class="transaction-label">${transaction.label}</td>
+				<td>${transaction.label}</td>
 				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
-				<td class="transaction-amount" style="display: none;">${transaction.amount}</td>
 				<td class="transaction-date">${transaction.date.toDate().format(messages.get('date.format'))}</td>
 				<td><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>
 			</tr>
@@ -184,19 +169,6 @@
 			return false;
 		});
 
-		/* Regular transaction creation from regular transactions table */
-		$('#createRegularTransactionLink').click(function() {
-			$('#transactionId').val('').prop('disabled', true);
-			$('#transactionCategory').val('');
-			$('#transactionLabel').val('').prop('disabled', false);
-			$('#transactionAmount').val('').prop('disabled', false);
-			$('#transactionDate').val('');
-
-			$('#dialog').dialog('open');
-
-			return false;
-		});
-
 		/* Regular transaction deletion from regular transactions table */
 		regularTransactions.find('a[data-action="delete"]').click(function() {
 			return confirm('Êtes-vous sûr de vouloir supprimer cette transaction permanente ?');
@@ -210,14 +182,10 @@
 		oneOffTransactions.find('a[data-action="create"]').click(function() {
 			var tr = $(this).closest('tr[data-transaction-id]');
 			var transactionId = tr.data('transaction-id');
-			var label = tr.find('.transaction-label').text();
-			var amount = tr.find('.transaction-amount').text();
 			var date = tr.find('.transaction-date').text();
 
 			$('#transactionId').val(transactionId).prop('disabled', false);
 			$('#transactionCategory').val('');
-			$('#transactionLabel').val(label).prop('disabled', true);
-			$('#transactionAmount').val(amount).prop('disabled', true);
 			$('#transactionDate').val(date);
 
 			dialog.dialog('open');

@@ -20,6 +20,10 @@ public class RegularTransaction extends Model {
 	@ManyToOne
 	public Configuration configuration;
 
+	public String additionalLabel;
+
+	public Double amount;
+
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime date;
 
