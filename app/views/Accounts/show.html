@@ -1,5 +1,5 @@
 #{extends 'main.html' /}
-#{set title:'Compte' /}
+#{set title:messages.get('titles.accounts.show') /}
 
 #{form @Accounts.show(accountId), method:'GET', id:'dateForm', class:'form-inline'}
 	<input id="dateYear" type="hidden" value="${year}">

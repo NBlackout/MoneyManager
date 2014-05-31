@@ -7,12 +7,14 @@ datetime.format=MM/dd/yyyy HH:mm:ss
 currency=USD
 
 # Titles
+titles.accounts.index=Accounts
+titles.accounts.show=Account
 titles.application.index=Home
 titles.banks.index=Banks
-titles.users.sign.up=Sign up
-titles.customers.index=Customers
 titles.customers.create=Customer creation
 titles.customers.edit=Customer edition
+titles.customers.index=Customers
+titles.users.sign.up=Sign up
 
 # Actions
 actions.cancel=Cancel
