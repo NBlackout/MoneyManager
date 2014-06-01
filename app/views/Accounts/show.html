@@ -49,16 +49,24 @@
 
 	<tbody>
 		#{list as:'category', items:regularTransactions.keySet()}
+			%{
+				Double total = categoryTotals.get(category);
+			}%
+
 			<tr>
 				<td><a href="#" data-action="expand" data-category-id="${category.id}"><i class="icon-chevron-down"></i>&nbsp;${category.label}</a></td>
-				<td>${categoryTotals.get(category)?.formatCurrency(messages.get('currency'))}</td>
+				<td class="${(total < 0) ? 'debit' : ((total > 0) ? 'credit' : 'neutral')}">${total?.formatCurrency(messages.get('currency'))}</td>
 				<td colspan="2"></td>
 			</tr>
 
 			#{list as:'transaction', items:regularTransactions.get(category)}
+				%{
+					Double amount = transaction.amount;
+				}%
+
 				<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-category-id="${category.id}">
 					<td>${transaction.configuration.friendlyLabel}</td>
-					<td>${transaction.amount?.formatCurrency(messages.get('currency'))}</td>
+					<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}">${amount?.formatCurrency(messages.get('currency'))}</td>
 					<td>${transaction.date.toDate().format(messages.get('date.format'))}</td>
 					<td>
 						<a href="@{Transactions.generate(transaction.configuration.id)}"><i class="icon-cog"></i></a>
@@ -82,9 +90,13 @@
 
 	<tbody>
 		#{list as:'transaction', items:oneOffTransactions}
+			%{
+				double amount = transaction.amount;
+			}%
+
 			<tr data-transaction-id="${transaction.id}">
 				<td>${transaction.label}</td>
-				<td>${transaction.amount.formatCurrency(messages.get('currency'))}</td>
+				<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}">${amount.formatCurrency(messages.get('currency'))}</td>
 				<td class="transaction-date">${transaction.date.toDate().format(messages.get('date.format'))}</td>
 				<td><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>
 			</tr>
