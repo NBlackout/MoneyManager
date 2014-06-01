@@ -1,6 +1,10 @@
 #{extends 'main.html' /}
 #{set title:messages.get('titles.accounts.show') /}
 
+%{
+	currentDate = (year == currentYear && month == currentMonth);
+}%
+
 #{form @Accounts.show(accountId), method:'GET', id:'dateForm', class:'form-inline'}
 	<input id="dateYear" type="hidden" value="${year}">
 	<input id="dateMonth" type="hidden" value="${month}">
@@ -43,7 +47,10 @@
 			<th>&{'labels.label'}</th>
 			<th>&{'labels.amount'}</th>
 			<th>&{'labels.date'}</th>
-			<th>&{'labels.actions'}</th>
+
+			#{if currentDate == true}
+				<th>&{'labels.actions'}</th>
+			#{/if}
 		</tr>
 	</thead>
 
@@ -56,7 +63,13 @@
 			<tr>
 				<td><a href="#" data-action="expand" data-category-id="${category.id}"><i class="icon-chevron-down"></i>&nbsp;${category.label}</a></td>
 				<td class="${(total < 0) ? 'debit' : ((total > 0) ? 'credit' : 'neutral')}">${total?.formatCurrency(messages.get('currency'))}</td>
-				<td colspan="2"></td>
+
+				#{if currentDate == true}
+					<td colspan="2"></td>
+				#{/if}
+				#{else}
+					<td></td>
+				#{/else}
 			</tr>
 
 			#{list as:'transaction', items:regularTransactions.get(category)}
@@ -68,10 +81,13 @@
 					<td>${transaction.configuration.friendlyLabel}</td>
 					<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}">${amount?.formatCurrency(messages.get('currency'))}</td>
 					<td>${transaction.date.toDate().format(messages.get('date.format'))}</td>
-					<td>
-						<a href="@{Transactions.generate(transaction.configuration.id)}"><i class="icon-cog"></i></a>
-						<a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="delete"><i class="${transaction.configuration.active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
-					</td>
+
+					#{if currentDate == true}
+						<td>
+							<a href="@{Transactions.generate(transaction.configuration.id)}"><i class="icon-cog"></i></a>
+							<a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="delete"><i class="${transaction.configuration.active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
+						</td>
+					#{/if}
 				</tr>
 			#{/list}
 		#{/list}
@@ -84,7 +100,10 @@
 			<th>&{'labels.label'}</th>
 			<th>&{'labels.amount'}</th>
 			<th>&{'labels.date'}</th>
-			<th>&{'labels.pay.monthly'}</th>
+
+			#{if currentDate == true}
+				<th>&{'labels.pay.monthly'}</th>
+			#{/if}
 		</tr>
 	</thead>
 
@@ -98,7 +117,10 @@
 				<td>${transaction.label}</td>
 				<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}">${amount.formatCurrency(messages.get('currency'))}</td>
 				<td class="transaction-date">${transaction.date.toDate().format(messages.get('date.format'))}</td>
-				<td><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>
+
+				#{if currentDate == true}
+					<td><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>
+				#{/if}
 			</tr>
 		#{/list}
 	</tbody>
