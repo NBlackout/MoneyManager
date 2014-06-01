@@ -44,6 +44,7 @@ labels.login=Identifiant
 labels.number=Numéro
 labels.password=Mot de passe
 labels.password.bis=Retaper le mot de passe
+labels.pay.monthly=Mensualiser
 
 # Errors
 errors.field.required=Ce champs est requis

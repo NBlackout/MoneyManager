@@ -44,6 +44,7 @@ labels.login=Login
 labels.number=Number
 labels.password=Password
 labels.password.bis=Retype password
+labels.pay.monthly=Pay monthly
 
 # Errors
 errors.field.required=This field is required

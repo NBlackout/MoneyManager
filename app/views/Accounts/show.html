@@ -84,7 +84,7 @@
 			<th>&{'labels.label'}</th>
 			<th>&{'labels.amount'}</th>
 			<th>&{'labels.date'}</th>
-			<th>&{'labels.actions'}</th>
+			<th>&{'labels.pay.monthly'}</th>
 		</tr>
 	</thead>
 
@@ -129,7 +129,6 @@
 			var month = date.data('month');
 
 			window.location = form.attr('action') + '/' + year + '/' + month;
-
 
 			return false;
 		});
@@ -177,7 +176,19 @@
 		/* Regular transaction expansion from regular transactions table */
 		regularTransactions.find('a[data-action="expand"]').click(function() {
 			var categoryId = $(this).data('category-id');
-			regularTransactions.find('tr[data-category-id="' + categoryId + '"]').toggle();
+			var i = $(this).find('i');
+
+			if (i.hasClass('icon-chevron-down')) {
+				regularTransactions.find('tr[data-category-id="' + categoryId + '"]').hide();
+
+				i.removeClass('icon-chevron-down');
+				i.addClass('icon-chevron-right');
+			} else {
+				regularTransactions.find('tr[data-category-id="' + categoryId + '"]').show();
+
+				i.removeClass('icon-chevron-right');
+				i.addClass('icon-chevron-down');
+			}
 
 			return false;
 		});
