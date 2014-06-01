@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import jobs.synchronizers.TransactionsSynchronizer;
 import models.Account;
@@ -46,16 +47,31 @@ public class Accounts extends SuperController {
 		// Categories
 		List<Category> categories = Category.findAll();
 
-		// Regular transactions
+		// Category totals and regular transactions
+		Map<Category, Double> categoryTotals = new HashMap<>();
 		Map<Category, List<RegularTransaction>> regularTransactions = new HashMap<>();
 		for (Category category : categories) {
-			regularTransactions.put(category, RegularTransaction.findByAccountIdAndCategoryIdAndYearAndMonth(accountId, category.id, year, month));
+			Double total = null;
+			List<RegularTransaction> transactions = RegularTransaction.findByAccountIdAndCategoryIdAndYearAndMonth(accountId, category.id, year, month);
+
+			for (RegularTransaction transaction : transactions) {
+				if (transaction.amount != null) {
+					if (total == null) {
+						total = new Double(0d);
+					}
+
+					total += transaction.amount;
+				}
+			}
+
+			categoryTotals.put(category, total);
+			regularTransactions.put(category, transactions);
 		}
 
 		// One-off transactions
 		List<OneOffTransaction> oneOffTransactions = OneOffTransaction.findByAccountIdAndYearAndMonth(accountId, year, month);
 
-		render(accountId, year, month, currentYear, currentMonth, dates, categories, regularTransactions, oneOffTransactions);
+		render(accountId, year, month, currentYear, currentMonth, dates, categories, categoryTotals, regularTransactions, oneOffTransactions);
 	}
 
 	public static void synchronize(long accountId) {

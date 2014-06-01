@@ -51,7 +51,8 @@
 		#{list as:'category', items:regularTransactions.keySet()}
 			<tr>
 				<td><a href="#" data-action="expand" data-category-id="${category.id}"><i class="icon-chevron-down"></i>&nbsp;${category.label}</a></td>
-				<td colspan="3"></td>
+				<td>${categoryTotals.get(category)?.formatCurrency(messages.get('currency'))}</td>
+				<td colspan="2"></td>
 			</tr>
 
 			#{list as:'transaction', items:regularTransactions.get(category)}
