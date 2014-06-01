@@ -114,7 +114,7 @@
 			}%
 
 			<tr data-transaction-id="${transaction.id}">
-				<td>${transaction.label}</td>
+				<td class="transaction-label">${transaction.label}</td>
 				<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}">${amount.formatCurrency(messages.get('currency'))}</td>
 				<td class="transaction-date">${transaction.date.toDate().format(messages.get('date.format'))}</td>
 
@@ -228,12 +228,14 @@
 		oneOffTransactions.find('a[data-action="create"]').click(function() {
 			var tr = $(this).closest('tr[data-transaction-id]');
 			var transactionId = tr.data('transaction-id');
+			var label = tr.find('.transaction-label').text();
 			var date = tr.find('.transaction-date').text();
 
 			$('#transactionId').val(transactionId).prop('disabled', false);
 			$('#transactionCategory').val('');
 			$('#transactionDate').val(date);
 
+			dialog.dialog('option', 'title', label);
 			dialog.dialog('open');
 
 			return false;
