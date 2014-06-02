@@ -9,9 +9,9 @@
 	<h2>${account.label}&nbsp;<small>${account.customer.firstName}&nbsp;${account.customer.lastName}</small></h2>
 </div>
 
-#{form @Accounts.show(accountId), method:'GET', id:'dateForm', class:'text-center'}
+#{form @Accounts.show(account.accountId), method:'GET', id:'dateForm', class:'text-center'}
 	<div class="input-prepend input-append">
-		<a href="@{Accounts.show(accountId, previousDate.toDate().format('yyyy'), previousDate.toDate().format('M'))}" class="btn btn-primary">&{'labels.previous'}</a>
+		<a href="@{Accounts.show(account.accountId, previousDate.toDate().format('yyyy'), previousDate.toDate().format('M'))}" class="btn btn-primary">&{'labels.previous'}</a>
 
 		<select id="dates" class="span2">
 			#{list as:'d', items:dates}
@@ -19,7 +19,7 @@
 			#{/list}
 		</select>
 
-		<a href="@{Accounts.show(accountId, nextDate.toDate().format('yyyy'), nextDate.toDate().format('M'))}" class="btn btn-primary">&{'labels.next'}</a>
+		<a href="@{Accounts.show(account.accountId, nextDate.toDate().format('yyyy'), nextDate.toDate().format('M'))}" class="btn btn-primary">&{'labels.next'}</a>
 	</div>
 #{/form}
 
