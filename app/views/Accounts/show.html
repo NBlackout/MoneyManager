@@ -5,7 +5,11 @@
 	boolean currentDate = (date.equals(current) == true);
 }%
 
-#{form @Accounts.show(accountId), method:'GET', id:'dateForm'}
+<div class="page-header">
+	<h2>${account.label}&nbsp;<small>${account.customer.firstName}&nbsp;${account.customer.lastName}</small></h2>
+</div>
+
+#{form @Accounts.show(accountId), method:'GET', id:'dateForm', class:'text-center'}
 	<div class="input-prepend input-append">
 		<a href="@{Accounts.show(accountId, previousDate.toDate().format('yyyy'), previousDate.toDate().format('M'))}" class="btn btn-primary">&{'labels.previous'}</a>
 
@@ -45,58 +49,60 @@
 <div>
 	<h3>&{'titles.transactions.regular'}</h3>
 
-	<table id="regularTransactions" class="table table-hover">
-		<thead>
-			<tr>
-				<th>&{'labels.label'}</th>
-				<th>&{'labels.amount'}</th>
-				<th>&{'labels.date'}</th>
-
-				#{if currentDate == true}
-					<th>&{'labels.actions'}</th>
-				#{/if}
-			</tr>
-		</thead>
-
-		<tbody>
-			#{list as:'category', items:regularTransactions.keySet()}
-				%{
-					Double total = categoryTotals.get(category);
-				}%
-
+	<div class="well">
+		<table id="regularTransactions" class="table table-hover">
+			<thead>
 				<tr>
-					<td><a href="#" data-action="expand" data-category-id="${category.id}"><i class="icon-chevron-down"></i>&nbsp;${category.label}</a></td>
-					<td class="${(total < 0) ? 'debit' : ((total > 0) ? 'credit' : 'neutral')}">${total?.formatCurrency(messages.get('currency'))}</td>
+					<th>&{'labels.label'}</th>
+					<th class="span1">&{'labels.amount'}</th>
+					<th class="span2">&{'labels.date'}</th>
 
 					#{if currentDate == true}
-						<td colspan="2"></td>
+						<th>&{'labels.actions'}</th>
 					#{/if}
-					#{else}
-						<td></td>
-					#{/else}
 				</tr>
+			</thead>
 
-				#{list as:'transaction', items:regularTransactions.get(category)}
+			<tbody>
+				#{list as:'category', items:regularTransactions.keySet()}
 					%{
-						Double amount = transaction.amount;
+						Double total = categoryTotals.get(category);
 					}%
 
-					<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-category-id="${category.id}">
-						<td>${transaction.configuration.friendlyLabel}</td>
-						<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}">${amount?.formatCurrency(messages.get('currency'))}</td>
-						<td>${transaction.date.toDate().format(messages.get('date.format'))}</td>
+					<tr data-category-id="${category.id}" style="cursor: pointer;">
+						<td><a href="#"><i data-action="expand" class="icon-chevron-down"></i>&nbsp;${category.label}</a></td>
+						<td class="${(total < 0) ? 'debit' : ((total > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${total?.formatCurrency(messages.get('currency'))}</td>
 
 						#{if currentDate == true}
-							<td>
-								<a href="@{Transactions.generate(transaction.configuration.id)}"><i class="icon-cog"></i></a>
-								<a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="deactivate"><i class="${transaction.configuration.active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
-							</td>
+							<td colspan="2"></td>
 						#{/if}
+						#{else}
+							<td></td>
+						#{/else}
 					</tr>
+
+					#{list as:'transaction', items:regularTransactions.get(category)}
+						%{
+							Double amount = transaction.amount;
+						}%
+
+						<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-transaction-category-id="${category.id}">
+							<td style="padding-left: 25px;">${transaction.configuration.friendlyLabel}</td>
+							<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${amount?.formatCurrency(messages.get('currency'))}</td>
+							<td>${transaction.date.toDate().format(messages.get('date.format'))}</td>
+
+							#{if currentDate == true}
+								<td>
+									<a href="@{Transactions.generate(transaction.configuration.id)}"><i class="icon-cog"></i></a>
+									<a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="deactivate"><i class="${transaction.configuration.active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
+								</td>
+							#{/if}
+						</tr>
+					#{/list}
 				#{/list}
-			#{/list}
-		</tbody>
-	</table>
+			</tbody>
+		</table>
+	</div>
 </div>
 
 #{if oneOffTransactions}
@@ -108,8 +114,8 @@
 				<tr>
 					<th style="width: 1px;"></th>
 					<th>&{'labels.label'}</th>
-					<th>&{'labels.amount'}</th>
-					<th>&{'labels.date'}</th>
+					<th class="span1">&{'labels.amount'}</th>
+					<th class="span2">&{'labels.date'}</th>
 
 					#{if currentDate == true}
 						<th>&{'labels.pay.monthly'}</th>
@@ -132,7 +138,7 @@
 						#{/else}
 
 						<td class="transaction-label">${transaction.label}</td>
-						<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}">${amount.formatCurrency(messages.get('currency'))}</td>
+						<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${amount.formatCurrency(messages.get('currency'))}</td>
 						<td class="transaction-date">${transaction.date.toDate().format(messages.get('date.format'))}</td>
 
 						#{if currentDate == true}
@@ -167,7 +173,7 @@
 			var selected = dates.find('option:selected');
 			var year = date.data('year');
 			var month = date.data('month');
-			
+
 			window.location = $('#dateForm').attr('action') + '/' + year + '/' + month;
 		});
 	};
@@ -181,7 +187,7 @@
 			form.submit();
 		};
 		buttons[messages['actions.cancel']] = function() {
-			$('#dialog').dialog('close')
+			$('#dialog').dialog('close');
 		};
 
 		/* Dialog configuration */
@@ -212,8 +218,20 @@
 		var regularTransactions = $('#regularTransactions > tbody');
 
 		/* Regular transaction expansion from regular transactions table */
-		regularTransactions.find('a[data-action="expand"]').click(function() {
+		regularTransactions.find('tr[data-category-id]').click(function() {
 			var categoryId = $(this).data('category-id');
+			var i = $(this).find('i[data-action]');
+
+			var classToRemove = (i.hasClass('icon-chevron-down')) ? 'icon-chevron-down' : 'icon-chevron-right';
+			var classToAdd = (i.hasClass('icon-chevron-down')) ? 'icon-chevron-right' : 'icon-chevron-down';
+
+			i.removeClass(classToRemove);
+			i.addClass(classToAdd);
+
+			regularTransactions.find('tr[data-transaction-category-id="' + categoryId + '"]').toggle();
+		});
+
+		regularTransactions.find('a[data-action="expand"]').click(function() {
 			var i = $(this).find('i');
 
 			if (i.hasClass('icon-chevron-down')) {

@@ -26,6 +26,9 @@ public class Accounts extends SuperController {
 			index();
 		}
 
+		// Account
+		Account account = Account.findById(accountId);
+
 		DateTime now = DateTime.now();
 		int currentYear = now.getYear();
 		int currentMonth = now.getMonthOfYear();
@@ -74,7 +77,7 @@ public class Accounts extends SuperController {
 		// One-off transactions
 		List<OneOffTransaction> oneOffTransactions = OneOffTransaction.findByAccountIdAndYearAndMonth(accountId, year, month);
 
-		render(accountId, now, date, previousDate, nextDate, dates, categories, categoryTotals, regularTransactions, oneOffTransactions);
+		render(account, now, date, previousDate, nextDate, dates, categories, categoryTotals, regularTransactions, oneOffTransactions);
 	}
 
 	public static void synchronize(long accountId) {
