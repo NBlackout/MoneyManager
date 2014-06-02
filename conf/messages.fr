@@ -54,6 +54,10 @@ labels.pay.monthly=Mensualiser
 labels.previous=Précédent
 labels.users=Utilisateurs
 
+# Confirms
+confirms.transactions.regular.create=Êtes-vous sûr de vouloir mensualiser cette transaction ?
+confirms.transactions.regular.deactivate=Êtes-vous sûr de vouloir désactivate cette transaction ?
+
 # Errors
 errors.field.required=Ce champs est requis
 errors.login.already.used=L'identifiant est déjà utilisé

@@ -89,7 +89,7 @@
 						#{if currentDate == true}
 							<td>
 								<a href="@{Transactions.generate(transaction.configuration.id)}"><i class="icon-cog"></i></a>
-								<a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="delete"><i class="${transaction.configuration.active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
+								<a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="deactivate"><i class="${transaction.configuration.active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
 							</td>
 						#{/if}
 					</tr>
@@ -196,7 +196,7 @@
 
 		/* Form submission */
 		form.submit(function() {
-			return confirm('Êtes-vous sûr de vouloir ajouter cette transaction permanente ?');
+			return confirm(messages['confirms.transactions.regular.create']);
 		});
 	};
 
@@ -224,8 +224,8 @@
 		});
 
 		/* Regular transaction deletion from regular transactions table */
-		regularTransactions.find('a[data-action="delete"]').click(function() {
-			return confirm('Êtes-vous sûr de vouloir supprimer cette transaction permanente ?');
+		regularTransactions.find('a[data-action="deactivate"]').click(function() {
+			return confirm(messages['confirms.transactions.regular.deactivate']);
 		});
 	};
 

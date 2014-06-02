@@ -54,6 +54,10 @@ labels.pay.monthly=Pay monthly
 labels.previous=Previous
 labels.users=Users
 
+# Confirms
+confirms.transactions.regular.create=Are you sure you want to pay monthly this transaction ?
+confirms.transactions.regular.deactivate=Are you sure you want to deactivate this transaction ?
+
 # Errors
 errors.field.required=This field is required
 errors.login.already.used=Login already used
