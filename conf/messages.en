@@ -14,6 +14,8 @@ titles.banks.index=Banks
 titles.customers.create=Customer creation
 titles.customers.edit=Customer edition
 titles.customers.index=Customers
+titles.transactions.regular=Regular transactions
+titles.transactions.one-off=One-off transactions
 titles.users.index=Users
 titles.users.sign.up=Sign up
 
