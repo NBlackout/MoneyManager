@@ -37,7 +37,7 @@ public class Accounts extends SuperController {
 
 		// Dates
 		DateTime date = new DateTime(year, month, 1, 0, 0);
-		DateTime prevDate = date.minusMonths(1);
+		DateTime previousDate = date.minusMonths(1);
 		DateTime nextDate = date.plusMonths(1);
 
 		List<DateTime> dates = new LinkedList<>();
@@ -74,7 +74,7 @@ public class Accounts extends SuperController {
 		// One-off transactions
 		List<OneOffTransaction> oneOffTransactions = OneOffTransaction.findByAccountIdAndYearAndMonth(accountId, year, month);
 
-		render(accountId, now, date, prevDate, nextDate, dates, categories, categoryTotals, regularTransactions, oneOffTransactions);
+		render(accountId, now, date, previousDate, nextDate, dates, categories, categoryTotals, regularTransactions, oneOffTransactions);
 	}
 
 	public static void synchronize(long accountId) {

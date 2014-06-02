@@ -2,23 +2,22 @@
 #{set title:messages.get('titles.accounts.show') /}
 
 %{
-	boolean currentDate = (date.equals(current) == false);
+	boolean currentDate = (date.equals(current) == true);
 }%
-
-<div class="btn-group">
 
 #{form @Accounts.show(accountId), method:'GET', id:'dateForm'}
 	<div class="input-prepend input-append">
-		<a href="@{Accounts.show(accountId, prevDate.toDate().format('yyyy'), prevDate.toDate().format('M'))}" class="btn add-on">&lt;</a>
-		<select id="dates">
+		<a href="@{Accounts.show(accountId, previousDate.toDate().format('yyyy'), previousDate.toDate().format('M'))}" class="btn btn-primary">&{'labels.previous'}</a>
+
+		<select id="dates" class="span2">
 			#{list as:'d', items:dates}
 				<option data-year="${d.toDate().format('yyyy')}" data-month="${d.toDate().format('M')}">${d.toDate().format(messages.get('date.format.month'))}</option>
 			#{/list}
 		</select>
-		<a href="@{Accounts.show(accountId, nextDate.toDate().format('yyyy'), nextDate.toDate().format('M'))}" class="btn add-on">&gt;</a>
+
+		<a href="@{Accounts.show(accountId, nextDate.toDate().format('yyyy'), nextDate.toDate().format('M'))}" class="btn btn-primary">&{'labels.next'}</a>
 	</div>
 #{/form}
-</div>
 
 <div id="dialog" style="display: none;">
 	#{form @Transactions.create(), id:'createRegularTransactionForm', method:'POST'}

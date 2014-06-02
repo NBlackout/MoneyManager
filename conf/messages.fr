@@ -46,10 +46,12 @@ labels.label=Intitulé
 labels.label.friendly=Intitulé
 labels.language=Langue
 labels.login=Identifiant
+labels.next=Suivant
 labels.number=Numéro
 labels.password=Mot de passe
 labels.password.bis=Retaper le mot de passe
 labels.pay.monthly=Mensualiser
+labels.previous=Précédent
 labels.users=Utilisateurs
 
 # Errors
