@@ -2,21 +2,23 @@
 #{set title:messages.get('titles.accounts.show') /}
 
 %{
-	currentDate = (year == currentYear && month == currentMonth);
+	boolean currentDate = (date.equals(current) == false);
 }%
 
-#{form @Accounts.show(accountId), method:'GET', id:'dateForm', class:'form-inline'}
-	<input id="dateYear" type="hidden" value="${year}">
-	<input id="dateMonth" type="hidden" value="${month}">
+<div class="btn-group">
 
-	<select id="dates">
-		#{list as:'date', items:dates}
-			<option data-year="${date.toDate().format('yyyy')}" data-month="${date.toDate().format('M')}">${date.toDate().format(messages.get('date.format.month'))}</option>
-		#{/list}
-	</select>
-
-	<button class="btn btn-primary" type="submit">&{'actions.validate'}</button>
+#{form @Accounts.show(accountId), method:'GET', id:'dateForm'}
+	<div class="input-prepend input-append">
+		<a href="@{Accounts.show(accountId, prevDate.toDate().format('yyyy'), prevDate.toDate().format('M'))}" class="btn add-on">&lt;</a>
+		<select id="dates">
+			#{list as:'d', items:dates}
+				<option data-year="${d.toDate().format('yyyy')}" data-month="${d.toDate().format('M')}">${d.toDate().format(messages.get('date.format.month'))}</option>
+			#{/list}
+		</select>
+		<a href="@{Accounts.show(accountId, nextDate.toDate().format('yyyy'), nextDate.toDate().format('M'))}" class="btn add-on">&gt;</a>
+	</div>
 #{/form}
+</div>
 
 <div id="dialog" style="display: none;">
 	#{form @Transactions.create(), id:'createRegularTransactionForm', method:'POST'}
@@ -141,28 +143,25 @@
 
 	function initDateForm() {
 		var dates = $('#dates');
-		var form = $('#dateForm');
 
 		dates.find('option').each(function() {
 			var date = $(this);
 			var year = date.data('year');
 			var month = date.data('month');
 
-			if (year == $('#dateYear').val() && month == $('#dateMonth').val()) {
+			if (year == '${date.toDate().format("yyyy")}' && month == '${date.toDate().format("M")}') {
 				date.attr('selected', 'selected');
 
 				return false;
 			}
 		});
 
-		form.submit(function() {
-			var date = $('#dates :selected');
+		dates.change(function() {
+			var selected = dates.find('option:selected');
 			var year = date.data('year');
 			var month = date.data('month');
-
-			window.location = form.attr('action') + '/' + year + '/' + month;
-
-			return false;
+			
+			window.location = $('#dateForm').attr('action') + '/' + year + '/' + month;
 		});
 	};
 
@@ -192,7 +191,7 @@
 			buttonImage: '',
 			buttonImageOnly: true,
 			dateFormat: 'dd/mm/yy',
-			minDate: '01/${currentMonth}/${currentYear}',
+			minDate: '01/${now.getMonthOfYear()}/${now.getYear()}',
 			showOn: 'button'
 		});
 
