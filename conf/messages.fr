@@ -14,6 +14,7 @@ titles.banks.index=Banques
 titles.customers.create=Création d'un client
 titles.customers.edit=Édition d'un client
 titles.customers.index=Clients
+titles.users.index=Utilisateurs
 titles.users.sign.up=Inscription
 
 # Actions
@@ -28,6 +29,8 @@ actions.validate=Valider
 # Labels
 labels.accounts=Comptes
 labels.actions=Actions
+labels.activated=Activé
+labels.admin=Administrateur
 labels.amount=Montant
 labels.balance=Solde
 labels.bank=Banque
@@ -45,6 +48,7 @@ labels.number=Numéro
 labels.password=Mot de passe
 labels.password.bis=Retaper le mot de passe
 labels.pay.monthly=Mensualiser
+labels.users=Utilisateurs
 
 # Errors
 errors.field.required=Ce champs est requis

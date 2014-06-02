@@ -1,9 +1,17 @@
 package controllers;
 
+import java.util.List;
+
 import models.User;
 import play.libs.Crypto;
 
 public class Users extends SuperController {
+
+	public static void index() {
+		List<User> users = User.findAll();
+
+		render(users);
+	}
 
 	public static void signUp() {
 		if (session.contains("user.id")) {
@@ -37,9 +45,10 @@ public class Users extends SuperController {
 			user.login = login;
 			user.password = Crypto.encryptAES(password);
 			user.locale = locale;
+			user.admin = false;
+			user.activated = false;
 			user.save();
 
-			SuperController.updateSession(user);
 			Application.index();
 		} else {
 			keepValidation();

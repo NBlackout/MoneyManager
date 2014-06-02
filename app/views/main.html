@@ -18,6 +18,7 @@
 	String returnUrl = request.url;
 	Long userId = (session.get('user.id')) ? Long.parseLong(session.get('user.id')) : null;
 	String userLogin = session.get('user.login');
+	Boolean userAdmin = (session.get('user.admin')) ? Boolean.parseBoolean(session.get('user.admin')) : false;
 }%
 
 <!DOCTYPE html>
@@ -55,6 +56,10 @@
 							<li><a href="@{Banks.index()}">&{'labels.banks'}</a></li>
 							<li><a href="@{Customers.index()}">&{'labels.customers'}</a></li>
 							<li><a href="@{Accounts.index()}">&{'labels.accounts'}</a></li>
+
+							#{if userAdmin == true}
+								<li><a href="@{Users.index()}">&{'labels.users'}</a></li>
+							#{/if} 
 						</ul>
 
 						#{if userId}

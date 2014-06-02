@@ -14,6 +14,7 @@ titles.banks.index=Banks
 titles.customers.create=Customer creation
 titles.customers.edit=Customer edition
 titles.customers.index=Customers
+titles.users.index=Users
 titles.users.sign.up=Sign up
 
 # Actions
@@ -28,6 +29,8 @@ actions.validate=Validate
 # Labels
 labels.accounts=Accounts
 labels.actions=Actions
+labels.activated=Activated
+labels.admin=Administrator
 labels.amount=Amount
 labels.balance=Balance
 labels.bank=Bank
@@ -45,6 +48,7 @@ labels.number=Number
 labels.password=Password
 labels.password.bis=Retype password
 labels.pay.monthly=Pay monthly
+labels.users=Users
 
 # Errors
 errors.field.required=This field is required

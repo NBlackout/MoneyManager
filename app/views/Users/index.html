@@ -1,0 +1,26 @@
+#{extends 'main.html' /}
+#{set title:messages.get('titles.users.index') /}
+
+#{if users}
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th>&{'labels.login'}</th>
+				<th>&{'labels.language'}</th>
+				<th>&{'labels.activated'}</th>
+				<th>&{'labels.admin'}</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			#{list as:'user', items:users}
+				<tr>
+					<td>${user.login}</td>
+					<td>${play.configuration['languages.' + user.locale]}</td>
+					<td>${user.activated}</td>
+					<td>${user.admin}</td>
+				</tr>
+			#{/list}
+		</tbody>
+	</table>
+#{/if}
