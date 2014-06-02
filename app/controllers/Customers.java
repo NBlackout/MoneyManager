@@ -5,7 +5,7 @@ import java.util.List;
 import models.Bank;
 import models.Customer;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 
 import play.libs.Crypto;
 
@@ -48,7 +48,7 @@ public class Customers extends SuperController {
 			customer.bank = Bank.findById(bankId);
 			customer.login = login;
 			customer.password = Crypto.encryptAES(password);
-			customer.firstName = StringUtils.capitalize(firstName);
+			customer.firstName = WordUtils.capitalize(firstName.toLowerCase());
 			customer.lastName = lastName.toUpperCase();
 			customer.save();
 
