@@ -55,4 +55,13 @@ public class Users extends SuperController {
 			signUp();
 		}
 	}
+
+	public static void toggle(Long userId) {
+		User user = User.findById(userId);
+
+		user.activated = (user.activated == false);
+		user.save();
+
+		index();
+	}
 }
