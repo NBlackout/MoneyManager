@@ -1,16 +1,18 @@
 #{extends 'main.html' /}
-#{set title:messages.get('titles.users.sign.up') /}
+#{set title:messages.get('titles.users.edit') /}
 
 <fieldset>
-	<legend>&{'titles.users.sign.up'}</legend>
+	<legend>&{'titles.users.edit'}</legend>
 
-	#{form @Users.create(), method:'POST', class:'form-horizontal'}
-		<div class="control-group#{ifError 'login'} error#{/ifError}">
-			<label class="control-label required" for="login">&{'labels.login'}</label>
+	#{form @Users.save(), method:'POST', class:'form-horizontal'}
+		<input name="userId" type="hidden" value="${user.id}">
+
+		<div class="control-group#{ifError 'passwordOld'} error#{/ifError}">
+			<label class="control-label required" for="passwordOld">&{'labels.password.old'}</label>
 			<div class="controls">
-				<input id="login" name="login" type="text" value="${flash.login}" placeholder="&{'labels.login'}">
-				#{ifError 'login'}
-					<span class="help-inline">#{error 'login' /}</span>
+				<input id="passwordOld" name="passwordOld" type="password" placeholder="&{'labels.password.old'}">
+				#{ifError 'passwordOld'}
+					<span class="help-inline">#{error 'passwordOld' /}</span>
 				#{/ifError}
 			</div>
 		</div>
@@ -41,7 +43,7 @@
 				<select name="locale">
 					<option></option>
 					#{list items:play.langs, as:'locale'}
-						<option value="${locale}"#{if locale == flash.locale}selected="selected"#{/if}>${play.configuration['languages.' + locale]}</option>
+						<option value="${locale}"#{if locale == user.locale}selected="selected"#{/if}>${play.configuration['languages.' + locale]}</option>
 					#{/list}
 				</select> 
 				#{ifError 'locale'}
@@ -52,7 +54,7 @@
 
 		<div class="control-group">
 			<div class="controls">
-				<button class="btn btn-primary" type="submit">&{'actions.create'}</button>
+				<button class="btn btn-primary" type="submit">&{'actions.save'}</button>
 			</div>
 		</div>
 	#{/form}

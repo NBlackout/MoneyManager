@@ -21,7 +21,13 @@ public class Users extends SuperController {
 		render();
 	}
 
-	public static void save(String login, String password, String passwordBis, String locale) {
+	public static void edit(Long userId) {
+		User user = User.findById(userId);
+
+		render(user);
+	}
+
+	public static void create(String login, String password, String passwordBis, String locale) {
 		/* Parameters validation */
 		validation.required(login).message("errors.field.required");
 		validation.required(password).message("errors.field.required");
@@ -50,10 +56,43 @@ public class Users extends SuperController {
 			user.save();
 
 			Application.index();
-		} else {
-			keepValidation();
-			signUp();
 		}
+
+		keepValidation();
+		signUp();
+	}
+
+	public static void save(Long userId, String passwordOld, String password, String passwordBis, String locale) {
+		/* Parameters validation */
+		validation.required(passwordOld).message("errors.field.required");
+		validation.required(password).message("errors.field.required");
+		validation.required(passwordBis).message("errors.field.required");
+		validation.required(locale).message("errors.field.required");
+
+		if (validation.hasError("password") == false && validation.hasError("passwordBis") == false && password.equals(passwordBis) == false) {
+			validation.addError("passwordBis", "errors.passwords.not.equals");
+		}
+
+		User user = User.findById(userId);
+		if (validation.hasError("passwordOld") == false && Crypto.encryptAES(passwordOld).equals(user.password) == false) {
+			validation.addError("passwordOld", "errors.password.old.wrong");
+		}
+
+		if (validation.hasErrors() == false) {
+			/* User update */
+			user.password = Crypto.encryptAES(password);
+			user.locale = locale;
+			user.save();
+
+			if (session.contains("user.id") && user.id == Long.parseLong(session.get("user.id"))) {
+				SuperController.updateSession(user);
+			}
+
+			Application.index();
+		}
+
+		keepValidation();
+		edit(userId);
 	}
 
 	public static void toggle(Long userId) {

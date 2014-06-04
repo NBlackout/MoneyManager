@@ -24,6 +24,9 @@
 						#{if user.admin == false}
 							<a href="@{Users.toggle(user.id)}"><i class="${user.activated == true ? 'icon-stop' : 'icon-play'}"></i></a>
 						#{/if}
+						#{if user.admin == false || user.id == userId}
+							<a href="@{Users.edit(user.id)}"><i class="icon-edit"></i></a>
+						#{/if}
 					</td>
 				</tr>
 			#{/list}

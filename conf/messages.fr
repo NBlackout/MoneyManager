@@ -16,12 +16,14 @@ titles.customers.edit=Édition d'un client
 titles.customers.index=Clients
 titles.transactions.regular=Transaction régulières
 titles.transactions.one-off=Transaction uniques
+titles.users.edit=Édition d'un utilisateur
 titles.users.index=Utilisateurs
 titles.users.sign.up=Inscription
 
 # Actions
 actions.cancel=Annuler
 actions.create=Créer
+actions.modify=Modifier
 actions.save=Enregistrer
 actions.sign.in=Connexion
 actions.sign.out=Déconnexion
@@ -50,6 +52,7 @@ labels.next=Suivant
 labels.number=Numéro
 labels.password=Mot de passe
 labels.password.bis=Retaper le mot de passe
+labels.password.old=Ancien mot de passe
 labels.pay.monthly=Mensualiser
 labels.previous=Précédent
 labels.users=Utilisateurs
@@ -62,3 +65,4 @@ confirms.transactions.regular.deactivate=Êtes-vous sûr de vouloir désactivate
 errors.field.required=Ce champs est requis
 errors.login.already.used=L'identifiant est déjà utilisé
 errors.passwords.not.equals=Les mots de passe doivent être égaux
+errors.password.old.wrong=Le mot est incorrect 

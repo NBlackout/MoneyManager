@@ -16,12 +16,14 @@ titles.customers.edit=Customer edition
 titles.customers.index=Customers
 titles.transactions.regular=Regular transactions
 titles.transactions.one-off=One-off transactions
+titles.users.edit=User edition
 titles.users.index=Users
 titles.users.sign.up=Sign up
 
 # Actions
 actions.cancel=Cancel
 actions.create=Create
+actions.modify=Modify
 actions.save=Save
 actions.sign.in=Sign in
 actions.sign.out=Sign out
@@ -50,6 +52,7 @@ labels.next=Next
 labels.number=Number
 labels.password=Password
 labels.password.bis=Retype password
+labels.password.old=Old password
 labels.pay.monthly=Pay monthly
 labels.previous=Previous
 labels.users=Users
@@ -62,3 +65,4 @@ confirms.transactions.regular.deactivate=Are you sure you want to deactivate thi
 errors.field.required=This field is required
 errors.login.already.used=Login already used
 errors.passwords.not.equals=The two passwords must be equals
+errors.password.old.wrong=Wrong password
