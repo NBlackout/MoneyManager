@@ -97,9 +97,15 @@ public class Users extends SuperController {
 
 	public static void toggle(Long userId) {
 		User user = User.findById(userId);
-
 		user.activated = (user.activated == false);
 		user.save();
+
+		index();
+	}
+
+	public static void delete(Long userId) {
+		User user = User.findById(userId);
+		user.delete();
 
 		index();
 	}
