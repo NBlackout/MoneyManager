@@ -1,8 +1,8 @@
 #{extends 'main.html' /}
-#{set title:messages.get('titles.users.sign.up') /}
+#{set title:messages.get('titles.users.create') /}
 
 <fieldset>
-	<legend>&{'titles.users.sign.up'}</legend>
+	<legend>&{'titles.users.create'}</legend>
 
 	#{form @Users.save(), method:'POST', class:'form-horizontal'}
 		<div class="control-group#{ifError 'login'} error#{/ifError}">

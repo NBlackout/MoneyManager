@@ -53,9 +53,9 @@ public class Customers extends SuperController {
 			customer.save();
 
 			index();
-		} else {
-			keepValidation();
-			create();
 		}
+
+		keepValidation();
+		create();
 	}
 }

@@ -16,6 +16,7 @@ titles.customers.edit=Édition d'un client
 titles.customers.index=Clients
 titles.transactions.regular=Transaction régulières
 titles.transactions.one-off=Transaction uniques
+titles.users.create=Création d'un utilisateur
 titles.users.edit=Édition d'un utilisateur
 titles.users.index=Utilisateurs
 titles.users.sign.up=Inscription

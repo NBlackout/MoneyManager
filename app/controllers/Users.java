@@ -13,11 +13,7 @@ public class Users extends SuperController {
 		render(users);
 	}
 
-	public static void signUp() {
-		if (session.contains("user.id")) {
-			Application.index();
-		}
-
+	public static void create() {
 		render();
 	}
 
@@ -27,72 +23,85 @@ public class Users extends SuperController {
 		render(user);
 	}
 
-	public static void create(String login, String password, String passwordBis, String locale) {
-		/* Parameters validation */
-		validation.required(login).message("errors.field.required");
-		validation.required(password).message("errors.field.required");
-		validation.required(passwordBis).message("errors.field.required");
-		validation.required(locale).message("errors.field.required");
-
-		if (validation.hasError("login") == false) {
-			long count = User.count("byLogin", login);
-			if (count != 0) {
-				validation.addError("login", "errors.login.already.used");
-			}
-		}
-
-		if (validation.hasError("password") == false && validation.hasError("passwordBis") == false && password.equals(passwordBis) == false) {
-			validation.addError("passwordBis", "errors.passwords.not.equals");
-		}
-
-		if (validation.hasErrors() == false) {
-			/* User creation */
-			User user = new User();
-			user.login = login;
-			user.password = Crypto.encryptAES(password);
-			user.locale = locale;
-			user.admin = false;
-			user.activated = false;
-			user.save();
-
+	public static void signUp() {
+		if (session.contains("user.id")) {
 			Application.index();
 		}
 
-		keepValidation();
-		signUp();
+		render();
 	}
 
-	public static void save(Long userId, String passwordOld, String password, String passwordBis, String locale) {
-		/* Parameters validation */
-		validation.required(passwordOld).message("errors.field.required");
-		validation.required(password).message("errors.field.required");
-		validation.required(passwordBis).message("errors.field.required");
-		validation.required(locale).message("errors.field.required");
+	public static void save(Long userId, String login, String passwordOld, String password, String passwordBis, String locale) {
+		if (userId == null) {
+			/* Parameters validation */
+			validation.required(login).message("errors.field.required");
+			validation.required(password).message("errors.field.required");
+			validation.required(passwordBis).message("errors.field.required");
+			validation.required(locale).message("errors.field.required");
 
-		if (validation.hasError("password") == false && validation.hasError("passwordBis") == false && password.equals(passwordBis) == false) {
-			validation.addError("passwordBis", "errors.passwords.not.equals");
-		}
-
-		User user = User.findById(userId);
-		if (validation.hasError("passwordOld") == false && Crypto.encryptAES(passwordOld).equals(user.password) == false) {
-			validation.addError("passwordOld", "errors.password.old.wrong");
-		}
-
-		if (validation.hasErrors() == false) {
-			/* User update */
-			user.password = Crypto.encryptAES(password);
-			user.locale = locale;
-			user.save();
-
-			if (session.contains("user.id") && user.id == Long.parseLong(session.get("user.id"))) {
-				SuperController.updateSession(user);
+			if (validation.hasError("login") == false) {
+				long count = User.count("byLogin", login);
+				if (count != 0) {
+					validation.addError("login", "errors.login.already.used");
+				}
 			}
 
-			Application.index();
-		}
+			if (validation.hasError("password") == false && validation.hasError("passwordBis") == false && password.equals(passwordBis) == false) {
+				validation.addError("passwordBis", "errors.passwords.not.equals");
+			}
 
-		keepValidation();
-		edit(userId);
+			if (validation.hasErrors() == false) {
+				/* User creation */
+				User user = new User();
+				user.login = login;
+				user.password = Crypto.encryptAES(password);
+				user.locale = locale;
+				user.admin = false;
+				user.activated = false;
+				user.save();
+
+				Application.index();
+			}
+
+			keepValidation();
+
+			if (session.contains("user.id") == true) {
+				create();
+			} else {
+				signUp();
+			}
+		} else {
+			/* Parameters validation */
+			validation.required(passwordOld).message("errors.field.required");
+			validation.required(password).message("errors.field.required");
+			validation.required(passwordBis).message("errors.field.required");
+			validation.required(locale).message("errors.field.required");
+
+			if (validation.hasError("password") == false && validation.hasError("passwordBis") == false && password.equals(passwordBis) == false) {
+				validation.addError("passwordBis", "errors.passwords.not.equals");
+			}
+
+			User user = User.findById(userId);
+			if (validation.hasError("passwordOld") == false && Crypto.encryptAES(passwordOld).equals(user.password) == false) {
+				validation.addError("passwordOld", "errors.password.old.wrong");
+			}
+
+			if (validation.hasErrors() == false) {
+				/* User update */
+				user.password = Crypto.encryptAES(password);
+				user.locale = locale;
+				user.save();
+
+				if (session.contains("user.id") && user.id == Long.parseLong(session.get("user.id"))) {
+					SuperController.updateSession(user);
+				}
+
+				Application.index();
+			}
+
+			keepValidation();
+			edit(userId);
+		}
 	}
 
 	public static void toggle(Long userId) {
