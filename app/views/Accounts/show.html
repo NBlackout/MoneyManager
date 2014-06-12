@@ -2,7 +2,7 @@
 #{set title:messages.get('titles.accounts.show') /}
 
 %{
-	boolean currentDate = (date.equals(current) == true);
+	boolean currentDate = (date.getYear() == now.getYear() && date.getMonthOfYear() == now.getMonthOfYear());
 }%
 
 <div class="page-header">
