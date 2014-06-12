@@ -2,6 +2,8 @@
 #{set title:messages.get('titles.accounts.show') /}
 
 %{
+	Boolean userAdmin = (session.get('user.admin')) ? Boolean.parseBoolean(session.get('user.admin')) : false;
+
 	boolean currentDate = (date.getYear() == now.getYear() && date.getMonthOfYear() == now.getMonthOfYear());
 }%
 
@@ -54,10 +56,10 @@
 			<thead>
 				<tr>
 					<th>&{'labels.label'}</th>
-					<th class="span2">&{'labels.amount'}</th>
-					<th class="span2">&{'labels.date'}</th>
+					<th>&{'labels.amount'}</th>
+					<th>&{'labels.date'}</th>
 
-					#{if currentDate == true}
+					#{if currentDate == true || userAdmin == true}
 						<th>&{'labels.actions'}</th>
 					#{/if}
 				</tr>
@@ -73,7 +75,7 @@
 						<td><a href="#"><i data-action="expand" class="icon-chevron-down"></i>&nbsp;${category.label}</a></td>
 						<td class="${(total < 0) ? 'debit' : ((total > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${total?.formatCurrency(messages.get('currency'))}</td>
 
-						#{if currentDate == true}
+						#{if currentDate == true || userAdmin == true}
 							<td colspan="2"></td>
 						#{/if}
 						#{else}
@@ -91,7 +93,7 @@
 							<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${amount?.formatCurrency(messages.get('currency'))}</td>
 							<td>${transaction.date.toDate().format(messages.get('date.format'))}</td>
 
-							#{if currentDate == true}
+							#{if currentDate == true || userAdmin == true}
 								<td>
 									<a href="@{Transactions.generate(transaction.configuration.id)}"><i class="icon-cog"></i></a>
 									<a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="deactivate"><i class="${transaction.configuration.active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
@@ -114,8 +116,8 @@
 				<tr>
 					<th style="width: 1px;"></th>
 					<th>&{'labels.label'}</th>
-					<th class="span2">&{'labels.amount'}</th>
-					<th class="span2">&{'labels.date'}</th>
+					<th>&{'labels.amount'}</th>
+					<th>&{'labels.date'}</th>
 
 					#{if currentDate == true}
 						<th>&{'labels.pay.monthly'}</th>
