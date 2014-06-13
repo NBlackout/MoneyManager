@@ -31,7 +31,7 @@ public class Users extends SuperController {
 		render();
 	}
 
-	public static void save(Long userId, String login, String passwordOld, String password, String passwordBis, String locale) {
+	public static void save(Long userId, String login, String passwordOld, String password, String passwordBis, String locale, Boolean admin, Boolean activated) {
 		if (userId == null) {
 			/* Parameters validation */
 			validation.required(login).message("errors.field.required");
@@ -56,8 +56,8 @@ public class Users extends SuperController {
 				user.login = login;
 				user.password = Crypto.encryptAES(password);
 				user.locale = locale;
-				user.admin = false;
-				user.activated = false;
+				user.admin = admin;
+				user.activated = activated;
 				user.save();
 
 				Application.index();

@@ -54,6 +54,22 @@
 	</div>
 
 	<div class="control-group">
+		<label class="control-label" for="admin">&{'labels.admin'}</label>
+		<div class="controls">
+			<input id="admin" name="admin" type="checkbox" value="true"#{if user.admin == true}checked="checked"#{/if}>
+			<input name="admin" type="hidden" value="false">
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="activated">&{'labels.activated'}</label>
+		<div class="controls">
+			<input id="activated" name="activated" type="checkbox" value="true"#{if user.activated == true}checked="checked"#{/if}>
+			<input name="activated" type="hidden" value="false">
+		</div>
+	</div>
+
+	<div class="control-group">
 		<div class="controls">
 			<button class="btn btn-primary" type="submit">&{'actions.save'}</button>
 		</div>
