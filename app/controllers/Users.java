@@ -2,10 +2,10 @@ package controllers;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-import org.jsoup.helper.StringUtil;
-
 import models.User;
+
+import org.apache.commons.lang.StringUtils;
+
 import play.libs.Crypto;
 
 public class Users extends SuperController {
