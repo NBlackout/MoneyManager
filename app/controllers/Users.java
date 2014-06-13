@@ -79,22 +79,23 @@ public class Users extends SuperController {
 			/* Parameters validation */
 			validation.required(locale).message("errors.field.required");
 
-			if (StringUtils.isBlank(passwordOld) == false) {
+			boolean passwordFlag = StringUtils.isBlank(passwordOld);
+			if (passwordFlag == false) {
 				validation.required(password).message("errors.field.required");
 				validation.required(passwordBis).message("errors.field.required");
 
-				if (validation.hasError("password") == false && validation.hasError("passwordBis") == false && password.equals(passwordBis) == false) {
-					validation.addError("passwordBis", "errors.passwords.not.equals");
+				if (Crypto.encryptAES(passwordOld).equals(user.password) == false) {
+					validation.addError("passwordOld", "errors.password.old.wrong");
 				}
 
-				if (validation.hasError("passwordOld") == false && Crypto.encryptAES(passwordOld).equals(user.password) == false) {
-					validation.addError("passwordOld", "errors.password.old.wrong");
+				if (validation.hasError("password") == false && validation.hasError("passwordBis") == false && password.equals(passwordBis) == false) {
+					validation.addError("passwordBis", "errors.passwords.not.equals");
 				}
 			}
 
 			if (validation.hasErrors() == false) {
 				/* User update */
-				user.password = Crypto.encryptAES(password);
+				user.password = (passwordFlag == false) ? Crypto.encryptAES(password) : user.password;
 				user.locale = locale;
 				user.admin = admin;
 				user.activated = activated;
