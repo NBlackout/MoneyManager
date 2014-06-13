@@ -1,6 +1,10 @@
 #{extends 'main.html' /}
 #{set title:messages.get('titles.users.index') /}
 
+<div class="page-header">
+	<h1>&{'labels.users'}</h1>
+</div>
+
 #{if users}
 	<table class="table table-hover">
 		<thead>
@@ -34,6 +38,9 @@
 		</tbody>
 	</table>
 #{/if}
+#{else}
+	<p>&{'info.users.empty'}</p>
+#{/else}
 
 <div>
 	<a href="@{Users.create()}" class="btn btn-primary">&{'actions.create'}</a>

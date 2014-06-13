@@ -62,6 +62,11 @@ labels.users=Utilisateurs
 confirms.transactions.regular.create=Êtes-vous sûr de vouloir mensualiser cette transaction ?
 confirms.transactions.regular.deactivate=Êtes-vous sûr de vouloir désactivate cette transaction ?
 
+# Info
+info.accounts.empty=Aucun compte trouvé
+info.customers.empty=Aucun client ajouté
+info.users.empty=Aucun utilisateur enregistré
+
 # Errors
 errors.field.required=Ce champs est requis
 errors.login.already.used=L'identifiant est déjà utilisé

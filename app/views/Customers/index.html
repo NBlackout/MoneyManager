@@ -1,6 +1,10 @@
 #{extends 'main.html' /}
 #{set title:messages.get('titles.customers.index') /}
 
+<div class="page-header">
+	<h1>&{'labels.customers'}</h1>
+</div>
+
 #{if customers}
 	<table id="customers" class="table table-hover">
 		<thead>
@@ -24,6 +28,9 @@
 		</tbody>
 	</table>
 #{/if}
+#{else}
+	<p>&{'info.customers.empty'}</p>
+#{/else}
 
 <div>
 	<a href="@{Customers.create()}" class="btn btn-primary">&{'actions.create'}</a>
