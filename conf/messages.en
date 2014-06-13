@@ -3,28 +3,23 @@ date.format=MM/dd/yyyy
 date.format.month=MMMM yyyy
 datetime.format=MM/dd/yyyy HH:mm:ss
 
-# Currency
-currency=USD
-
 # Titles
-titles.accounts.index=Accounts
+titles.accounts.index=Accounts list
 titles.accounts.show=Account summary
 titles.application.index=Home
-titles.banks.index=Banks
+titles.banks.index=Banks list
 titles.customers.create=Customer creation
-titles.customers.edit=Customer edition
-titles.customers.index=Customers
+titles.customers.index=Customers list
 titles.transactions.regular=Regular transactions
 titles.transactions.one-off=One-off transactions
 titles.users.create=User creation
 titles.users.edit=User edition
-titles.users.index=Users
+titles.users.index=Users list
 titles.users.sign.up=Sign up
 
 # Actions
 actions.cancel=Cancel
 actions.create=Create
-actions.modify=Modify
 actions.save=Save
 actions.sign.in=Sign in
 actions.sign.out=Sign out
@@ -36,6 +31,7 @@ labels.accounts=Accounts
 labels.actions=Actions
 labels.activated=Activated
 labels.admin=Administrator
+labels.administration=Administration
 labels.amount=Amount
 labels.balance=Balance
 labels.bank=Bank
@@ -45,7 +41,10 @@ labels.customers=Customers
 labels.date=Date
 labels.date.lastSync=Last synchronization date
 labels.details=Details
+labels.false=No
 labels.firstName=First name
+labels.information=Information
+labels.information.edit=Edit my information
 labels.lastName=Last name
 labels.label=Label
 labels.label.friendly=Friendly label
@@ -59,17 +58,20 @@ labels.password.old=Old password
 labels.pay.monthly=Pay monthly
 labels.period=Period
 labels.previous=Previous
+labels.summary=Summary
+labels.true=Yes
 labels.users=Users
+labels.users.account.edit=Modify my account
 
 # Confirms
 confirms.transactions.regular.create=Are you sure you want to pay monthly this transaction ?
 confirms.transactions.regular.deactivate=Are you sure you want to deactivate this transaction ?
 
-# Info
-info.accounts.empty=No account found
-info.customers.empty=No customer created
-info.transactions.empty=No transaction found
-info.users.empty=No user registered
+# Information
+information.accounts.empty=No account found
+information.customers.empty=No customer created
+information.transactions.empty=No transaction found
+information.users.empty=No user registered
 
 # Errors
 errors.field.required=This field is required

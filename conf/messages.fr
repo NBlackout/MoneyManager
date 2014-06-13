@@ -3,28 +3,23 @@ date.format=dd/MM/yyyy
 date.format.month=MMMM yyyy
 datetime.format=dd/MM/yyyy HH:mm:ss
 
-# Currency
-currency=EUR
-
 # Titles
-titles.accounts.index=Comptes
+titles.accounts.index=Liste des comptes
 titles.accounts.show=Synthèse du compte
 titles.application.index=Accueil
-titles.banks.index=Banques
+titles.banks.index=Liste des banques
 titles.customers.create=Création d'un client
-titles.customers.edit=Édition d'un client
-titles.customers.index=Clients
+titles.customers.index=Liste des clients
 titles.transactions.regular=Transactions régulières
 titles.transactions.one-off=Transactions uniques
 titles.users.create=Création d'un utilisateur
-titles.users.edit=Édition d'un utilisateur
-titles.users.index=Utilisateurs
+titles.users.edit=Édition des informations d'un utilisateur
+titles.users.index=Liste des utilisateurs
 titles.users.sign.up=Inscription
 
 # Actions
 actions.cancel=Annuler
 actions.create=Créer
-actions.modify=Modifier
 actions.save=Enregistrer
 actions.sign.in=Connexion
 actions.sign.out=Déconnexion
@@ -36,6 +31,7 @@ labels.accounts=Comptes
 labels.actions=Actions
 labels.activated=Activé
 labels.admin=Administrateur
+labels.administration=Administration
 labels.amount=Montant
 labels.balance=Solde
 labels.bank=Banque
@@ -45,7 +41,10 @@ labels.customers=Clients
 labels.date=Date
 labels.date.lastSync=Date de dernière synchronization
 labels.details=Détails
+labels.false=Non
 labels.firstName=Prénom
+labels.information=Informations
+labels.information.edit=Éditer mes informations
 labels.lastName=Nom
 labels.label=Intitulé
 labels.label.friendly=Intitulé
@@ -59,17 +58,20 @@ labels.password.old=Ancien mot de passe
 labels.pay.monthly=Mensualiser
 labels.period=Période
 labels.previous=Précédent
+labels.summary=Synthèse
+labels.true=Oui
 labels.users=Utilisateurs
+labels.users.account.modify=Modifier mon compte
 
 # Confirms
 confirms.transactions.regular.create=Êtes-vous sûr de vouloir mensualiser cette transaction ?
 confirms.transactions.regular.deactivate=Êtes-vous sûr de vouloir désactivate cette transaction ?
 
-# Info
-info.accounts.empty=Aucun compte trouvé
-info.customers.empty=Aucun client ajouté
-info.transactions.empty=Aucune transaction trouvée
-info.users.empty=Aucun utilisateur enregistré
+# Information
+information.accounts.empty=Aucun compte trouvé
+information.customers.empty=Aucun client ajouté
+information.transactions.empty=Aucune transaction trouvée
+information.users.empty=Aucun utilisateur enregistré
 
 # Errors
 errors.field.required=Ce champs est requis

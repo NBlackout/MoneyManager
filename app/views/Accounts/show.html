@@ -8,7 +8,7 @@
 }%
 
 <div class="page-header">
-	<h2>&{'titles.accounts.show'}</h2>
+	<h2>&{'labels.summary'}</h2>
 </div>
 
 <div id="dialog" style="display: none;">
@@ -47,7 +47,7 @@
 	<dt>&{'labels.number'}</dt>
 	<dd>&{account.fullNumber}</dd>
 	<dt>&{'labels.balance'}</dt>
-	<dd>${account.balance.formatCurrency(messages.get('currency'))}</dd>
+	<dd class="${(account.balance < 0) ? 'debit' : ((account.balance > 0) ? 'credit' : 'neutral')}">${account.balance.formatCurrency('EUR')}</dd>
 </dl>
 
 <hr style="margin: 40px 0px;">
@@ -90,14 +90,8 @@
 
 				<tr data-category-id="${category.id}" style="cursor: pointer;">
 					<td><a href="#"><i data-action="expand" class="icon-chevron-down"></i>&nbsp;${category.label}</a></td>
-					<td class="${(total < 0) ? 'debit' : ((total > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${total?.formatCurrency(messages.get('currency'))}</td>
-
-					#{if currentDate == true || userAdmin == true}
-						<td colspan="2"></td>
-					#{/if}
-					#{else}
-						<td></td>
-					#{/else}
+					<td class="${(total < 0) ? 'debit' : ((total > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${total?.formatCurrency('EUR')}</td>
+					<td #{if currentDate == true || userAdmin == true}colspan="2"#{/if}>
 				</tr>
 
 				#{list as:'transaction', items:regularTransactions.get(category)}
@@ -107,7 +101,7 @@
 
 					<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-transaction-category-id="${category.id}">
 						<td style="padding-left: 25px;">${transaction.configuration.friendlyLabel}</td>
-						<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${amount?.formatCurrency(messages.get('currency'))}</td>
+						<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${amount?.formatCurrency('EUR')}</td>
 						<td>${transaction.date.toDate().format(messages.get('date.format'))}</td>
 
 						#{if currentDate == true || userAdmin == true}
@@ -146,15 +140,14 @@
 				}%
 
 				<tr data-transaction-id="${transaction.id}">
-					#{if transaction.additionalLabel}
-						<td><i title="${transaction.additionalLabel}" class="icon-info-sign" style="cursor: help;"></i></td>
-					#{/if}
-					#{else}
-						<td></td>
-					#{/else}
+					<td>
+						#{if transaction.additionalLabel}
+							<i title="${transaction.additionalLabel}" class="icon-info-sign" style="cursor: help;"></i>
+						#{/if}
+					</td>
 
 					<td class="transaction-label">${transaction.label}</td>
-					<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${amount.formatCurrency(messages.get('currency'))}</td>
+					<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${amount.formatCurrency('EUR')}</td>
 					<td class="transaction-date">${transaction.date.toDate().format(messages.get('date.format'))}</td>
 
 					#{if currentDate == true}
@@ -166,7 +159,7 @@
 	</table>
 #{/if}
 #{else}
-	<p>&{'info.transactions.empty'}</p>
+	<p>&{'information.transactions.empty'}</p>
 #{/else}
 
 <script type="text/javascript">

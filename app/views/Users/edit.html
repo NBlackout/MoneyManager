@@ -1,8 +1,12 @@
 #{extends 'main.html' /}
 #{set title:messages.get('titles.users.edit') /}
 
+%{
+	Long userId = (session.get('user.id')) ? Long.parseLong(session.get('user.id')) : null;
+}%
+
 <div class="page-header">
-	<h2>&{'titles.users.edit'}</h2>
+	<h2>&{'labels.information'}</h2>
 </div>
 
 #{form @Users.save(), method:'POST', class:'form-horizontal'}
@@ -42,7 +46,6 @@
 		<label class="control-label required" for="locale">&{'labels.language'}</label>
 		<div class="controls">
 			<select name="locale">
-				<option></option>
 				#{list items:play.langs, as:'locale'}
 					<option value="${locale}"#{if locale == user.locale}selected="selected"#{/if}>${play.configuration['languages.' + locale]}</option>
 				#{/list}
@@ -53,7 +56,7 @@
 		</div>
 	</div>
 
-	<div class="control-group">
+	<div class="control-group" style="margin-bottom: 10px;">
 		<label class="control-label" for="admin">&{'labels.admin'}</label>
 		<div class="controls">
 			<input id="admin" name="admin" type="checkbox" value="true"#{if user.admin == true}checked="checked"#{/if}>

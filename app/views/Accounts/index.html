@@ -24,7 +24,7 @@
 					<td>${account.customer.bank.label}</td>
 					<td>${account.fullNumber}</td>
 					<td><a href="@{Accounts.show(account.id)}">${account.label}</a></td>
-					<td>${account.balance.formatCurrency(messages.get('currency'))}</td>
+					<td>${account.balance.formatCurrency('EUR')}</td>
 					<td>${account.lastSync?.toDate()?.format(messages.get('datetime.format'))}</td>
 					<td><a href="@{Accounts.synchronize(account.id)}"><i class="icon-refresh"></i></a></td>
 				</tr>
@@ -33,5 +33,5 @@
 	</table>
 #{/if}
 #{else}
-	<p>&{'info.accounts.empty'}</p>
+	<p>&{'information.accounts.empty'}</p>
 #{/else}

@@ -2,7 +2,7 @@
 #{set title:messages.get('titles.users.create') /}
 
 <div class="page-header">
-	<h2>&{'titles.users.create'}</h2>
+	<h2>&{'labels.information'}</h2>
 </div>
 
 #{form @Users.save(), method:'POST', class:'form-horizontal'}
@@ -51,7 +51,7 @@
 		</div>
 	</div>
 
-	<div class="control-group">
+	<div class="control-group" style="margin-bottom: 10px;">
 		<label class="control-label" for="admin">&{'labels.admin'}</label>
 		<div class="controls">
 			<input id="admin" name="admin" type="checkbox" value="true"#{if flash.admin && flash.admin == "true"}checked="checked"#{/if}>

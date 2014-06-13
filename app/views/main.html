@@ -76,9 +76,9 @@
 									<a class="dropdown-toggle" href="#" data-toggle="dropdown">${userLogin}&nbsp;<b class="caret"></b></a>
 									<ul class="dropdown-menu user-dropdown-menu">
 										<li class="dropdown">
-											<a href="@{Users.edit(userId)}">&{'actions.modify'}</a>
+											<a href="@{Users.edit(userId)}">&{'labels.information.edit'}</a>
 										</li>
-										<li class="divider"></li>
+										<li class="divider" style="margin-bottom: 0px;"></li>
 										<li class="dropdown">
 											<div>
 												<form class="navbar-form" action="@{SuperController.logOut()}" method="POST">

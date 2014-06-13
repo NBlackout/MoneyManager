@@ -2,13 +2,16 @@ package controllers;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.jsoup.helper.StringUtil;
+
 import models.User;
 import play.libs.Crypto;
 
 public class Users extends SuperController {
 
 	public static void index() {
-		List<User> users = User.findAll();
+		List<User> users = User.find("ORDER BY login ASC").fetch();
 
 		render(users);
 	}
@@ -60,7 +63,7 @@ public class Users extends SuperController {
 				user.activated = activated;
 				user.save();
 
-				Application.index();
+				index();
 			}
 
 			keepValidation();
@@ -71,32 +74,37 @@ public class Users extends SuperController {
 				signUp();
 			}
 		} else {
+			User user = User.findById(userId);
+
 			/* Parameters validation */
-			validation.required(passwordOld).message("errors.field.required");
-			validation.required(password).message("errors.field.required");
-			validation.required(passwordBis).message("errors.field.required");
 			validation.required(locale).message("errors.field.required");
 
-			if (validation.hasError("password") == false && validation.hasError("passwordBis") == false && password.equals(passwordBis) == false) {
-				validation.addError("passwordBis", "errors.passwords.not.equals");
-			}
+			if (StringUtils.isBlank(passwordOld) == false) {
+				validation.required(password).message("errors.field.required");
+				validation.required(passwordBis).message("errors.field.required");
 
-			User user = User.findById(userId);
-			if (validation.hasError("passwordOld") == false && Crypto.encryptAES(passwordOld).equals(user.password) == false) {
-				validation.addError("passwordOld", "errors.password.old.wrong");
+				if (validation.hasError("password") == false && validation.hasError("passwordBis") == false && password.equals(passwordBis) == false) {
+					validation.addError("passwordBis", "errors.passwords.not.equals");
+				}
+
+				if (validation.hasError("passwordOld") == false && Crypto.encryptAES(passwordOld).equals(user.password) == false) {
+					validation.addError("passwordOld", "errors.password.old.wrong");
+				}
 			}
 
 			if (validation.hasErrors() == false) {
 				/* User update */
 				user.password = Crypto.encryptAES(password);
 				user.locale = locale;
+				user.admin = admin;
+				user.activated = activated;
 				user.save();
 
 				if (session.contains("user.id") && user.id == Long.parseLong(session.get("user.id"))) {
 					SuperController.updateSession(user);
 				}
 
-				Application.index();
+				index();
 			}
 
 			keepValidation();
