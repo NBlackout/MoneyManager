@@ -8,7 +8,7 @@ currency=USD
 
 # Titles
 titles.accounts.index=Accounts
-titles.accounts.show=Account
+titles.accounts.show=Account summary
 titles.application.index=Home
 titles.banks.index=Banks
 titles.customers.create=Customer creation
@@ -40,9 +40,11 @@ labels.amount=Amount
 labels.balance=Balance
 labels.bank=Bank
 labels.banks=Banks
+labels.customer=Customer
 labels.customers=Customers
 labels.date=Date
 labels.date.lastSync=Last synchronization date
+labels.details=Details
 labels.firstName=First name
 labels.lastName=Last name
 labels.label=Label
@@ -55,6 +57,7 @@ labels.password=Password
 labels.password.bis=Retype password
 labels.password.old=Old password
 labels.pay.monthly=Pay monthly
+labels.period=Period
 labels.previous=Previous
 labels.users=Users
 
@@ -65,6 +68,7 @@ confirms.transactions.regular.deactivate=Are you sure you want to deactivate thi
 # Info
 info.accounts.empty=No account found
 info.customers.empty=No customer created
+info.transactions.empty=No transaction found
 info.users.empty=No user registered
 
 # Errors

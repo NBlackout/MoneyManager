@@ -1,76 +1,76 @@
 #{extends 'main.html' /}
 #{set title:messages.get('titles.customers.create') /}
 
-<fieldset>
-	<legend>&{'titles.customers.create'}</legend>
+<div class="page-header">
+	<h2>&{'titles.customers.create'}</h2>
+</div>
 
-	#{form @Customers.save(), method:'POST', class:'form-horizontal'}
-		<div class="control-group#{ifError 'bankId'} error#{/ifError}">
-			<label class="control-label required" for="bankId">&{'labels.bank'}</label>
-			<div class="controls">
-				#{select 'bankId', items:banks, labelProperty:'label', id:'bankId', value:flash.bankId}
-					#{option}#{/option}
-				#{/select}
-				#{ifError 'bankId'}
-					<span class="help-inline">#{error 'bankId' /}</span>
-				#{/ifError}
-			</div>
+#{form @Customers.save(), method:'POST', class:'form-horizontal'}
+	<div class="control-group#{ifError 'bankId'} error#{/ifError}">
+		<label class="control-label required" for="bankId">&{'labels.bank'}</label>
+		<div class="controls">
+			#{select 'bankId', items:banks, labelProperty:'label', id:'bankId', value:flash.bankId}
+				#{option}#{/option}
+			#{/select}
+			#{ifError 'bankId'}
+				<span class="help-inline">#{error 'bankId' /}</span>
+			#{/ifError}
 		</div>
+	</div>
 
-		<div class="control-group#{ifError 'login'} error#{/ifError}">
-			<label class="control-label required" for="login">&{'labels.login'}</label>
-			<div class="controls">
-				<input id="login" name="login" type="text" value="${flash.login}" placeholder="&{'labels.login'}">
-				#{ifError 'login'}
-					<span class="help-inline">#{error 'login' /}</span>
-				#{/ifError}
-			</div>
+	<div class="control-group#{ifError 'login'} error#{/ifError}">
+		<label class="control-label required" for="login">&{'labels.login'}</label>
+		<div class="controls">
+			<input id="login" name="login" type="text" value="${flash.login}" placeholder="&{'labels.login'}">
+			#{ifError 'login'}
+				<span class="help-inline">#{error 'login' /}</span>
+			#{/ifError}
 		</div>
+	</div>
 
-		<div class="control-group#{ifError 'password'} error#{/ifError}">
-			<label class="control-label required" for="password">&{'labels.password'}</label>
-			<div class="controls">
-				<input id="password" name="password" type="password" placeholder="&{'labels.password'}">
-				#{ifError 'password'}
-					<span class="help-inline">#{error 'password' /}</span>
-				#{/ifError}
-			</div>
+	<div class="control-group#{ifError 'password'} error#{/ifError}">
+		<label class="control-label required" for="password">&{'labels.password'}</label>
+		<div class="controls">
+			<input id="password" name="password" type="password" placeholder="&{'labels.password'}">
+			#{ifError 'password'}
+				<span class="help-inline">#{error 'password' /}</span>
+			#{/ifError}
 		</div>
+	</div>
 
-		<div class="control-group#{ifError 'passwordBis'} error#{/ifError}">
-			<label class="control-label required" for="passwordBis">&{'labels.password.bis'}</label>
-			<div class="controls">
-				<input id="passwordBis" name="passwordBis" type="password" placeholder="&{'labels.password.bis'}">
-				#{ifError 'passwordBis'}
-					<span class="help-inline">#{error 'passwordBis' /}</span>
-				#{/ifError}
-			</div>
+	<div class="control-group#{ifError 'passwordBis'} error#{/ifError}">
+		<label class="control-label required" for="passwordBis">&{'labels.password.bis'}</label>
+		<div class="controls">
+			<input id="passwordBis" name="passwordBis" type="password" placeholder="&{'labels.password.bis'}">
+			#{ifError 'passwordBis'}
+				<span class="help-inline">#{error 'passwordBis' /}</span>
+			#{/ifError}
 		</div>
+	</div>
 
-		<div class="control-group#{ifError 'firstName'} error#{/ifError}">
-			<label class="control-label required" for="firstName">&{'labels.firstName'}</label>
-			<div class="controls">
-				<input id="firstName" name="firstName" type="text" value="${flash.firstName}" placeholder="&{'labels.firstName'}">
-				#{ifError 'firstName'}
-					<span class="help-inline">#{error 'firstName' /}</span>
-				#{/ifError}
-			</div>
+	<div class="control-group#{ifError 'firstName'} error#{/ifError}">
+		<label class="control-label required" for="firstName">&{'labels.firstName'}</label>
+		<div class="controls">
+			<input id="firstName" name="firstName" type="text" value="${flash.firstName}" placeholder="&{'labels.firstName'}">
+			#{ifError 'firstName'}
+				<span class="help-inline">#{error 'firstName' /}</span>
+			#{/ifError}
 		</div>
+	</div>
 
-		<div class="control-group#{ifError 'lastName'} error#{/ifError}">
-			<label class="control-label required" for="lastName">&{'labels.lastName'}</label>
-			<div class="controls">
-				<input id="lastName" name="lastName" type="text" value="${flash.lastName}" placeholder="&{'labels.lastName'}">
-				#{ifError 'lastName'}
-					<span class="help-inline">#{error 'lastName' /}</span>
-				#{/ifError}
-			</div>
+	<div class="control-group#{ifError 'lastName'} error#{/ifError}">
+		<label class="control-label required" for="lastName">&{'labels.lastName'}</label>
+		<div class="controls">
+			<input id="lastName" name="lastName" type="text" value="${flash.lastName}" placeholder="&{'labels.lastName'}">
+			#{ifError 'lastName'}
+				<span class="help-inline">#{error 'lastName' /}</span>
+			#{/ifError}
 		</div>
+	</div>
 
-		<div class="control-group">
-			<div class="controls">
-				<button class="btn btn-primary" type="submit">&{'actions.create'}</button>
-			</div>
+	<div class="control-group">
+		<div class="controls">
+			<button class="btn btn-primary" type="submit">&{'actions.create'}</button>
 		</div>
-	#{/form}
-</fieldset>
+	</div>
+#{/form}

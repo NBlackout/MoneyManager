@@ -1,59 +1,59 @@
 #{extends 'main.html' /}
 #{set title:messages.get('titles.users.sign.up') /}
 
-<fieldset>
-	<legend>&{'titles.users.sign.up'}</legend>
+<div class="page-header">
+	<h2>&{'titles.users.sign.up'}</h2>
+</div>
 
-	#{form @Users.save(), method:'POST', class:'form-horizontal'}
-		<div class="control-group#{ifError 'login'} error#{/ifError}">
-			<label class="control-label required" for="login">&{'labels.login'}</label>
-			<div class="controls">
-				<input id="login" name="login" type="text" value="${flash.login}" placeholder="&{'labels.login'}">
-				#{ifError 'login'}
-					<span class="help-inline">#{error 'login' /}</span>
-				#{/ifError}
-			</div>
+#{form @Users.save(), method:'POST', class:'form-horizontal'}
+	<div class="control-group#{ifError 'login'} error#{/ifError}">
+		<label class="control-label required" for="login">&{'labels.login'}</label>
+		<div class="controls">
+			<input id="login" name="login" type="text" value="${flash.login}" placeholder="&{'labels.login'}">
+			#{ifError 'login'}
+				<span class="help-inline">#{error 'login' /}</span>
+			#{/ifError}
 		</div>
+	</div>
 
-		<div class="control-group#{ifError 'password'} error#{/ifError}">
-			<label class="control-label required" for="password">&{'labels.password'}</label>
-			<div class="controls">
-				<input id="password" name="password" type="password" placeholder="&{'labels.password'}">
-				#{ifError 'password'}
-					<span class="help-inline">#{error 'password' /}</span>
-				#{/ifError}
-			</div>
+	<div class="control-group#{ifError 'password'} error#{/ifError}">
+		<label class="control-label required" for="password">&{'labels.password'}</label>
+		<div class="controls">
+			<input id="password" name="password" type="password" placeholder="&{'labels.password'}">
+			#{ifError 'password'}
+				<span class="help-inline">#{error 'password' /}</span>
+			#{/ifError}
 		</div>
+	</div>
 
-		<div class="control-group#{ifError 'passwordBis'} error#{/ifError}">
-			<label class="control-label required" for="passwordBis">&{'labels.password.bis'}</label>
-			<div class="controls">
-				<input id="passwordBis" name="passwordBis" type="password" placeholder="&{'labels.password.bis'}">
-				#{ifError 'passwordBis'}
-					<span class="help-inline">#{error 'passwordBis' /}</span>
-				#{/ifError}
-			</div>
+	<div class="control-group#{ifError 'passwordBis'} error#{/ifError}">
+		<label class="control-label required" for="passwordBis">&{'labels.password.bis'}</label>
+		<div class="controls">
+			<input id="passwordBis" name="passwordBis" type="password" placeholder="&{'labels.password.bis'}">
+			#{ifError 'passwordBis'}
+				<span class="help-inline">#{error 'passwordBis' /}</span>
+			#{/ifError}
 		</div>
+	</div>
 
-		<div class="control-group#{ifError 'locale'} error#{/ifError}">
-			<label class="control-label required" for="locale">&{'labels.language'}</label>
-			<div class="controls">
-				<select name="locale">
-					<option></option>
-					#{list items:play.langs, as:'locale'}
-						<option value="${locale}"#{if locale == flash.locale}selected="selected"#{/if}>${play.configuration['languages.' + locale]}</option>
-					#{/list}
-				</select> 
-				#{ifError 'locale'}
-					<span class="help-inline">#{error 'locale' /}</span>
-				#{/ifError}
-			</div>
+	<div class="control-group#{ifError 'locale'} error#{/ifError}">
+		<label class="control-label required" for="locale">&{'labels.language'}</label>
+		<div class="controls">
+			<select name="locale">
+				<option></option>
+				#{list items:play.langs, as:'locale'}
+					<option value="${locale}"#{if locale == flash.locale}selected="selected"#{/if}>${play.configuration['languages.' + locale]}</option>
+				#{/list}
+			</select> 
+			#{ifError 'locale'}
+				<span class="help-inline">#{error 'locale' /}</span>
+			#{/ifError}
 		</div>
+	</div>
 
-		<div class="control-group">
-			<div class="controls">
-				<button class="btn btn-primary" type="submit">&{'actions.create'}</button>
-			</div>
+	<div class="control-group">
+		<div class="controls">
+			<button class="btn btn-primary" type="submit">&{'actions.create'}</button>
 		</div>
-	#{/form}
-</fieldset>
+	</div>
+#{/form}

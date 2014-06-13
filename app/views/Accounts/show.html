@@ -8,22 +8,8 @@
 }%
 
 <div class="page-header">
-	<h2>${account.label}&nbsp;<small>${account.customer.firstName}&nbsp;${account.customer.lastName}</small></h2>
+	<h2>&{'titles.accounts.show'}</h2>
 </div>
-
-#{form @Accounts.show(account.id), method:'GET', id:'dateForm', class:'text-center'}
-	<div class="input-prepend input-append">
-		<a href="@{Accounts.show(account.id, previousDate.toDate().format('yyyy'), previousDate.toDate().format('M'))}" class="btn btn-primary">&{'labels.previous'}</a>
-
-		<select id="dates" class="span2">
-			#{list as:'d', items:dates}
-				<option data-year="${d.toDate().format('yyyy')}" data-month="${d.toDate().format('M')}">${d.toDate().format(messages.get('date.format.month'))}</option>
-			#{/list}
-		</select>
-
-		<a href="@{Accounts.show(account.id, nextDate.toDate().format('yyyy'), nextDate.toDate().format('M'))}" class="btn btn-primary">&{'labels.next'}</a>
-	</div>
-#{/form}
 
 <div id="dialog" style="display: none;">
 	#{form @Transactions.create(), id:'createRegularTransactionForm', method:'POST'}
@@ -48,110 +34,140 @@
 	#{/form}
 </div>
 
-<div>
-	<h3>&{'titles.transactions.regular'}</h3>
+<h3>&{'labels.details'}</h3>
+<dl class="dl-horizontal">
+	<dt>&{'labels.bank'}</dt>
+	<dd>${account.customer.bank.label}</dd>
+	<dt>&{'labels.customer'}</dt>
+	<dd>${account.customer.fullName}</dd>
+	<dt>&nbsp;</dt>
+	<dd>&nbsp;</dd>
+	<dt>&{'labels.label'}</dt>
+	<dd>${account.label}</dd>
+	<dt>&{'labels.number'}</dt>
+	<dd>&{account.fullNumber}</dd>
+	<dt>&{'labels.balance'}</dt>
+	<dd>${account.balance.formatCurrency(messages.get('currency'))}</dd>
+</dl>
 
-	<div class="well">
-		<table id="regularTransactions" class="table table-hover">
-			<thead>
-				<tr>
-					<th>&{'labels.label'}</th>
-					<th>&{'labels.amount'}</th>
-					<th>&{'labels.date'}</th>
+<hr style="margin: 40px 0px;">
+
+<h3>&{'labels.period'}</h3>
+#{form @Accounts.show(account.id), method:'GET', id:'dateForm'}
+	<div class="input-prepend input-append">
+		<a href="@{Accounts.show(account.id, previousDate.toDate().format('yyyy'), previousDate.toDate().format('M'))}" class="btn btn-primary">&{'labels.previous'}</a>
+
+		<select id="dates" class="span2">
+			#{list as:'d', items:dates}
+				<option data-year="${d.toDate().format('yyyy')}" data-month="${d.toDate().format('M')}">${d.toDate().format(messages.get('date.format.month'))}</option>
+			#{/list}
+		</select>
+
+		<a href="@{Accounts.show(account.id, nextDate.toDate().format('yyyy'), nextDate.toDate().format('M'))}" class="btn btn-primary">&{'labels.next'}</a>
+	</div>
+#{/form}
+
+<h3>&{'titles.transactions.regular'}</h3>
+<div class="well">
+	<table id="regularTransactions" class="table table-hover">
+		<thead>
+			<tr>
+				<th>&{'labels.label'}</th>
+				<th>&{'labels.amount'}</th>
+				<th>&{'labels.date'}</th>
+
+				#{if currentDate == true || userAdmin == true}
+					<th>&{'labels.actions'}</th>
+				#{/if}
+			</tr>
+		</thead>
+
+		<tbody>
+			#{list as:'category', items:regularTransactions.keySet()}
+				%{
+					Double total = categoryTotals.get(category);
+				}%
+
+				<tr data-category-id="${category.id}" style="cursor: pointer;">
+					<td><a href="#"><i data-action="expand" class="icon-chevron-down"></i>&nbsp;${category.label}</a></td>
+					<td class="${(total < 0) ? 'debit' : ((total > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${total?.formatCurrency(messages.get('currency'))}</td>
 
 					#{if currentDate == true || userAdmin == true}
-						<th>&{'labels.actions'}</th>
+						<td colspan="2"></td>
 					#{/if}
+					#{else}
+						<td></td>
+					#{/else}
 				</tr>
-			</thead>
 
-			<tbody>
-				#{list as:'category', items:regularTransactions.keySet()}
+				#{list as:'transaction', items:regularTransactions.get(category)}
 					%{
-						Double total = categoryTotals.get(category);
+						Double amount = transaction.amount;
 					}%
 
-					<tr data-category-id="${category.id}" style="cursor: pointer;">
-						<td><a href="#"><i data-action="expand" class="icon-chevron-down"></i>&nbsp;${category.label}</a></td>
-						<td class="${(total < 0) ? 'debit' : ((total > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${total?.formatCurrency(messages.get('currency'))}</td>
+					<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-transaction-category-id="${category.id}">
+						<td style="padding-left: 25px;">${transaction.configuration.friendlyLabel}</td>
+						<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${amount?.formatCurrency(messages.get('currency'))}</td>
+						<td>${transaction.date.toDate().format(messages.get('date.format'))}</td>
 
 						#{if currentDate == true || userAdmin == true}
-							<td colspan="2"></td>
+							<td>
+								<a href="@{Transactions.generate(transaction.configuration.id)}"><i class="icon-cog"></i></a>
+								<a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="deactivate"><i class="${transaction.configuration.active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
+							</td>
 						#{/if}
-						#{else}
-							<td></td>
-						#{/else}
 					</tr>
-
-					#{list as:'transaction', items:regularTransactions.get(category)}
-						%{
-							Double amount = transaction.amount;
-						}%
-
-						<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-transaction-category-id="${category.id}">
-							<td style="padding-left: 25px;">${transaction.configuration.friendlyLabel}</td>
-							<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${amount?.formatCurrency(messages.get('currency'))}</td>
-							<td>${transaction.date.toDate().format(messages.get('date.format'))}</td>
-
-							#{if currentDate == true || userAdmin == true}
-								<td>
-									<a href="@{Transactions.generate(transaction.configuration.id)}"><i class="icon-cog"></i></a>
-									<a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="deactivate"><i class="${transaction.configuration.active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
-								</td>
-							#{/if}
-						</tr>
-					#{/list}
 				#{/list}
-			</tbody>
-		</table>
-	</div>
+			#{/list}
+		</tbody>
+	</table>
 </div>
 
+<h3>&{'titles.transactions.one-off'}</h3>
 #{if oneOffTransactions}
-	<div>
-		<h3>&{'titles.transactions.one-off'}</h3>
+	<table id="oneOffTransactions" class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th style="width: 1px;"></th>
+				<th>&{'labels.label'}</th>
+				<th>&{'labels.amount'}</th>
+				<th>&{'labels.date'}</th>
 
-		<table id="oneOffTransactions" class="table table-condensed table-hover">
-			<thead>
-				<tr>
-					<th style="width: 1px;"></th>
-					<th>&{'labels.label'}</th>
-					<th>&{'labels.amount'}</th>
-					<th>&{'labels.date'}</th>
+				#{if currentDate == true}
+					<th>&{'labels.pay.monthly'}</th>
+				#{/if}
+			</tr>
+		</thead>
+
+		<tbody>
+			#{list as:'transaction', items:oneOffTransactions}
+				%{
+					double amount = transaction.amount;
+				}%
+
+				<tr data-transaction-id="${transaction.id}">
+					#{if transaction.additionalLabel}
+						<td><i title="${transaction.additionalLabel}" class="icon-info-sign" style="cursor: help;"></i></td>
+					#{/if}
+					#{else}
+						<td></td>
+					#{/else}
+
+					<td class="transaction-label">${transaction.label}</td>
+					<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${amount.formatCurrency(messages.get('currency'))}</td>
+					<td class="transaction-date">${transaction.date.toDate().format(messages.get('date.format'))}</td>
 
 					#{if currentDate == true}
-						<th>&{'labels.pay.monthly'}</th>
+						<td><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>
 					#{/if}
 				</tr>
-			</thead>
-
-			<tbody>
-				#{list as:'transaction', items:oneOffTransactions}
-					%{
-						double amount = transaction.amount;
-					}%
-
-					<tr data-transaction-id="${transaction.id}">
-						#{if transaction.additionalLabel}
-							<td><i title="${transaction.additionalLabel}" class="icon-info-sign" style="cursor: help;"></i></td>
-						#{/if}
-						#{else}
-							<td></td>
-						#{/else}
-
-						<td class="transaction-label">${transaction.label}</td>
-						<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${amount.formatCurrency(messages.get('currency'))}</td>
-						<td class="transaction-date">${transaction.date.toDate().format(messages.get('date.format'))}</td>
-
-						#{if currentDate == true}
-							<td><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>
-						#{/if}
-					</tr>
-				#{/list}
-			</tbody>
-		</table>
-	</div>
+			#{/list}
+		</tbody>
+	</table>
 #{/if}
+#{else}
+	<p>&{'info.transactions.empty'}</p>
+#{/else}
 
 <script type="text/javascript">
 	var dialog = $('#dialog');

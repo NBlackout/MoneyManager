@@ -28,4 +28,8 @@ public class Customer extends Model {
 
 	@OneToMany(mappedBy = "customer")
 	public List<Account> accounts;
+
+	public String getFullName() {
+		return firstName + " " + lastName;
+	}
 }

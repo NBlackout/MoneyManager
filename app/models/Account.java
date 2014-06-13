@@ -33,7 +33,7 @@ public class Account extends Model {
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
 	public DateTime lastSync;
 
-	public String getNumber() {
+	public String getFullNumber() {
 		StringBuilder builder = new StringBuilder();
 		{
 			builder.append(agency);

@@ -2,7 +2,7 @@
 #{set title:messages.get('titles.accounts.index') /}
 
 <div class="page-header">
-	<h1>&{'labels.accounts'}</h1>
+	<h2>&{'labels.accounts'}</h2>
 </div>
 
 #{if accounts}
@@ -22,7 +22,7 @@
 			#{list as:'account', items:accounts}
 				<tr data-account-id="${account.id}">
 					<td>${account.customer.bank.label}</td>
-					<td>${account.number}</td>
+					<td>${account.fullNumber}</td>
 					<td><a href="@{Accounts.show(account.id)}">${account.label}</a></td>
 					<td>${account.balance.formatCurrency(messages.get('currency'))}</td>
 					<td>${account.lastSync?.toDate()?.format(messages.get('datetime.format'))}</td>
