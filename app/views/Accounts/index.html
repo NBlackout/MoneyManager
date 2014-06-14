@@ -13,7 +13,7 @@
 				<th>&{'labels.number'}</th>
 				<th>&{'labels.label'}</th>
 				<th>&{'labels.balance'}</th>
-				<th>&{'labels.date.lastSync'}</th>
+				<th>&{'labels.lastSync'}</th>
 				<th>&{'labels.actions'}</th>
 			</tr>
 		</thead>
@@ -25,7 +25,7 @@
 					<td>${account.fullNumber}</td>
 					<td><a href="@{Accounts.show(account.id)}">${account.label}</a></td>
 					<td>${account.balance.formatCurrency('EUR')}</td>
-					<td>${account.lastSync?.toDate()?.format(messages.get('datetime.format'))}</td>
+					<td>${account.localLastSync?.toDate()?.format(messages.get('dates.datetime.format'))}</td>
 					<td><a href="@{Accounts.synchronize(account.id)}"><i class="icon-refresh"></i></a></td>
 				</tr>
 			#{/list}

@@ -34,7 +34,7 @@
 	#{/form}
 </div>
 
-<h3>&{'labels.details'}</h3>
+<h3>&{'labels.details'}&nbsp;<small>${account.label}</small></h3>
 <dl class="dl-horizontal">
 	<dt>&{'labels.bank'}</dt>
 	<dd>${account.customer.bank.label}</dd>
@@ -42,12 +42,12 @@
 	<dd>${account.customer.fullName}</dd>
 	<dt>&nbsp;</dt>
 	<dd>&nbsp;</dd>
-	<dt>&{'labels.label'}</dt>
-	<dd>${account.label}</dd>
 	<dt>&{'labels.number'}</dt>
 	<dd>&{account.fullNumber}</dd>
 	<dt>&{'labels.balance'}</dt>
 	<dd class="${(account.balance < 0) ? 'debit' : ((account.balance > 0) ? 'credit' : 'neutral')}">${account.balance.formatCurrency('EUR')}</dd>
+	<dt>&{'labels.lastSync'}</dt>
+	<dd>${account.localLastSync?.toDate().format(messages.get('dates.datetime.format'))}</dd>
 </dl>
 
 <hr style="margin: 40px 0px;">
@@ -59,7 +59,7 @@
 
 		<select id="dates" class="span2">
 			#{list as:'d', items:dates}
-				<option data-year="${d.toDate().format('yyyy')}" data-month="${d.toDate().format('M')}">${d.toDate().format(messages.get('date.format.month'))}</option>
+				<option data-year="${d.toDate().format('yyyy')}" data-month="${d.toDate().format('M')}">${d.toDate().format(messages.get('dates.format.month'))}</option>
 			#{/list}
 		</select>
 
@@ -102,7 +102,7 @@
 					<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-transaction-category-id="${category.id}">
 						<td style="padding-left: 25px;">${transaction.configuration.friendlyLabel}</td>
 						<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${amount?.formatCurrency('EUR')}</td>
-						<td>${transaction.date.toDate().format(messages.get('date.format'))}</td>
+						<td>${transaction.date.toDate().format(messages.get('dates.format'))}</td>
 
 						#{if currentDate == true || userAdmin == true}
 							<td>
@@ -148,7 +148,7 @@
 
 					<td class="transaction-label">${transaction.label}</td>
 					<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${amount.formatCurrency('EUR')}</td>
-					<td class="transaction-date">${transaction.date.toDate().format(messages.get('date.format'))}</td>
+					<td class="transaction-date">${transaction.date.toDate().format(messages.get('dates.format'))}</td>
 
 					#{if currentDate == true}
 						<td><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>

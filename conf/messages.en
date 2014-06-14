@@ -1,7 +1,8 @@
 # Dates
-date.format=MM/dd/yyyy
-date.format.month=MMMM yyyy
-datetime.format=MM/dd/yyyy HH:mm:ss
+dates.format=MM/dd/yyyy
+dates.format.month=MMMM yyyy
+dates.datetime.format=MM/dd/yyyy HH:mm:ss
+dates.timezone.id=Europe/Helsinki
 
 # Titles
 titles.accounts.index=Accounts list
@@ -39,7 +40,6 @@ labels.banks=Banks
 labels.customer=Customer
 labels.customers=Customers
 labels.date=Date
-labels.date.lastSync=Last synchronization date
 labels.details=Details
 labels.false=No
 labels.firstName=First name
@@ -49,6 +49,7 @@ labels.lastName=Last name
 labels.label=Label
 labels.label.friendly=Friendly label
 labels.language=Language
+labels.lastSync=Last synchronization
 labels.login=Login
 labels.next=Next
 labels.number=Number
