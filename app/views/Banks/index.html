@@ -21,7 +21,7 @@
 				<tr data-bank-id="${bank.id}">
 					<td>${bank.label}</td>
 					<td>${bank.customers.size()}</td>
-					<td>${bank.lastSync?.toDate()?.format(messages.get('dates.datetime.format'))}</td>
+					<td>${bank.localLastSync?.toDate()?.format(messages.get('dates.datetime.format'))}</td>
 					<td><a href="@{Banks.synchronize(bank.id)}"><i class="icon-refresh"></i></a></td>
 				</tr>
 			#{/list}

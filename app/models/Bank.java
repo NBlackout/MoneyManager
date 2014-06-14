@@ -9,8 +9,10 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import play.db.jpa.Model;
+import play.i18n.Messages;
 
 @Entity
 @Table(name = "`Bank`")
@@ -30,4 +32,18 @@ public class Bank extends Model {
 
 	@OneToMany(mappedBy = "bank")
 	public List<Customer> customers;
+
+	public DateTime getLocalLastSync() {
+		DateTime localLastSync = null;
+
+		if (lastSync != null) {
+			String id = Messages.get("dates.timezone.id");
+			DateTimeZone local = DateTimeZone.forID(id);
+			long millis = local.convertUTCToLocal(lastSync.getMillis());
+
+			localLastSync = new DateTime(millis);
+		}
+
+		return localLastSync;
+	}
 }
