@@ -79,8 +79,8 @@ public class Users extends SuperController {
 			/* Parameters validation */
 			validation.required(locale).message("errors.field.required");
 
-			boolean passwordFlag = StringUtils.isBlank(passwordOld);
-			if (passwordFlag == false) {
+			boolean passwordEdition = StringUtils.isNotBlank(passwordOld);
+			if (passwordEdition == true) {
 				validation.required(password).message("errors.field.required");
 				validation.required(passwordBis).message("errors.field.required");
 
@@ -95,7 +95,7 @@ public class Users extends SuperController {
 
 			if (validation.hasErrors() == false) {
 				/* User update */
-				user.password = (passwordFlag == false) ? Crypto.encryptAES(password) : user.password;
+				user.password = (passwordEdition == true) ? Crypto.encryptAES(password) : user.password;
 				user.locale = locale;
 				user.admin = admin;
 				user.activated = activated;

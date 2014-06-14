@@ -66,14 +66,17 @@ public class AccountsSynchronizer extends Job {
 					for (AccountParserResult aResult : aResults) {
 						// Retrieve account data
 						Account account = Account.find("byLabel", aResult.getLabel()).first();
-						if (account == null) {
-							account = new Account();
-							account.customer = customer;
-							account.agency = aResult.getAgency();
-							account.rank = aResult.getRank();
-							account.series = aResult.getSeries();
-							account.subAccount = aResult.getSubAccount();
-							account.label = aResult.getLabel();
+						{
+							if (account == null) {
+								account = new Account();
+								account.customer = customer;
+								account.agency = aResult.getAgency();
+								account.rank = aResult.getRank();
+								account.series = aResult.getSeries();
+								account.subAccount = aResult.getSubAccount();
+								account.label = aResult.getLabel();
+							}
+
 							account.balance = aResult.getBalance();
 							account.save();
 						}
