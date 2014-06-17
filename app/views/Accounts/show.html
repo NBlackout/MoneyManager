@@ -69,15 +69,15 @@
 
 <h3>&{'titles.transactions.regular'}</h3>
 <div class="well">
-	<table id="regularTransactions" class="table table-hover">
+	<table id="regularTransactions" class="table table-hover" style="margin-bottom: 0px;">
 		<thead>
 			<tr>
 				<th>&{'labels.label'}</th>
 				<th>&{'labels.amount'}</th>
-				<th>&{'labels.date'}</th>
+				<th class="hidden-phone">&{'labels.date'}</th>
 
 				#{if currentDate == true || userAdmin == true}
-					<th>&{'labels.actions'}</th>
+					<th class="hidden-phone">&{'labels.actions'}</th>
 				#{/if}
 			</tr>
 		</thead>
@@ -89,9 +89,13 @@
 				}%
 
 				<tr data-category-id="${category.id}" style="cursor: pointer;">
-					<td><a href="#"><i data-action="expand" class="icon-chevron-down"></i>&nbsp;${category.label}</a></td>
-					<td class="${(total < 0) ? 'debit' : ((total > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${total?.formatCurrency('EUR')}</td>
-					<td #{if currentDate == true || userAdmin == true}colspan="2"#{/if}>
+					<td><a href="#"><i class="icon-chevron-down"></i>&nbsp;${category.label}</a></td>
+					<td class="${(total < 0) ? 'debit' : ((total > 0) ? 'credit' : 'neutral')}" style="text-align: right; white-space: nowrap;">${total?.formatCurrency('EUR')}</td>
+					<td class="hidden-phone"></td>
+
+					#{if currentDate == true || userAdmin == true}
+						<td class="hidden-phone"></td>
+					#{/if}
 				</tr>
 
 				#{list as:'transaction', items:regularTransactions.get(category)}
@@ -101,11 +105,11 @@
 
 					<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-transaction-category-id="${category.id}">
 						<td style="padding-left: 25px;">${transaction.configuration.friendlyLabel}</td>
-						<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${amount?.formatCurrency('EUR')}</td>
-						<td>${transaction.date.toDate().format(messages.get('dates.format'))}</td>
+						<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right; white-space: nowrap;">${amount?.formatCurrency('EUR')}</td>
+						<td class="hidden-phone">${transaction.date.toDate().format(messages.get('dates.format'))}</td>
 
 						#{if currentDate == true || userAdmin == true}
-							<td>
+							<td class="hidden-phone">
 								<a href="@{Transactions.generate(transaction.configuration.id)}"><i class="icon-cog"></i></a>
 								<a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="deactivate"><i class="${transaction.configuration.active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
 							</td>
@@ -122,13 +126,13 @@
 	<table id="oneOffTransactions" class="table table-condensed table-hover">
 		<thead>
 			<tr>
-				<th style="width: 1px;"></th>
+				<th class="hidden-phone" style="width: 1px;"></th>
 				<th>&{'labels.label'}</th>
 				<th>&{'labels.amount'}</th>
 				<th>&{'labels.date'}</th>
 
 				#{if currentDate == true}
-					<th>&{'labels.pay.monthly'}</th>
+					<th class="hidden-phone">&{'labels.pay.monthly'}</th>
 				#{/if}
 			</tr>
 		</thead>
@@ -140,18 +144,18 @@
 				}%
 
 				<tr data-transaction-id="${transaction.id}">
-					<td>
+					<td class="hidden-phone">
 						#{if transaction.additionalLabel}
 							<i title="${transaction.additionalLabel}" class="icon-info-sign" style="cursor: help;"></i>
 						#{/if}
 					</td>
 
 					<td class="transaction-label">${transaction.label}</td>
-					<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right;">${amount.formatCurrency('EUR')}</td>
+					<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right; white-space: nowrap;">${amount.formatCurrency('EUR')}</td>
 					<td class="transaction-date">${transaction.date.toDate().format(messages.get('dates.format'))}</td>
 
 					#{if currentDate == true}
-						<td><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>
+						<td class="hidden-phone"><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>
 					#{/if}
 				</tr>
 			#{/list}
@@ -231,7 +235,7 @@
 		/* Regular transaction expansion from regular transactions table */
 		regularTransactions.find('tr[data-category-id]').click(function() {
 			var categoryId = $(this).data('category-id');
-			var i = $(this).find('i[data-action]');
+			var i = $(this).find('i');
 
 			var classToRemove = (i.hasClass('icon-chevron-down')) ? 'icon-chevron-down' : 'icon-chevron-right';
 			var classToAdd = (i.hasClass('icon-chevron-down')) ? 'icon-chevron-right' : 'icon-chevron-down';
@@ -240,22 +244,6 @@
 			i.addClass(classToAdd);
 
 			regularTransactions.find('tr[data-transaction-category-id="' + categoryId + '"]').toggle();
-		});
-
-		regularTransactions.find('a[data-action="expand"]').click(function() {
-			var i = $(this).find('i');
-
-			if (i.hasClass('icon-chevron-down')) {
-				regularTransactions.find('tr[data-category-id="' + categoryId + '"]').hide();
-
-				i.removeClass('icon-chevron-down');
-				i.addClass('icon-chevron-right');
-			} else {
-				regularTransactions.find('tr[data-category-id="' + categoryId + '"]').show();
-
-				i.removeClass('icon-chevron-right');
-				i.addClass('icon-chevron-down');
-			}
 
 			return false;
 		});

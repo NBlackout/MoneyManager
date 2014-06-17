@@ -11,8 +11,8 @@
 			<tr>
 				<th>&{'labels.label'}</th>
 				<th>&{'labels.customers'}</th>
-				<th>&{'labels.lastSync'}</th>
-				<th>&{'labels.actions'}</th>
+				<th class="hidden-phone">&{'labels.lastSync'}</th>
+				<th class="hidden-phone">&{'labels.actions'}</th>
 			</tr>
 		</thead>
 
@@ -21,8 +21,8 @@
 				<tr data-bank-id="${bank.id}">
 					<td>${bank.label}</td>
 					<td>${bank.customers.size()}</td>
-					<td>${bank.localLastSync?.toDate()?.format(messages.get('dates.datetime.format'))}</td>
-					<td><a href="@{Banks.synchronize(bank.id)}"><i class="icon-refresh"></i></a></td>
+					<td class="hidden-phone">${bank.localLastSync?.toDate()?.format(messages.get('dates.datetime.format'))}</td>
+					<td class="hidden-phone"><a href="@{Banks.synchronize(bank.id)}"><i class="icon-refresh"></i></a></td>
 				</tr>
 			#{/list}
 		</tbody>
