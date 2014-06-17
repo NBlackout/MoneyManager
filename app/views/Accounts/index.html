@@ -10,11 +10,11 @@
 		<thead>
 			<tr>
 				<th>&{'labels.bank'}</th>
-				<th>&{'labels.number'}</th>
+				<th class="hidden-phone">&{'labels.number'}</th>
 				<th>&{'labels.label'}</th>
 				<th>&{'labels.balance'}</th>
-				<th>&{'labels.lastSync'}</th>
-				<th>&{'labels.actions'}</th>
+				<th class="hidden-phone">&{'labels.lastSync'}</th>
+				<th class="hidden-phone">&{'labels.actions'}</th>
 			</tr>
 		</thead>
 
@@ -22,11 +22,11 @@
 			#{list as:'account', items:accounts}
 				<tr data-account-id="${account.id}">
 					<td>${account.customer.bank.label}</td>
-					<td>${account.fullNumber}</td>
+					<td class="hidden-phone">${account.fullNumber}</td>
 					<td><a href="@{Accounts.show(account.id)}">${account.label}</a></td>
-					<td>${account.balance.formatCurrency('EUR')}</td>
-					<td>${account.localLastSync?.toDate()?.format(messages.get('dates.datetime.format'))}</td>
-					<td><a href="@{Accounts.synchronize(account.id)}"><i class="icon-refresh"></i></a></td>
+					<td style="white-space: nowrap">${account.balance.formatCurrency('EUR')}</td>
+					<td class="hidden-phone">${account.localLastSync?.toDate()?.format(messages.get('dates.datetime.format'))}</td>
+					<td class="hidden-phone"><a href="@{Accounts.synchronize(account.id)}"><i class="icon-refresh"></i></a></td>
 				</tr>
 			#{/list}
 		</tbody>
