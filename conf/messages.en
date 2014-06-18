@@ -10,6 +10,7 @@ titles.accounts.show=Account summary
 titles.application.index=Home
 titles.banks.index=Banks list
 titles.customers.create=Customer creation
+titles.customers.edit=Customer edition
 titles.customers.index=Customers list
 titles.transactions.regular=Regular transactions
 titles.transactions.one-off=One-off transactions

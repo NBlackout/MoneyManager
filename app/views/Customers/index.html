@@ -1,6 +1,10 @@
 #{extends 'main.html' /}
 #{set title:messages.get('titles.customers.index') /}
 
+%{
+	Boolean userAdmin = (session.get('user.admin')) ? Boolean.parseBoolean(session.get('user.admin')) : false;
+}%
+
 <div class="page-header">
 	<h2>&{'labels.customers'}</h2>
 </div>
@@ -12,7 +16,11 @@
 				<th>&{'labels.firstName'}</th>
 				<th>&{'labels.lastName'}</th>
 				<th>&{'labels.bank'}</th>
-				<th>&{'labels.accounts'}</th>
+				<th class="hidden-phone">&{'labels.accounts'}</th>
+
+				#{if userAdmin == true}
+					<th class="hidden-phone">&{'labels.actions'}</th>
+				#{/if}
 			</tr>
 		</thead>
 
@@ -22,7 +30,13 @@
 					<td>${customer.firstName}</td>
 					<td>${customer.lastName}</td>
 					<td>${customer.bank.label}</td>
-					<td>${customer.accounts.size()}</td>
+					<td class="hidden-phone">${customer.accounts.size()}</td>
+
+					#{if userAdmin == true}
+						<td class="hidden-phone">
+							<a href="@{Customers.edit(customer.id)}"><i class="icon-edit"></i></a>
+						</td>
+					#{/if}
 				</tr>
 			#{/list}
 		</tbody>

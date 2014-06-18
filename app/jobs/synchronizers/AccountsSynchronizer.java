@@ -14,6 +14,7 @@ import models.Customer;
 import models.transactions.oneoff.OneOffTransaction;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import play.Logger;
 import play.jobs.Job;
@@ -97,12 +98,12 @@ public class AccountsSynchronizer extends Job {
 								}
 							}
 
-							account.lastSync = DateTime.now();
+							account.lastSync = DateTime.now().withZone(DateTimeZone.UTC);
 							account.save();
 						}
 					}
 
-					bank.lastSync = DateTime.now();
+					bank.lastSync = DateTime.now().withZone(DateTimeZone.UTC);
 					bank.save();
 				}
 			}

@@ -1,0 +1,67 @@
+#{extends 'main.html' /}
+#{set title:messages.get('titles.customers.edit') /}
+
+<div class="page-header">
+	<h2>&{'labels.information'}</h2>
+</div>
+
+#{form @Customers.save(), method:'POST', class:'form-horizontal'}
+	<input name="customerId" type="hidden" value="${customer.id}">
+
+	<div class="control-group#{ifError 'bankId'} error#{/ifError}">
+		<label class="control-label required" for="bankId">&{'labels.bank'}</label>
+		<div class="controls">
+			#{select 'bankId', items:banks, labelProperty:'label', id:'bankId', value:customer.bank.id}
+			#{/select}
+			#{ifError 'bankId'}
+				<span class="help-inline">#{error 'bankId' /}</span>
+			#{/ifError}
+		</div>
+	</div>
+
+	<div class="control-group#{ifError 'password'} error#{/ifError}">
+		<label class="control-label required" for="password">&{'labels.password'}</label>
+		<div class="controls">
+			<input id="password" name="password" type="password" placeholder="&{'labels.password'}">
+			#{ifError 'password'}
+				<span class="help-inline">#{error 'password' /}</span>
+			#{/ifError}
+		</div>
+	</div>
+
+	<div class="control-group#{ifError 'passwordBis'} error#{/ifError}">
+		<label class="control-label required" for="passwordBis">&{'labels.password.bis'}</label>
+		<div class="controls">
+			<input id="passwordBis" name="passwordBis" type="password" placeholder="&{'labels.password.bis'}">
+			#{ifError 'passwordBis'}
+				<span class="help-inline">#{error 'passwordBis' /}</span>
+			#{/ifError}
+		</div>
+	</div>
+
+	<div class="control-group#{ifError 'firstName'} error#{/ifError}">
+		<label class="control-label required" for="firstName">&{'labels.firstName'}</label>
+		<div class="controls">
+			<input id="firstName" name="firstName" type="text" value="${customer.firstName}" placeholder="&{'labels.firstName'}">
+			#{ifError 'firstName'}
+				<span class="help-inline">#{error 'firstName' /}</span>
+			#{/ifError}
+		</div>
+	</div>
+
+	<div class="control-group#{ifError 'lastName'} error#{/ifError}">
+		<label class="control-label required" for="lastName">&{'labels.lastName'}</label>
+		<div class="controls">
+			<input id="lastName" name="lastName" type="text" value="${customer.lastName}" placeholder="&{'labels.lastName'}">
+			#{ifError 'lastName'}
+				<span class="help-inline">#{error 'lastName' /}</span>
+			#{/ifError}
+		</div>
+	</div>
+
+	<div class="control-group">
+		<div class="controls">
+			<button class="btn btn-primary" type="submit">&{'actions.save'}</button>
+		</div>
+	</div>
+#{/form}

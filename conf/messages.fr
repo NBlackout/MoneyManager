@@ -10,6 +10,7 @@ titles.accounts.show=Synthèse du compte
 titles.application.index=Accueil
 titles.banks.index=Liste des banques
 titles.customers.create=Création d'un client
+titles.customers.edit=Édition des informations d'un client
 titles.customers.index=Liste des clients
 titles.transactions.regular=Transactions régulières
 titles.transactions.one-off=Transactions uniques
