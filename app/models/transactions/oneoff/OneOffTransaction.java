@@ -45,7 +45,7 @@ public class OneOffTransaction extends Model {
 		DateTime minDate = new DateTime(year, month, 1, 0, 0);
 		DateTime maxDate = minDate.plusMonths(1);
 
-		JPAQuery query = OneOffTransaction.find("account.id = :accountId AND date >= :minDate AND date < :maxDate ORDER BY date DESC, id DESC");
+		JPAQuery query = OneOffTransaction.find("account.id = :accountId AND date >= :minDate AND date < :maxDate ORDER BY date DESC, label ASC");
 		query.setParameter("accountId", accountId);
 		query.setParameter("minDate", minDate);
 		query.setParameter("maxDate", maxDate);
@@ -67,7 +67,7 @@ public class OneOffTransaction extends Model {
 		DateTime minDate = new DateTime(date.getYear(), date.getMonthOfYear(), 1, 0, 0);
 		DateTime maxDate = minDate.plusMonths(1);
 
-		JPAQuery query = OneOffTransaction.find("account.id = :accountId AND label = :label AND date >= :minDate AND date < :maxDate ORDER BY date DESC, id DESC");
+		JPAQuery query = OneOffTransaction.find("account.id = :accountId AND label = :label AND date >= :minDate AND date < :maxDate ORDER BY date DESC, label ASC");
 		query.setParameter("accountId", accountId);
 		query.setParameter("label", label);
 		query.setParameter("minDate", minDate);

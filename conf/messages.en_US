@@ -2,7 +2,7 @@
 dates.format=MM/dd/yyyy
 dates.format.month=MMMM yyyy
 dates.datetime.format=MM/dd/yyyy HH:mm:ss
-dates.timezone.id=Europe/Helsinki
+dates.timezone.id=US/Central
 
 # Titles
 titles.accounts.index=Accounts list
@@ -37,6 +37,7 @@ labels.administration=Administration
 labels.amount=Amount
 labels.balance=Balance
 labels.bank=Bank
+labels.bank.type=Bank type
 labels.banks=Banks
 labels.customer=Customer
 labels.customers=Customers

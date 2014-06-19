@@ -57,7 +57,7 @@
 	<div class="input-prepend input-append">
 		<a href="@{Accounts.show(account.id, previousDate.toDate().format('yyyy'), previousDate.toDate().format('M'))}" class="btn btn-primary">&{'labels.previous'}</a>
 
-		<select id="dates" class="span2">
+		<select id="dates">
 			#{list as:'d', items:dates}
 				<option data-year="${d.toDate().format('yyyy')}" data-month="${d.toDate().format('M')}">${d.toDate().format(messages.get('dates.format.month'))}</option>
 			#{/list}

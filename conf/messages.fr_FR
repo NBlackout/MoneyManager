@@ -37,6 +37,7 @@ labels.administration=Administration
 labels.amount=Montant
 labels.balance=Solde
 labels.bank=Banque
+labels.bank.type=Type de banque
 labels.banks=Banques
 labels.customer=Client
 labels.customers=Clients
