@@ -1,10 +1,17 @@
 package controllers;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.GZIPOutputStream;
+
 import models.User;
 import play.i18n.Lang;
 import play.libs.Crypto;
 import play.mvc.Before;
 import play.mvc.Controller;
+import play.mvc.Finally;
 import play.mvc.Router;
 
 public class SuperController extends Controller {
@@ -33,6 +40,28 @@ public class SuperController extends Controller {
 		updateSession(null);
 
 		redirectSafely(returnUrl);
+	}
+
+	@Finally
+	public static void compress() {
+		String input = response.out.toString();
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream((int) (input.length() * 0.75));
+		try (GZIPOutputStream gos = new GZIPOutputStream(baos)) {
+			InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+
+			byte[] buffer = new byte[5000];
+			int read = 0;
+			while ((read = inputStream.read(buffer)) > 0) {
+				gos.write(buffer, 0, read);
+			}
+
+			response.setHeader("Content-Encoding", "gzip");
+			response.setHeader("Content-Length", baos.size() + "");
+			response.out = baos;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Before
