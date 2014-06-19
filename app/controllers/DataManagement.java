@@ -9,31 +9,19 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.text.NumberFormat;
-import java.util.Currency;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import javax.persistence.ManyToOne;
 
 import models.Account;
 import models.Bank;
 import models.Customer;
 import models.transactions.oneoff.OneOffTransaction;
-import models.transactions.regular.Category;
 import models.transactions.regular.Configuration;
-import models.transactions.regular.Periodicity;
 import models.transactions.regular.RegularTransaction;
 
 import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
-import play.i18n.Lang;
 import play.i18n.Messages;
 
 public class DataManagement extends SuperController {

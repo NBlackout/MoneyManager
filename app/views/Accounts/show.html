@@ -178,14 +178,14 @@
 			var month = date.data('month');
 
 			if (year == '${date.toDate().format("yyyy")}' && month == '${date.toDate().format("M")}') {
-				date.attr('selected', 'selected');
+				date.prop('selected', true);
 
 				return false;
 			}
 		});
 
 		dates.change(function() {
-			var selected = dates.find('option:selected');
+			var date = dates.find('option:selected');
 			var year = date.data('year');
 			var month = date.data('month');
 
