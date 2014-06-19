@@ -58,8 +58,8 @@ public class CreditDuNordWebSiteParser implements IWebSiteParser {
 
 		Response response1 = JsoupConnection.get(url1, cookies);
 		if (response1 != null) {
-			DateTime begin = (account.lastSync != null) ? account.lastSync : new DateTime(2000, 1, 1, 0, 0);
 			DateTime end = DateTime.now();
+			DateTime begin = (account.lastSync != null) ? end.minusMonths(2) : new DateTime(2000, 1, 1, 0, 0);
 
 			String url2 = "https://www.credit-du-nord.fr/vos-comptes/IPT/appmanager/transac/particuliers?_cdnRemUrl=%2FtransacClippe%2FTEL_2.asp&_cdnPtlKey=MTIyNDA%3D";
 			Map<String, String> data2 = new HashMap<>();
