@@ -24,7 +24,7 @@
 					<td>${account.customer.bank.label}</td>
 					<td class="hidden-phone">${account.fullNumber}</td>
 					<td><a href="@{Accounts.show(account.id)}">${account.label}</a></td>
-					<td style="white-space: nowrap">${account.balance.formatCurrency('EUR')}</td>
+					<td style="white-space: nowrap">${account.balance.formatCurrencyEur()}</td>
 					<td class="hidden-phone">${account.localLastSync?.toDate()?.format(messages.get('dates.datetime.format'))}</td>
 					<td class="hidden-phone"><a href="@{Accounts.synchronize(account.id)}"><i class="icon-refresh"></i></a></td>
 				</tr>
