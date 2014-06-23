@@ -76,6 +76,7 @@
 <table id="regularTransactions" class="table table-hover" style="margin-bottom: 0px;">
 	<thead>
 		<tr>
+			<th class="hidden-phone" style="width: 1px;"></th>
 			<th>&{'labels.label'}</th>
 			<th>&{'labels.amount'}</th>
 			<th class="hidden-phone">&{'labels.date'}</th>
@@ -93,7 +94,8 @@
 			}%
 
 			<tr data-category-id="${category.id}" style="cursor: pointer;">
-				<td><a href="#"><i class="icon-chevron-down"></i>&nbsp;${category.label}&nbsp;(${regularTransactions.get(category).size()})</a></td>
+				<td class="hidden-phone">(${regularTransactions.get(category).size()})</td>
+				<td><a href="#"><i class="icon-chevron-down"></i>&nbsp;${category.label}</a></td>
 				<td class="${(total < 0) ? 'debit' : ((total > 0) ? 'credit' : 'neutral')}" style="text-align: right; white-space: nowrap;">${total?.formatCurrencyEur()}</td>
 				<td class="hidden-phone"></td>
 
@@ -104,25 +106,31 @@
 
 			#{list as:'transaction', items:regularTransactions.get(category)}
 				%{
+					models.transactions.regular.Configuration configuration = transaction.configuration;
 					models.transactions.oneoff.OneOffTransaction oneOffTransaction = transaction.oneOffTransaction;
 
-					Boolean found = (oneOffTransaction != null);  
 					Double amount = oneOffTransaction?.amount;
 					Boolean active = (transaction.configuration.active == true);
 				}%
 
-				<tr data-transaction-category-id="${category.id}" class="${(found == false) ? 'error' : 'success'}">
+				<tr data-transaction-category-id="${category.id}" class="${(oneOffTransaction == null) ? 'error' : 'success'}">
+					<td class="hidden-phone">
+						#{if oneOffTransaction != null}
+							<i title="${oneOffTransaction.label}" class="icon-info-sign" style="cursor: help;"></i>
+						#{/if}
+					</td>
+
 					<td>${transaction.configuration.friendlyLabel}</td>
 					<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right; white-space: nowrap;">${amount?.formatCurrencyEur()}</td>
-					<td class="hidden-phone">${((found == true) ? oneOffTransaction.date : transaction.expectedDate).toDate()?.format(messages.get('dates.format'))}</td>
+					<td class="hidden-phone">${((oneOffTransaction != null) ? oneOffTransaction.date : transaction.expectedDate).toDate()?.format(messages.get('dates.format'))}</td>
 
 					#{if currentDate == true || userAdmin == true}
 						<td class="hidden-phone">
-							<a href="@{Transactions.generate(transaction.configuration.id)}"><i class="icon-cog"></i></a>
-							<a href="@{Transactions.toggle(transaction.configuration.id, date.getYear(), date.getMonthOfYear())}" data-action="toggle"><i class="${active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
+							<a href="@{Transactions.generate(configuration.id)}"><i class="icon-cog"></i></a>
+							<a href="@{Transactions.toggle(configuration.id, date.getYear(), date.getMonthOfYear())}" data-action="toggle"><i class="${active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
 
 							#{if userAdmin == true}
-								<a href="@{Transactions.delete(transaction.configuration.id, date.getYear(), date.getMonthOfYear())}" data-action="delete"><i class="icon-remove"></i></a>
+								<a href="@{Transactions.delete(configuration.id, date.getYear(), date.getMonthOfYear())}" data-action="delete"><i class="icon-remove"></i></a>
 							#{/if}
 						</td>
 					#{/if}
