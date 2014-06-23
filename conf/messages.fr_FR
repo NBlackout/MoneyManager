@@ -12,6 +12,7 @@ titles.banks.index=Liste des banques
 titles.customers.create=Création d'un client
 titles.customers.edit=Édition des informations d'un client
 titles.customers.index=Liste des clients
+titles.data.management.index=Gestion des données
 titles.transactions.regular=Transactions régulières
 titles.transactions.one-off=Transactions uniques
 titles.users.create=Création d'un utilisateur
@@ -22,6 +23,8 @@ titles.users.sign.up=Inscription
 # Actions
 actions.cancel=Annuler
 actions.create=Créer
+actions.export=Exporter
+actions.import=Importer
 actions.save=Enregistrer
 actions.sign.in=Connexion
 actions.sign.out=Déconnexion
@@ -41,6 +44,7 @@ labels.bank.type=Type de banque
 labels.banks=Banques
 labels.customer=Client
 labels.customers=Clients
+labels.data.management=Gestion des données
 labels.date=Date
 labels.details=Détails
 labels.false=Non
@@ -61,6 +65,8 @@ labels.password.old=Ancien mot de passe
 labels.pay.monthly=Mensualiser
 labels.period=Période
 labels.previous=Précédent
+labels.restore=Restauration
+labels.save=Sauvegarde
 labels.summary=Synthèse
 labels.true=Oui
 labels.users=Utilisateurs
@@ -68,7 +74,8 @@ labels.users.account.modify=Modifier mon compte
 
 # Confirms
 confirms.transactions.regular.create=Êtes-vous sûr de vouloir mensualiser cette transaction ?
-confirms.transactions.regular.deactivate=Êtes-vous sûr de vouloir désactivate cette transaction ?
+confirms.transactions.regular.toggle=Êtes-vous sûr de vouloir activer/désactiver cette transaction ?
+confirms.transactions.regular.delete=Êtes-vous sûr de vouloir supprimer cette transaction ?
 
 # Information
 information.accounts.empty=Aucun compte trouvé

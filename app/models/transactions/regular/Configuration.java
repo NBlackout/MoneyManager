@@ -29,7 +29,7 @@ public class Configuration extends Model {
 	@ManyToOne
 	public Periodicity periodicity;
 
-	public String label;
+	public String fixedLabel;
 
 	public String friendlyLabel;
 

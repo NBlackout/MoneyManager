@@ -18,7 +18,6 @@ import models.Bank;
 import models.Customer;
 import models.transactions.oneoff.OneOffTransaction;
 import models.transactions.regular.Configuration;
-import models.transactions.regular.RegularTransaction;
 
 import org.apache.commons.lang.ObjectUtils;
 
@@ -201,7 +200,7 @@ public class DataManagement extends SuperController {
 				builder.append(";");
 				builder.append(Messages.get("labels.periodicity"));
 				builder.append(";");
-				builder.append(Messages.get("labels.label"));
+				builder.append(Messages.get("labels.label.fixed"));
 				builder.append(";");
 				builder.append(Messages.get("labels.label.friendly"));
 				builder.append(";");
@@ -220,7 +219,7 @@ public class DataManagement extends SuperController {
 					builder.append(";");
 					builder.append(configuration.periodicity.id);
 					builder.append(";");
-					builder.append(configuration.label);
+					builder.append(configuration.fixedLabel);
 					builder.append(";");
 					builder.append(configuration.friendlyLabel);
 					builder.append(";");
@@ -239,41 +238,41 @@ public class DataManagement extends SuperController {
 			zos.write(builder.toString().getBytes(Charset.forName("UTF-8")));
 
 			// Regular transactions export
-			zos.putNextEntry(new ZipEntry(Messages.get("labels.transactions.regular") + ".csv"));
-
-			builder = new StringBuilder();
-			{
-				builder.append(Messages.get("labels.configuration"));
-				builder.append(";");
-				builder.append(Messages.get("labels.label.additional"));
-				builder.append(";");
-				builder.append(Messages.get("labels.amount"));
-				builder.append(";");
-				builder.append(Messages.get("labels.date"));
-				builder.append(";");
-				builder.append(Messages.get("labels.done"));
-				builder.append("\n");
-
-				List<RegularTransaction> transactions = RegularTransaction.find("ORDER BY configuration.id ASC, date DESC, additionalLabel ASC").fetch();
-				for (RegularTransaction transaction : transactions) {
-					builder.append(transaction.configuration.id);
-					builder.append(";");
-					builder.append(transaction.additionalLabel);
-					builder.append(";");
-					builder.append(transaction.amount);
-					builder.append(";");
-					builder.append(transaction.date);
-					builder.append(";");
-					builder.append(transaction.done);
-					builder.append("\n");
-				}
-			}
-
-			zos.write(0xEF);
-			zos.write(0xBB);
-			zos.write(0xBF);
-			zos.write(builder.toString().getBytes(Charset.forName("UTF-8")));
-			zos.closeEntry();
+			// zos.putNextEntry(new ZipEntry(Messages.get("labels.transactions.regular") + ".csv"));
+			//
+			// builder = new StringBuilder();
+			// {
+			// builder.append(Messages.get("labels.configuration"));
+			// builder.append(";");
+			// builder.append(Messages.get("labels.label.additional"));
+			// builder.append(";");
+			// builder.append(Messages.get("labels.amount"));
+			// builder.append(";");
+			// builder.append(Messages.get("labels.date"));
+			// builder.append(";");
+			// builder.append(Messages.get("labels.done"));
+			// builder.append("\n");
+			//
+			// List<RegularTransaction> transactions = RegularTransaction.find("ORDER BY configuration.id ASC, date DESC, additionalLabel ASC").fetch();
+			// for (RegularTransaction transaction : transactions) {
+			// builder.append(transaction.configuration.id);
+			// builder.append(";");
+			// builder.append(transaction.additionalLabel);
+			// builder.append(";");
+			// builder.append(transaction.amount);
+			// builder.append(";");
+			// builder.append(transaction.date);
+			// builder.append(";");
+			// builder.append(transaction.done);
+			// builder.append("\n");
+			// }
+			// }
+			//
+			// zos.write(0xEF);
+			// zos.write(0xBB);
+			// zos.write(0xBF);
+			// zos.write(builder.toString().getBytes(Charset.forName("UTF-8")));
+			// zos.closeEntry();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import models.transactions.oneoff.OneOffTransaction;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -20,14 +23,11 @@ public class RegularTransaction extends Model {
 	@ManyToOne
 	public Configuration configuration;
 
-	public String additionalLabel;
-
-	public Double amount;
-
 	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
-	public DateTime date;
+	public DateTime expectedDate;
 
-	public boolean done;
+	@OneToOne
+	public OneOffTransaction oneOffTransaction;
 
 	public static List<RegularTransaction> findByAccountIdAndCategoryIdAndYearAndMonth(Long accountId, Long categoryId, Integer year, Integer month) {
 		if (accountId == null) {
@@ -46,7 +46,7 @@ public class RegularTransaction extends Model {
 		DateTime minDate = new DateTime(year, month, 1, 0, 0);
 		DateTime maxDate = minDate.plusMonths(1);
 
-		JPAQuery query = RegularTransaction.find("configuration.account.id = :accountId AND configuration.category.id = :categoryId AND date >= :minDate AND date < :maxDate ORDER BY date DESC");
+		JPAQuery query = RegularTransaction.find("configuration.account.id = :accountId AND configuration.category.id = :categoryId AND expectedDate >= :minDate AND expectedDate < :maxDate ORDER BY expectedDate DESC");
 		query.setParameter("accountId", accountId);
 		query.setParameter("categoryId", categoryId);
 		query.setParameter("minDate", minDate);

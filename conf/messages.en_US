@@ -12,6 +12,7 @@ titles.banks.index=Banks list
 titles.customers.create=Customer creation
 titles.customers.edit=Customer edition
 titles.customers.index=Customers list
+titles.data.management.index=Data management
 titles.transactions.regular=Regular transactions
 titles.transactions.one-off=One-off transactions
 titles.users.create=User creation
@@ -22,6 +23,8 @@ titles.users.sign.up=Sign up
 # Actions
 actions.cancel=Cancel
 actions.create=Create
+actions.export=Export
+actions.import=Import
 actions.save=Save
 actions.sign.in=Sign in
 actions.sign.out=Sign out
@@ -41,6 +44,7 @@ labels.bank.type=Bank type
 labels.banks=Banks
 labels.customer=Customer
 labels.customers=Customers
+labels.data.management=Data management
 labels.date=Date
 labels.details=Details
 labels.false=No
@@ -61,6 +65,8 @@ labels.password.old=Old password
 labels.pay.monthly=Pay monthly
 labels.period=Period
 labels.previous=Previous
+labels.restore=Restore
+labels.save=Save
 labels.summary=Summary
 labels.true=Yes
 labels.users=Users
@@ -68,7 +74,8 @@ labels.users.account.edit=Modify my account
 
 # Confirms
 confirms.transactions.regular.create=Are you sure you want to pay monthly this transaction ?
-confirms.transactions.regular.deactivate=Are you sure you want to deactivate this transaction ?
+confirms.transactions.regular.toggle=Are you sure you want to toggle this transaction ?
+confirms.transactions.regular.delete=Are you sure you want to delete this transaction ?
 
 # Information
 information.accounts.empty=No account found

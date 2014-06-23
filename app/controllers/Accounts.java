@@ -61,12 +61,12 @@ public class Accounts extends SuperController {
 			List<RegularTransaction> transactions = RegularTransaction.findByAccountIdAndCategoryIdAndYearAndMonth(accountId, category.id, year, month);
 
 			for (RegularTransaction transaction : transactions) {
-				if (transaction.amount != null) {
+				if (transaction.oneOffTransaction != null) {
 					if (total == null) {
 						total = new Double(0d);
 					}
 
-					total += transaction.amount;
+					total += transaction.oneOffTransaction.amount;
 				}
 			}
 

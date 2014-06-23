@@ -2,7 +2,7 @@
 #{set title:messages.get('titles.accounts.show') /}
 
 %{
-	Boolean userAdmin = (session.get('user.admin')) ? Boolean.parseBoolean(session.get('user.admin')) : false;
+	Boolean userAdmin = (session.get('user.admin') != null) ? Boolean.parseBoolean(session.get('user.admin')) : false;
 
 	boolean currentDate = (date.getYear() == now.getYear() && date.getMonthOfYear() == now.getMonthOfYear());
 }%
@@ -20,6 +20,11 @@
 			#{select 'categoryId', items:categories, labelProperty:'label', id:'transactionCategory'}
 				#{option}#{/option}
 			#{/select}
+		</div>
+
+		<div>
+			<label>&{'labels.label.fixed'}</label>
+			<input id="transactionFixedLabel" name="fixedLabel" type="text" placeholder="&{'labels.label.fixed'}">
 		</div>
 
 		<div>
@@ -68,58 +73,64 @@
 #{/form}
 
 <h3>&{'titles.transactions.regular'}</h3>
-<div class="well">
-	<table id="regularTransactions" class="table table-hover" style="margin-bottom: 0px;">
-		<thead>
-			<tr>
-				<th>&{'labels.label'}</th>
-				<th>&{'labels.amount'}</th>
-				<th class="hidden-phone">&{'labels.date'}</th>
+<table id="regularTransactions" class="table table-hover" style="margin-bottom: 0px;">
+	<thead>
+		<tr>
+			<th>&{'labels.label'}</th>
+			<th>&{'labels.amount'}</th>
+			<th class="hidden-phone">&{'labels.date'}</th>
+
+			#{if currentDate == true || userAdmin == true}
+				<th class="hidden-phone">&{'labels.actions'}</th>
+			#{/if}
+		</tr>
+	</thead>
+
+	<tbody>
+		#{list as:'category', items:regularTransactions.keySet()}
+			%{
+				Double total = categoryTotals.get(category);
+			}%
+
+			<tr data-category-id="${category.id}" style="cursor: pointer;">
+				<td><a href="#"><i class="icon-chevron-down"></i>&nbsp;${category.label}&nbsp;(${regularTransactions.get(category).size()})</a></td>
+				<td class="${(total < 0) ? 'debit' : ((total > 0) ? 'credit' : 'neutral')}" style="text-align: right; white-space: nowrap;">${total?.formatCurrencyEur()}</td>
+				<td class="hidden-phone"></td>
 
 				#{if currentDate == true || userAdmin == true}
-					<th class="hidden-phone">&{'labels.actions'}</th>
+					<td class="hidden-phone"></td>
 				#{/if}
 			</tr>
-		</thead>
 
-		<tbody>
-			#{list as:'category', items:regularTransactions.keySet()}
+			#{list as:'transaction', items:regularTransactions.get(category)}
 				%{
-					Double total = categoryTotals.get(category);
+					models.transactions.oneoff.OneOffTransaction oneOffTransaction = transaction.oneOffTransaction;
+
+					Boolean found = (oneOffTransaction != null);  
+					Double amount = oneOffTransaction?.amount;
+					Boolean active = (transaction.configuration.active == true);
 				}%
 
-				<tr data-category-id="${category.id}" style="cursor: pointer;">
-					<td><a href="#"><i class="icon-chevron-down"></i>&nbsp;${category.label}</a></td>
-					<td class="${(total < 0) ? 'debit' : ((total > 0) ? 'credit' : 'neutral')}" style="text-align: right; white-space: nowrap;">${total?.formatCurrencyEur()}</td>
-					<td class="hidden-phone"></td>
+				<tr data-transaction-category-id="${category.id}" class="${(found == false) ? 'error' : 'success'}">
+					<td>${transaction.configuration.friendlyLabel}</td>
+					<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right; white-space: nowrap;">${amount?.formatCurrencyEur()}</td>
+					<td class="hidden-phone">${((found == true) ? oneOffTransaction.date : transaction.expectedDate).toDate()?.format(messages.get('dates.format'))}</td>
 
 					#{if currentDate == true || userAdmin == true}
-						<td class="hidden-phone"></td>
+						<td class="hidden-phone">
+							<a href="@{Transactions.generate(transaction.configuration.id)}"><i class="icon-cog"></i></a>
+							<a href="@{Transactions.toggle(transaction.configuration.id, date.getYear(), date.getMonthOfYear())}" data-action="toggle"><i class="${active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
+
+							#{if userAdmin == true}
+								<a href="@{Transactions.delete(transaction.configuration.id, date.getYear(), date.getMonthOfYear())}" data-action="delete"><i class="icon-remove"></i></a>
+							#{/if}
+						</td>
 					#{/if}
 				</tr>
-
-				#{list as:'transaction', items:regularTransactions.get(category)}
-					%{
-						Double amount = transaction.amount;
-					}%
-
-					<tr class="${(transaction.done == true) ? 'success' : 'error'}" data-transaction-category-id="${category.id}">
-						<td style="padding-left: 25px;">${transaction.configuration.friendlyLabel}</td>
-						<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right; white-space: nowrap;">${amount?.formatCurrencyEur()}</td>
-						<td class="hidden-phone">${transaction.date.toDate().format(messages.get('dates.format'))}</td>
-
-						#{if currentDate == true || userAdmin == true}
-							<td class="hidden-phone">
-								<a href="@{Transactions.generate(transaction.configuration.id)}"><i class="icon-cog"></i></a>
-								<a href="@{Transactions.deactivate(transaction.configuration.id)}" data-action="deactivate"><i class="${transaction.configuration.active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
-							</td>
-						#{/if}
-					</tr>
-				#{/list}
 			#{/list}
-		</tbody>
-	</table>
-</div>
+		#{/list}
+	</tbody>
+</table>
 
 <h3>&{'titles.transactions.one-off'}</h3>
 #{if oneOffTransactions}
@@ -131,7 +142,7 @@
 				<th>&{'labels.amount'}</th>
 				<th>&{'labels.date'}</th>
 
-				#{if currentDate == true}
+				#{if currentDate == true || userAdmin == true}
 					<th class="hidden-phone">&{'labels.pay.monthly'}</th>
 				#{/if}
 			</tr>
@@ -139,25 +150,27 @@
 
 		<tbody>
 			#{list as:'transaction', items:oneOffTransactions}
-				%{
-					double amount = transaction.amount;
-				}%
+				#{if transaction.regularTransaction == null}
+					%{
+						Double amount = transaction.amount;
+					}%
 
-				<tr data-transaction-id="${transaction.id}">
-					<td class="hidden-phone">
-						#{if transaction.additionalLabel}
-							<i title="${transaction.additionalLabel}" class="icon-info-sign" style="cursor: help;"></i>
+					<tr data-transaction-id="${transaction.id}">
+						<td class="hidden-phone">
+							#{if transaction.additionalLabel}
+								<i title="${transaction.additionalLabel}" class="icon-info-sign" style="cursor: help;"></i>
+							#{/if}
+						</td>
+
+						<td class="transaction-label">${transaction.label}</td>
+						<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right; white-space: nowrap;">${amount.formatCurrencyEur()}</td>
+						<td class="transaction-date">${transaction.date.toDate().format(messages.get('dates.format'))}</td>
+
+						#{if currentDate == true || userAdmin == true}
+							<td class="hidden-phone"><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>
 						#{/if}
-					</td>
-
-					<td class="transaction-label">${transaction.label}</td>
-					<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right; white-space: nowrap;">${amount.formatCurrencyEur()}</td>
-					<td class="transaction-date">${transaction.date.toDate().format(messages.get('dates.format'))}</td>
-
-					#{if currentDate == true}
-						<td class="hidden-phone"><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>
-					#{/if}
-				</tr>
+					</tr>
+				#{/if}
 			#{/list}
 		</tbody>
 	</table>
@@ -248,9 +261,14 @@
 			return false;
 		});
 
+		/* Regular transaction toggle from regular transactions table */
+		regularTransactions.find('a[data-action="toggle"]').click(function() {
+			return confirm(messages['confirms.transactions.regular.toggle']);
+		});
+
 		/* Regular transaction deletion from regular transactions table */
-		regularTransactions.find('a[data-action="deactivate"]').click(function() {
-			return confirm(messages['confirms.transactions.regular.deactivate']);
+		regularTransactions.find('a[data-action="delete"]').click(function() {
+			return confirm(messages['confirms.transactions.regular.delete']);
 		});
 	};
 
@@ -266,6 +284,7 @@
 
 			$('#transactionId').val(transactionId).prop('disabled', false);
 			$('#transactionCategory').val('');
+			$('#transactionFixedLabel').val(label);
 			$('#transactionDate').val(date);
 
 			dialog.dialog('option', 'title', label);

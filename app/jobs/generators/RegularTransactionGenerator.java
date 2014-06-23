@@ -43,7 +43,7 @@ public class RegularTransactionGenerator extends Job {
 	}
 
 	private void generate(Configuration configuration) {
-		Logger.info("BEGIN RegularTransactionGenerator.generate(" + configuration.label + ")");
+		Logger.info("BEGIN RegularTransactionGenerator.generate(" + configuration.friendlyLabel + ")");
 		DateTime date = configuration.lastDueDate;
 		if (date == null) {
 			date = configuration.firstDueDate;
@@ -57,27 +57,31 @@ public class RegularTransactionGenerator extends Job {
 			}
 		}
 
-		Double amount = null;
-		boolean done = false;
+		List<OneOffTransaction> oneOffTransactions = OneOffTransaction.findByAccountIdAndLabelAndDate(configuration.account.id, configuration.fixedLabel, date);
+		if (oneOffTransactions != null && oneOffTransactions.isEmpty() == false) {
+			for (OneOffTransaction oneOffTransaction : oneOffTransactions) {
+				RegularTransaction transaction = new RegularTransaction();
+				transaction.configuration = configuration;
+				transaction.expectedDate = date;
+				transaction.oneOffTransaction = oneOffTransaction;
+				transaction.save();
 
-		OneOffTransaction oneOffTransaction = OneOffTransaction.findByAccountIdAndLabelAndDate(configuration.account.id, configuration.label, date);
-		if (oneOffTransaction != null) {
-			amount = oneOffTransaction.amount;
-			date = oneOffTransaction.date;
-			done = date.isBefore(DateTime.now());
+				if (configuration.lastDueDate == null || configuration.lastDueDate.isBefore(oneOffTransaction.date) == true) {
+					configuration.lastDueDate = oneOffTransaction.date;
+					configuration.save();
+				}
+			}
+		} else {
+			RegularTransaction transaction = new RegularTransaction();
+			transaction.configuration = configuration;
+			transaction.expectedDate = date;
+			transaction.oneOffTransaction = null;
+			transaction.save();
 
-			oneOffTransaction.delete();
+			configuration.lastDueDate = date;
+			configuration.save();
 		}
 
-		RegularTransaction transaction = new RegularTransaction();
-		transaction.configuration = configuration;
-		transaction.amount = amount;
-		transaction.date = date;
-		transaction.done = done;
-		transaction.save();
-
-		configuration.lastDueDate = transaction.date;
-		configuration.save();
-		Logger.info("  END RegularTransactionGenerator.generate(" + configuration.label + ")");
+		Logger.info("  END RegularTransactionGenerator.generate(" + configuration.friendlyLabel + ")");
 	}
 }
