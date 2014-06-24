@@ -44,7 +44,7 @@ public class SuperController extends Controller {
 
 	@Finally
 	public static void compress() {
-		if (response.contentType.equals("application/zip") == false) {
+		if (response.contentType != null && response.contentType.equals("application/zip") == false) {
 			String input = response.out.toString();
 
 			ByteArrayOutputStream baos = new ByteArrayOutputStream((int) (input.length() * 0.75));

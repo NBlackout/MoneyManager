@@ -36,7 +36,7 @@
 						#{if user.id != userId}
 							<a href="@{Users.edit(user.id)}"><i title="&{'actions.edit'}" class="icon-edit"></i></a>
 							<a href="@{Users.toggle(user.id)}"><i title="&{(activated == true) ? 'actions.deactivate' : 'actions.activate'}" class="${(activated == true) ? 'icon-stop' : 'icon-play'}"></i></a>
-							<a href="@{Users.delete(user.id)}"><i title="&{'actions.delete'}" class="icon-remove"></i></a>
+							<a href="@{Users.delete(user.id)}"><i title="&{'actions.delete'}" class="icon-trash"></i></a>
 						#{/if}
 					</td>
 				</tr>
