@@ -44,23 +44,25 @@ public class SuperController extends Controller {
 
 	@Finally
 	public static void compress() {
-		String input = response.out.toString();
+		if (response.contentType.equals("application/zip") == false) {
+			String input = response.out.toString();
 
-		ByteArrayOutputStream baos = new ByteArrayOutputStream((int) (input.length() * 0.75));
-		try (GZIPOutputStream gos = new GZIPOutputStream(baos)) {
-			InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+			ByteArrayOutputStream baos = new ByteArrayOutputStream((int) (input.length() * 0.75));
+			try (GZIPOutputStream gos = new GZIPOutputStream(baos)) {
+				InputStream inputStream = new ByteArrayInputStream(input.getBytes());
 
-			byte[] buffer = new byte[5000];
-			int read = 0;
-			while ((read = inputStream.read(buffer)) > 0) {
-				gos.write(buffer, 0, read);
+				byte[] buffer = new byte[5000];
+				int read = 0;
+				while ((read = inputStream.read(buffer)) > 0) {
+					gos.write(buffer, 0, read);
+				}
+
+				response.setHeader("Content-Encoding", "gzip");
+				response.setHeader("Content-Length", baos.size() + "");
+				response.out = baos;
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-
-			response.setHeader("Content-Encoding", "gzip");
-			response.setHeader("Content-Length", baos.size() + "");
-			response.out = baos;
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
