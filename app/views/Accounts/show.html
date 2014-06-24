@@ -12,7 +12,7 @@
 </div>
 
 <div id="dialog" style="display: none;">
-	#{form @Transactions.create(), id:'createRegularTransactionForm', method:'POST'}
+	#{form @Transactions.save(), id:'createRegularTransactionForm', method:'POST'}
 		<input id="transactionId" name="transactionId" type="hidden">
 
 		<div>
@@ -126,11 +126,11 @@
 
 					#{if currentDate == true || userAdmin == true}
 						<td class="hidden-phone">
-							<a href="@{Transactions.generate(configuration.id)}"><i class="icon-cog"></i></a>
-							<a href="@{Transactions.toggle(configuration.id, date.getYear(), date.getMonthOfYear())}" data-action="toggle"><i class="${active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
+							<a href="@{Transactions.generate(configuration.id)}"><i title="&{'actions.generate'}" class="icon-cog"></i></a>
+							<a href="@{Transactions.toggle(configuration.id, date.getYear(), date.getMonthOfYear())}" data-action="toggle"><i title="&{(active == true) ? 'actions.deactivate' : 'actions.activate'}" class="${(active == true) ? 'icon-step-forward' : 'icon-off'}"></i></a>
 
 							#{if userAdmin == true}
-								<a href="@{Transactions.delete(configuration.id, date.getYear(), date.getMonthOfYear())}" data-action="delete"><i class="icon-remove"></i></a>
+								<a href="@{Transactions.delete(configuration.id, date.getYear(), date.getMonthOfYear())}" data-action="delete"><i title="&{'actions.delete'}" class="icon-remove"></i></a>
 							#{/if}
 						</td>
 					#{/if}
@@ -151,7 +151,7 @@
 				<th>&{'labels.date'}</th>
 
 				#{if currentDate == true || userAdmin == true}
-					<th class="hidden-phone">&{'labels.pay.monthly'}</th>
+					<th class="hidden-phone">&{'labels.actions'}</th>
 				#{/if}
 			</tr>
 		</thead>
@@ -175,7 +175,7 @@
 						<td class="transaction-date">${transaction.date.toDate().format(messages.get('dates.format'))}</td>
 
 						#{if currentDate == true || userAdmin == true}
-							<td class="hidden-phone"><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>
+							<td class="hidden-phone"><a href="#" title="&{'actions.pay.monthly'}" data-action="pay-monthly"><i class="icon-calendar"></i></a></td>
 						#{/if}
 					</tr>
 				#{/if}
@@ -284,7 +284,7 @@
 		var oneOffTransactions = $('#oneOffTransactions > tbody');
 
 		/* Regular transaction creation from one-off transactions table */
-		oneOffTransactions.find('a[data-action="create"]').click(function() {
+		oneOffTransactions.find('a[data-action="pay-monthly"]').click(function() {
 			var tr = $(this).closest('tr[data-transaction-id]');
 			var transactionId = tr.data('transaction-id');
 			var label = tr.find('.transaction-label').text();

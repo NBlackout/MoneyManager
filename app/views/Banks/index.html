@@ -22,7 +22,7 @@
 					<td>${bank.label}</td>
 					<td>${bank.customers.size()}</td>
 					<td class="hidden-phone">${bank.localLastSync?.toDate()?.format(messages.get('dates.datetime.format'))}</td>
-					<td class="hidden-phone"><a href="@{Banks.synchronize(bank.id)}"><i class="icon-download-alt"></i></a></td>
+					<td class="hidden-phone"><a href="@{Banks.synchronize(bank.id)}"><i title="&{'actions.synchronize'}" class="icon-download-alt"></i></a></td>
 				</tr>
 			#{/list}
 		</tbody>

@@ -14,7 +14,7 @@ import play.data.binding.As;
 
 public class Transactions extends SuperController {
 
-	public static void create(Long transactionId, Long categoryId, String fixedLabel, String friendlyLabel, @As("dd/MM/yyyy") DateTime date) {
+	public static void save(Long transactionId, Long categoryId, String fixedLabel, String friendlyLabel, @As("dd/MM/yyyy") DateTime date) {
 		OneOffTransaction transaction = OneOffTransaction.findById(transactionId);
 
 		if (categoryId != null && StringUtils.isNotBlank(fixedLabel) && StringUtils.isNotBlank(friendlyLabel) && date != null) {

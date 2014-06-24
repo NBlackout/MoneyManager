@@ -21,14 +21,21 @@ titles.users.index=Users list
 titles.users.sign.up=Sign up
 
 # Actions
+actions.activate=Activate
 actions.cancel=Cancel
 actions.create=Create
+actions.deactivate=Deactivate
+actions.delete=Delete
+actions.edit=Edit
 actions.export=Export
+actions.generate=Generate
 actions.import=Import
+actions.pay.monthly=Pay monthly
 actions.save=Save
 actions.sign.in=Sign in
 actions.sign.out=Sign out
 actions.sign.up=Sign up
+actions.synchronize=Synchronize
 actions.validate=Validate
 
 # Labels
@@ -53,6 +60,7 @@ labels.information=Information
 labels.information.edit=Edit my information
 labels.lastName=Last name
 labels.label=Label
+labels.label.fixed=Fixed label
 labels.label.friendly=Friendly label
 labels.language=Language
 labels.lastSync=Last synchronization
@@ -62,7 +70,6 @@ labels.number=Number
 labels.password=Password
 labels.password.bis=Retype password
 labels.password.old=Old password
-labels.pay.monthly=Pay monthly
 labels.period=Period
 labels.previous=Previous
 labels.restore=Restore
