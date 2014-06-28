@@ -79,7 +79,7 @@ public class CreditDuNordWebSiteParser implements IWebSiteParser {
 				data2.put("MoisDebut", Integer.toString(begin.getMonthOfYear()));
 				data2.put("AnDebut", Integer.toString(begin.getYear()));
 				data2.put("JourFin", Integer.toString(end.getDayOfMonth()));
-				data2.put("MoisFin", Integer.toString(end.getMonthOfYear()));
+				data2.put("MoisFin", Integer.toString(end.getMonthOfYear() + 1));
 				data2.put("AnFin", Integer.toString(end.getYear()));
 				data2.put("logiciel", "TXT");
 			}
