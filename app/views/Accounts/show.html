@@ -12,29 +12,30 @@
 </div>
 
 <div id="dialog" style="display: none;">
-	#{form @Transactions.create(), id:'createRegularTransactionForm', method:'POST'}
-		<input id="transactionId" name="transactionId" type="hidden">
+	#{form @Configurations.save(), id:'createRegularTransactionForm', method:'POST'}
+		<input id="configurationId" name="configurationId" type="hidden">
+		<input name="accountId" type="hidden" value="${account.id}">
 
 		<div>
 			<label>Catégorie</label>
-			#{select 'categoryId', items:categories, labelProperty:'label', id:'transactionCategory'}
+			#{select 'categoryId', items:categories, labelProperty:'label', id:'configurationCategory'}
 				#{option}#{/option}
 			#{/select}
 		</div>
 
 		<div>
 			<label>&{'labels.label.fixed'}</label>
-			<input id="transactionFixedLabel" name="fixedLabel" type="text" placeholder="&{'labels.label.fixed'}">
+			<input id="configurationFixedLabel" name="fixedLabel" type="text" placeholder="&{'labels.label.fixed'}">
 		</div>
 
 		<div>
 			<label>&{'labels.label.friendly'}</label>
-			<input id="transactionFriendlyLabel" name="friendlyLabel" type="text" placeholder="&{'labels.label.friendly'}">
+			<input id="configurationFriendlyLabel" name="friendlyLabel" type="text" placeholder="&{'labels.label.friendly'}">
 		</div>
 
 		<div>
 			<label>&{'labels.date'}</label>
-			<input id="transactionDate" name="date" type="text" placeholder="&{'labels.date'}">
+			<input id="configurationDueDate" name="dueDate" type="text" placeholder="&{'labels.date'}">
 		</div>
 	#{/form}
 </div>
@@ -113,25 +114,24 @@
 					Boolean active = (transaction.configuration.active == true);
 				}%
 
-				<tr data-transaction-category-id="${category.id}" class="${(oneOffTransaction == null) ? 'error' : 'success'}">
+				<tr data-configuration-id="${configuration.id}" data-configuration-category-id="${category.id}" class="${(oneOffTransaction == null) ? 'error' : 'success'}">
 					<td class="hidden-phone">
 						#{if oneOffTransaction != null}
 							<i title="${oneOffTransaction.label}" class="icon-info-sign" style="cursor: help;"></i>
 						#{/if}
 					</td>
 
-					<td>${transaction.configuration.friendlyLabel}</td>
+					<td class="configuration-fixed-label" style="display: none;">${transaction.configuration.fixedLabel}</td>
+					<td class="configuration-friendly-label">${transaction.configuration.friendlyLabel}</td>
 					<td class="${(amount < 0) ? 'debit' : ((amount > 0) ? 'credit' : 'neutral')}" style="text-align: right; white-space: nowrap;">${amount?.formatCurrencyEur()}</td>
-					<td class="hidden-phone">${((oneOffTransaction != null) ? oneOffTransaction.date : transaction.expectedDate).toDate()?.format(messages.get('dates.format'))}</td>
+					<td class="configuration-due-date hidden-phone">${((oneOffTransaction != null) ? oneOffTransaction.date : transaction.expectedDate).toDate()?.format(messages.get('dates.format'))}</td>
 
 					#{if currentDate == true || userAdmin == true}
 						<td class="hidden-phone">
-							<a href="@{Transactions.generate(configuration.id)}"><i class="icon-cog"></i></a>
-							<a href="@{Transactions.toggle(configuration.id, date.getYear(), date.getMonthOfYear())}" data-action="toggle"><i class="${active == true ? 'icon-step-forward' : 'icon-off'}"></i></a>
-
-							#{if userAdmin == true}
-								<a href="@{Transactions.delete(configuration.id, date.getYear(), date.getMonthOfYear())}" data-action="delete"><i class="icon-remove"></i></a>
-							#{/if}
+							<a href="#" data-action="edit"><i title="&{'actions.edit'}" class="icon-edit"></i></a>
+							<a href="@{Configurations.generate(configuration.id)}"><i title="&{'actions.generate'}" class="icon-cog"></i></a>
+							<a href="@{Configurations.toggle(configuration.id, date.getYear(), date.getMonthOfYear())}" data-action="toggle"><i title="&{(active == true) ? 'actions.deactivate' : 'actions.activate'}" class="${(active == true) ? 'icon-stop' : 'icon-play'}"></i></a>
+							<a href="@{Configurations.delete(configuration.id, date.getYear(), date.getMonthOfYear())}" data-action="delete"><i title="&{'actions.delete'}" class="icon-trash"></i></a>
 						</td>
 					#{/if}
 				</tr>
@@ -151,7 +151,7 @@
 				<th>&{'labels.date'}</th>
 
 				#{if currentDate == true || userAdmin == true}
-					<th class="hidden-phone">&{'labels.pay.monthly'}</th>
+					<th class="hidden-phone">&{'labels.actions'}</th>
 				#{/if}
 			</tr>
 		</thead>
@@ -175,7 +175,7 @@
 						<td class="transaction-date">${transaction.date.toDate().format(messages.get('dates.format'))}</td>
 
 						#{if currentDate == true || userAdmin == true}
-							<td class="hidden-phone"><a href="#" data-action="create"><i class="icon-calendar"></i></a></td>
+							<td class="hidden-phone"><a href="#" title="&{'actions.pay.monthly'}" data-action="pay-monthly"><i class="icon-calendar"></i></a></td>
 						#{/if}
 					</tr>
 				#{/if}
@@ -236,8 +236,8 @@
 		});
 
 		/* Datepicker input */
-		$('#transactionDate').datepicker({
-			buttonImage: '',
+		$('#configurationDueDate').datepicker({
+			buttonImage: "@{'public/images/calendar.png'}",
 			buttonImageOnly: true,
 			dateFormat: 'dd/mm/yy',
 			minDate: '01/${now.getMonthOfYear()}/${now.getYear()}',
@@ -253,7 +253,7 @@
 	function initRegularTransactionsTable() {
 		var regularTransactions = $('#regularTransactions > tbody');
 
-		/* Regular transaction expansion from regular transactions table */
+		/* Regular transaction expansion */
 		regularTransactions.find('tr[data-category-id]').click(function() {
 			var categoryId = $(this).data('category-id');
 			var i = $(this).find('i');
@@ -264,17 +264,38 @@
 			i.removeClass(classToRemove);
 			i.addClass(classToAdd);
 
-			regularTransactions.find('tr[data-transaction-category-id="' + categoryId + '"]').toggle();
+			regularTransactions.find('tr[data-configuration-category-id="' + categoryId + '"]').toggle();
 
 			return false;
 		});
 
-		/* Regular transaction toggle from regular transactions table */
+		/* Regular transaction edition */
+		regularTransactions.find('a[data-action="edit"]').click(function() {
+			var tr = $(this).closest('tr[data-configuration-id]');
+			var id = tr.data('configuration-id');
+			var categoryId = tr.data('configuration-category-id');
+			var fixedLabel = tr.find('.configuration-fixed-label').text();
+			var friendlyLabel = tr.find('.configuration-friendly-label').text();
+			var dueDate = tr.find('.configuration-due-date').text();
+
+			$('#configurationId').val(id);
+			$('#configurationCategory').val(categoryId);
+			$('#configurationFixedLabel').val(fixedLabel);
+			$('#configurationFriendlyLabel').val(friendlyLabel);
+			$('#configurationDueDate').prop('readonly', true).datepicker("destroy").val(dueDate);
+
+			dialog.dialog('option', 'title', fixedLabel);
+			dialog.dialog('open');
+
+			return false;
+		});
+
+		/* Regular transaction toggle */
 		regularTransactions.find('a[data-action="toggle"]').click(function() {
 			return confirm(messages['confirms.transactions.regular.toggle']);
 		});
 
-		/* Regular transaction deletion from regular transactions table */
+		/* Regular transaction deletion */
 		regularTransactions.find('a[data-action="delete"]').click(function() {
 			return confirm(messages['confirms.transactions.regular.delete']);
 		});
@@ -284,18 +305,17 @@
 		var oneOffTransactions = $('#oneOffTransactions > tbody');
 
 		/* Regular transaction creation from one-off transactions table */
-		oneOffTransactions.find('a[data-action="create"]').click(function() {
+		oneOffTransactions.find('a[data-action="pay-monthly"]').click(function() {
 			var tr = $(this).closest('tr[data-transaction-id]');
-			var transactionId = tr.data('transaction-id');
-			var label = tr.find('.transaction-label').text();
-			var date = tr.find('.transaction-date').text();
+			var fixedLabel = tr.find('.transaction-label').text();
+			var dueDate = tr.find('.transaction-date').text();
 
-			$('#transactionId').val(transactionId).prop('disabled', false);
-			$('#transactionCategory').val('');
-			$('#transactionFixedLabel').val(label);
-			$('#transactionDate').val(date);
+			$('#configurationId').val('');
+			$('#configurationCategory').val('');
+			$('#configurationFixedLabel').val(fixedLabel);
+			$('#configurationDueDate').prop('readonly', false).datepicker().val(dueDate);
 
-			dialog.dialog('option', 'title', label);
+			dialog.dialog('option', 'title', fixedLabel);
 			dialog.dialog('open');
 
 			return false;

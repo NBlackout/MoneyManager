@@ -17,3 +17,10 @@
 .neutral {
 	color: gray;
 }
+
+/* Configurations */
+.ui-datepicker-trigger {
+	cursor: pointer;
+	margin-bottom: 10px;
+	margin-left: 5px;
+}

@@ -2,20 +2,49 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
-GET     /                                         Application.index
-GET     /banks/?                                  Banks.index
-GET     /customers/?                              Customers.index
-GET     /accounts/?                               Accounts.index
-GET     /accounts/{accountId}/{year}/{month}/?    Accounts.show
-GET     /accounts/{accountId}/?                   Accounts.show
-GET     /accounts/synchronize/{accountId}/?       Accounts.synchronize
+# Application
+GET     /                                            Application.index
+POST    /login                                       SuperController.logIn
+POST    /logout                                      SuperController.logOut
+
+# Accounts
+GET     /accounts/?                                  Accounts.index
+GET     /accounts/{accountId}/{year}/{month}/?       Accounts.show
+GET     /accounts/{accountId}/?                      Accounts.show
+GET     /accounts/synchronize/{accountId}/?          Accounts.synchronize
+
+# Banks
+GET     /banks/?                                     Banks.index
+GET     /banks/synchronize/{bankId}/?                Banks.synchronize
+
+# Customers
+GET     /customers/?                                 Customers.index
+GET     /customers/create/?                          Customers.create
+GET     /customers/edit/{customerId}/?               Customers.edit
+POST    /customers/save/?                            Customers.save
+
+# Configurations
+POST    /configurations/create/?                     Configurations.save
+GET     /configurations/delete/{configurationId}/?   Configurations.delete
+GET     /configurations/toggle/{configurationId}/?   Configurations.toggle
+GET     /configurations/generate/{configurationId}/? Configurations.generate
+
+# Users
+GET     /users/?                                     Users.index
+GET     /signup/?                                    Users.signUp
+GET     /users/create/?                              Users.create
+GET     /users/edit/{userId}/?                       Users.edit
+POST    /users/save/?                                Users.save
+GET     /users/delete/{userId}/?                     Users.delete
+GET     /users/toggle/{userId}/?                     Users.toggle
+
+# Data management
+GET     /datamanagement/?                            DataManagement.index
+GET     /datamanagement/export/?                     DataManagement.exportData
+GET     /datamanagement/import/?                     DataManagement.importData
 
 # Ignore favicon requests
-GET     /favicon.ico                              404
+GET     /favicon.ico                                 404
 
 # Map static resources from the /app/public folder to the /public path
-GET     /public/                                  staticDir:public
-
-# Catch all
-*       /{controller}/{action}/?                  {controller}.{action}
+GET     /public/                                     staticDir:public
