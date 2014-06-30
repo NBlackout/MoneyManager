@@ -32,7 +32,9 @@ public class RegularTransactionGenerator extends Job {
 		for (Configuration configuration : configurations) {
 			if (configuration.active == true) {
 				DateTime date = configuration.lastDueDate;
-				if (date == null || date.isBefore(DateTime.now()) == true) {
+				RegularTransaction latest = RegularTransaction.findLatestByConfigurationId(configuration.id);
+
+				if (date == null || date.isBefore(DateTime.now()) == true || latest.oneOffTransaction == null) {
 					generate(configuration);
 				}
 			}
@@ -45,9 +47,11 @@ public class RegularTransactionGenerator extends Job {
 	private void generate(Configuration configuration) {
 		Logger.info("BEGIN RegularTransactionGenerator.generate(" + configuration.friendlyLabel + ")");
 		DateTime date = configuration.lastDueDate;
+		RegularTransaction latest = RegularTransaction.findLatestByConfigurationId(configuration.id);
+
 		if (date == null) {
 			date = configuration.firstDueDate;
-		} else {
+		} else if (latest.oneOffTransaction != null) {
 			switch (configuration.periodicity.label) {
 				case "Mensuelle":
 					date = date.plusMonths(1);

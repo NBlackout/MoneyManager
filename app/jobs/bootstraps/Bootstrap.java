@@ -8,7 +8,7 @@ import play.Logger;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 
-@OnApplicationStart
+@OnApplicationStart(async = true)
 public class Bootstrap extends Job {
 
 	@Override

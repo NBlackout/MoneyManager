@@ -4,6 +4,7 @@
 
 # Application
 GET     /                                            Application.index
+GET     /hey                                         Application.hey
 POST    /login                                       SuperController.logIn
 POST    /logout                                      SuperController.logOut
 

@@ -54,4 +54,15 @@ public class RegularTransaction extends Model {
 
 		return query.fetch();
 	}
+
+	public static RegularTransaction findLatestByConfigurationId(Long configurationId) {
+		if (configurationId == null) {
+			throw new IllegalArgumentException("configurationId cannot be null");
+		}
+
+		JPAQuery query = RegularTransaction.find("configuration.id = :configurationId ORDER BY expectedDate desc");
+		query.setParameter("configurationId", configurationId);
+
+		return query.first();
+	}
 }
